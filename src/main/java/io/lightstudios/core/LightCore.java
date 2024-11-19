@@ -1,6 +1,7 @@
 package io.lightstudios.core;
 
 import com.zaxxer.hikari.HikariDataSource;
+import io.lightstudios.core.commands.TestCommand;
 import io.lightstudios.core.database.SQLDatabase;
 import io.lightstudios.core.database.impl.MySQLDatabase;
 import io.lightstudios.core.database.impl.SQLiteDatabase;
@@ -8,12 +9,18 @@ import io.lightstudios.core.database.model.ConnectionProperties;
 import io.lightstudios.core.database.model.DatabaseCredentials;
 import io.lightstudios.core.player.MessageSender;
 import io.lightstudios.core.player.TitleSender;
+import io.lightstudios.core.register.CommandRegister;
+import io.lightstudios.core.register.ModuleRegister;
 import io.lightstudios.core.util.ColorTranslation;
 import io.lightstudios.core.util.ConsolePrinter;
 import io.lightstudios.core.util.files.FileManager;
+import io.lightstudios.core.util.interfaces.LightCommand;
 import lombok.Getter;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -21,6 +28,7 @@ public class LightCore extends JavaPlugin {
 
     public static LightCore instance;
     public boolean lightCoreEnabled;
+    private ModuleRegister moduleRegister;
     private ConsolePrinter consolePrinter;
     private ColorTranslation colorTranslation;
     private MessageSender messageSender;
@@ -30,12 +38,15 @@ public class LightCore extends JavaPlugin {
     private SQLDatabase sqlDatabase;
     public HikariDataSource hikariDataSource;
 
+    public final ArrayList<LightCommand> subCommands = new ArrayList<>();
+
 
     @Override
     public void onLoad() {
         // generate the core.yml file
         instance = this;
         this.consolePrinter = new ConsolePrinter("§7[§rLight§eCore§7] §r");
+        this.moduleRegister = new ModuleRegister();
         this.colorTranslation = new ColorTranslation();
         this.messageSender = new MessageSender();
         this.titleSender = new TitleSender();
@@ -50,7 +61,7 @@ public class LightCore extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
+        initCommands();
         // on success loading the core module
         this.lightCoreEnabled = true;
         this.consolePrinter.printInfo("Successfully initialized LightCore. Ready for third party plugins.");
@@ -112,4 +123,12 @@ public class LightCore extends JavaPlugin {
             throw new RuntimeException("Could not maintain Database Connection.", e);
         }
     }
+
+    private void initCommands() {
+        PluginCommand command = getCommand("lightcore");
+        this.subCommands.add(new TestCommand());
+        new CommandRegister(command, subCommands);
+    }
+
+
 }
