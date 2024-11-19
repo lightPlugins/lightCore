@@ -4,12 +4,12 @@ version: '0.1.0'
 main: io.lightstudios.core.LightCore
 api-version: 1.21
 depend: []
-softdepend: ["PlaceholderAPI"]
+softdepend: ["PlaceholderAPI", "ProtocolLib"]
 loadbefore: []
 libraries:
-  - org.mariadb.jdbc:mariadb-java-client:3.5.0
-  - com.zaxxer:HikariCP:6.0.0
+#  - org.mariadb.jdbc:mariadb-java-client:3.5.0
+#  - com.zaxxer:HikariCP:6.0.0
 commands:
-  core:
+  lightcore:
     description: The root command for the api
-    aliases: [lightcore, lc]
+    aliases: [core, lcore, lc]
