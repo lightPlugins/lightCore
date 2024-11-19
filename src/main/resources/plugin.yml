@@ -1,5 +1,6 @@
 name: lightCore
-author: lightStudios
+author:
+  - lightStudios
 version: '0.1.0'
 main: io.lightstudios.core.LightCore
 api-version: 1.21

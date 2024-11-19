@@ -1,7 +1,6 @@
 package io.lightstudios.core;
 
 import com.zaxxer.hikari.HikariDataSource;
-import io.lightstudios.core.commands.TestCommand;
 import io.lightstudios.core.database.SQLDatabase;
 import io.lightstudios.core.database.impl.MySQLDatabase;
 import io.lightstudios.core.database.impl.SQLiteDatabase;
@@ -9,18 +8,14 @@ import io.lightstudios.core.database.model.ConnectionProperties;
 import io.lightstudios.core.database.model.DatabaseCredentials;
 import io.lightstudios.core.player.MessageSender;
 import io.lightstudios.core.player.TitleSender;
-import io.lightstudios.core.register.CommandRegister;
 import io.lightstudios.core.register.ModuleRegister;
 import io.lightstudios.core.util.ColorTranslation;
 import io.lightstudios.core.util.ConsolePrinter;
 import io.lightstudios.core.util.files.FileManager;
-import io.lightstudios.core.util.interfaces.LightCommand;
 import lombok.Getter;
-import org.bukkit.command.PluginCommand;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -38,13 +33,11 @@ public class LightCore extends JavaPlugin {
     private SQLDatabase sqlDatabase;
     public HikariDataSource hikariDataSource;
 
-    public final ArrayList<LightCommand> subCommands = new ArrayList<>();
-
-
     @Override
     public void onLoad() {
         // generate the core.yml file
         instance = this;
+        printLogo();
         this.consolePrinter = new ConsolePrinter("§7[§rLight§eCore§7] §r");
         this.moduleRegister = new ModuleRegister();
         this.colorTranslation = new ColorTranslation();
@@ -61,7 +54,6 @@ public class LightCore extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        initCommands();
         // on success loading the core module
         this.lightCoreEnabled = true;
         this.consolePrinter.printInfo("Successfully initialized LightCore. Ready for third party plugins.");
@@ -124,11 +116,31 @@ public class LightCore extends JavaPlugin {
         }
     }
 
-    private void initCommands() {
-        PluginCommand command = getCommand("lightcore");
-        this.subCommands.add(new TestCommand());
-        new CommandRegister(command, subCommands);
+    private void printLogo() {
+
+        String[] logo = {
+                " ___       ___  ________  ___  ___  _________  §e________  ________  ________  _______",
+                "|\\  \\     |\\  \\|\\   ____\\|\\  \\|\\  \\|\\___   ___\\§e\\   ____\\|\\   __  \\|\\   __  \\|\\  ___ \\",
+                "\\ \\  \\    \\ \\  \\ \\  \\___|\\ \\  \\\\\\  \\|___ \\  \\_§e\\ \\  \\___|\\ \\  \\|\\  \\ \\  \\|\\  \\ \\   __/|",
+                " \\ \\  \\    \\ \\  \\ \\  \\  __\\ \\   __  \\   \\ \\  \\ §e\\ \\  \\    \\ \\  \\\\\\  \\ \\   _  _\\ \\  \\_|/__",
+                "  \\ \\  \\____\\ \\  \\ \\  \\|\\  \\ \\  \\ \\  \\   \\ \\  \\ §e\\ \\  \\____\\ \\  \\\\\\  \\ \\  \\\\  \\\\ \\  \\_|\\ \\",
+                "   \\ \\_______\\ \\__\\ \\_______\\ \\__\\ \\__\\   \\ \\__\\ §e\\ \\_______\\ \\_______\\ \\__\\\\ _\\\\ \\_______\\",
+                "    \\|_______|\\|__|\\|_______|\\|__|\\|__|    \\|__|  §e\\|_______|\\|_______|\\|__|\\|__|\\|_______|\n"
+        };
+
+        for (String line : logo) {
+            Bukkit.getConsoleSender().sendMessage(line);
+        }
+
+        Bukkit.getConsoleSender().sendMessage("          LightCore: §ev0.1.0");
+        Bukkit.getConsoleSender().sendMessage("          Server: §e" + Bukkit.getServer().getVersion());
+        Bukkit.getConsoleSender().sendMessage("          API-Version: §e" + getDescription().getAPIVersion());
+        Bukkit.getConsoleSender().sendMessage("          Java: §e" + System.getProperty("java.version"));
+        Bukkit.getConsoleSender().sendMessage("          Authors: §e" + getDescription().getAuthors() + "\n");
+        Bukkit.getConsoleSender().sendMessage("          If you need help, please visit our §eDiscord §7server.");
+        Bukkit.getConsoleSender().sendMessage("          Discord: §ehttps://discord.gg/t9vS3hgWf8");
+        Bukkit.getConsoleSender().sendMessage("          Thank you for using §eLightCore §7:)\n");
+
+
     }
-
-
 }

@@ -1,8 +1,6 @@
 package io.lightstudios.core.register;
 
 import io.lightstudios.core.LightCore;
-import io.lightstudios.core.commands.TestCommand;
-import io.lightstudios.core.util.interfaces.LightCommand;
 import io.lightstudios.core.util.interfaces.LightModule;
 
 import java.util.ArrayList;
