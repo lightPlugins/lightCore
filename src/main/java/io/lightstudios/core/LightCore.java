@@ -110,7 +110,10 @@ public class LightCore extends JavaPlugin {
             this.sqlDatabase.connect();
 
         } catch (Exception e) {
-            this.getLogger().warning("Could not maintain Database Connection. Disabling third party plugins.");
+            getConsolePrinter().printError(List.of(
+                    "Could not maintain Database Connection. Disabling third party plugins.",
+                    "Please check your database connection & settings in the config file.",
+                    "Disabling all core related plugins."));
             this.lightCoreEnabled = false;
             throw new RuntimeException("Could not maintain Database Connection.", e);
         }
