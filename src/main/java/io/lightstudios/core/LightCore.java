@@ -1,6 +1,9 @@
 package io.lightstudios.core;
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import com.zaxxer.hikari.HikariDataSource;
+import de.tr7zw.changeme.nbtapi.NBT;
 import io.lightstudios.core.database.SQLDatabase;
 import io.lightstudios.core.database.impl.MySQLDatabase;
 import io.lightstudios.core.database.impl.SQLiteDatabase;
@@ -9,11 +12,15 @@ import io.lightstudios.core.database.model.DatabaseCredentials;
 import io.lightstudios.core.player.MessageSender;
 import io.lightstudios.core.player.TitleSender;
 import io.lightstudios.core.register.ModuleRegister;
+import io.lightstudios.core.tests.ClientSideLore;
 import io.lightstudios.core.util.ColorTranslation;
 import io.lightstudios.core.util.ConsolePrinter;
 import io.lightstudios.core.util.files.FileManager;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
@@ -29,6 +36,7 @@ public class LightCore extends JavaPlugin {
     private MessageSender messageSender;
     private TitleSender titleSender;
     private FileManager coreFile;
+    private ProtocolManager protocolManager;
 
     private SQLDatabase sqlDatabase;
     public HikariDataSource hikariDataSource;
@@ -37,6 +45,7 @@ public class LightCore extends JavaPlugin {
     public void onLoad() {
         // generate the core.yml file
         instance = this;
+        protocolManager = ProtocolLibrary.getProtocolManager();
         printLogo();
         this.consolePrinter = new ConsolePrinter("§7[§rLight§eCore§7] §r");
         this.moduleRegister = new ModuleRegister();
@@ -57,6 +66,8 @@ public class LightCore extends JavaPlugin {
         // on success loading the core module
         this.lightCoreEnabled = true;
         this.consolePrinter.printInfo("Successfully initialized LightCore. Ready for third party plugins.");
+        checkNBTAPI();
+        test();
     }
 
     @Override
@@ -117,6 +128,26 @@ public class LightCore extends JavaPlugin {
             this.lightCoreEnabled = false;
             throw new RuntimeException("Could not maintain Database Connection.", e);
         }
+    }
+
+    private void checkNBTAPI() {
+
+        if(!NBT.preloadApi()) {
+            this.consolePrinter.printError(List.of(
+                    "There is a problem with NBT-API. Please contact the developer",
+                    "Disabling all core related plugins."));
+            this.lightCoreEnabled = false;
+        } else {
+            this.consolePrinter.printInfo("NBT-API successfully loaded.");
+        }
+    }
+
+    private void test() {
+
+        PluginManager pm = Bukkit.getPluginManager();
+        pm.registerEvents(new ClientSideLore(this.protocolManager), this);
+
+
     }
 
     private void printLogo() {

@@ -22,6 +22,12 @@
         </repository>
 
         <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
+            <layout>default</layout>
+        </repository>
+
+        <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
@@ -63,6 +69,12 @@
         </dependency>
 
         <dependency>
+            <groupId>de.tr7zw</groupId>
+            <artifactId>item-nbt-api</artifactId>
+            <version>2.14.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>2.0.16</version>
@@ -85,6 +97,7 @@
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
             <version>5.3.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -151,13 +164,17 @@
                                 </relocation>
                                 <relocation>
                                     <pattern>com.github.stefvanschie.inventoryframework</pattern>
-                                    <shadedPattern>io.lightstudios.core.util.relocations.if</shadedPattern>
+                                    <shadedPattern>io.lightstudios.core.util.relocations.inv</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>de.tr7zw.changeme.nbtapi</pattern>
+                                    <shadedPattern>io.lightstudios.core.util.relocations.nbt</shadedPattern>
                                 </relocation>
                             </relocations>
                             <!-- Desktop PC -->
-                            <outputFile>C:/Users/phili/Desktop/playnayz development/plugins/${project.artifactId}-${project.version}-SNAPSHOT.jar</outputFile>
+                            <!--<outputFile>C:/Users/phili/Desktop/playnayz development/plugins/${project.artifactId}-${project.version}-SNAPSHOT.jar</outputFile> -->
                             <!-- Laptop -->
-                            <!--<outputFile>C:/Users/philipp/Desktop/mc/plugins/${project.artifactId}-${project.version}-SNAPSHOT.jar</outputFile>-->
+                            <outputFile>C:/Users/philipp/Desktop/mc/plugins/${project.artifactId}-${project.version}-SNAPSHOT.jar</outputFile>
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>
