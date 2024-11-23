@@ -1,0 +1,19 @@
+item: 'black_stained_glass_pane 1 hide_attributes'
+placeholders:
+  display-name: 'Example Item'
+  my-placeholder: 'my-value'
+  another-placeholder: 'another-value'
+  my-placeholderapi: '<red>Name: %player_name%'
+head-data: ''
+display-name: '#display-name#'
+lore:
+  - '<gray>This is an example lore.'
+  - '<gray>You can use defined placeholders like <#ffdc73>#placeholdername# '
+  - '<gray>from the placeholders section above.'
+overrides:
+  durability: -1
+  attack-damage: -1
+  attack-speed: -1
+  armor: -1
+  armor-toughness: -1
+  knockback-resistance: -1

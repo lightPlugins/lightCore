@@ -1,0 +1,37 @@
+settings:
+  id: gui_settings
+  args:
+    gui-title: '<dark_gray>Example <#ffdc73>INV <dark_gray>LightCore'
+    rows: 6
+    pattern:
+      #  0123456789
+      - '1100a0011' #0
+      - '100000001' #1
+      - '000000000' #2
+      - '000000000' #3
+      - '100000001' #4
+      - '1100b0011' #5
+contents:
+  'a':
+    id: gui_item
+    args:
+      item: 'lightcore:test_item'
+      click-actions: [ ]
+  '0':
+    id: gui_item
+    args:
+      placeholders: [ ]
+      item: 'black_stained_glass_pane 1 hide_attributes'
+      head-data: ''
+      display-name: ' '
+      lore: [ ]
+      click-actions: [ ]
+  '1':
+    id: gui_item
+    args:
+      placeholders: [ ]
+      item: 'gray_stained_glass_pane 1 hide_attributes'
+      head-data: ''
+      display-name: ' '
+      lore: [ ]
+      click-actions: [ ]

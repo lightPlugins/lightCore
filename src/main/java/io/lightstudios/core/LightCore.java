@@ -67,7 +67,6 @@ public class LightCore extends JavaPlugin {
         this.lightCoreEnabled = true;
         this.consolePrinter.printInfo("Successfully initialized LightCore. Ready for third party plugins.");
         checkNBTAPI();
-        testTimer();
     }
 
     @Override
