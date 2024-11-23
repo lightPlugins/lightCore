@@ -12,15 +12,13 @@ import io.lightstudios.core.database.model.DatabaseCredentials;
 import io.lightstudios.core.player.MessageSender;
 import io.lightstudios.core.player.TitleSender;
 import io.lightstudios.core.register.ModuleRegister;
-import io.lightstudios.core.tests.ClientSideLore;
 import io.lightstudios.core.util.ColorTranslation;
 import io.lightstudios.core.util.ConsolePrinter;
+import io.lightstudios.core.util.LightTimers;
 import io.lightstudios.core.util.files.FileManager;
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
@@ -30,6 +28,7 @@ public class LightCore extends JavaPlugin {
 
     public static LightCore instance;
     public boolean lightCoreEnabled;
+    private static LightTimers lightTimers;
     private ModuleRegister moduleRegister;
     private ConsolePrinter consolePrinter;
     private ColorTranslation colorTranslation;
@@ -47,6 +46,7 @@ public class LightCore extends JavaPlugin {
         instance = this;
         protocolManager = ProtocolLibrary.getProtocolManager();
         printLogo();
+        lightTimers = new LightTimers(this); // Initialize LightTimers instance
         this.consolePrinter = new ConsolePrinter("§7[§rLight§eCore§7] §r");
         this.moduleRegister = new ModuleRegister();
         this.colorTranslation = new ColorTranslation();
@@ -67,7 +67,7 @@ public class LightCore extends JavaPlugin {
         this.lightCoreEnabled = true;
         this.consolePrinter.printInfo("Successfully initialized LightCore. Ready for third party plugins.");
         checkNBTAPI();
-        test();
+        testTimer();
     }
 
     @Override
@@ -142,12 +142,51 @@ public class LightCore extends JavaPlugin {
         }
     }
 
-    private void test() {
+    private void testTimer() {
+        // Start Task 1
+        LightTimers.startTaskWithCounter((task, count) -> {
+            getConsolePrinter().printInfo("Task 1 with Consumer is running... Count: " + count);
+            if (count == 10) {
+                task.cancel();
+                getConsolePrinter().printInfo("Task 1 canceled after 10 iterations.");
+            }
+        }, 0L, 10L);
 
-        PluginManager pm = Bukkit.getPluginManager();
-        pm.registerEvents(new ClientSideLore(this.protocolManager), this);
+        // Start Task 2
+        LightTimers.startTaskWithCounter((task, count) -> {
+            getConsolePrinter().printInfo("Task 2 with Consumer is running... Count: " + count);
+            if (count == 15) {
+                task.cancel();
+                getConsolePrinter().printInfo("Task 2 canceled after 15 iterations.");
+            }
+        }, 0L, 10L);
 
+        // Start Task 3
+        LightTimers.startTaskWithCounter((task, count) -> {
+            getConsolePrinter().printInfo("Task 3 with Consumer is running... Count: " + count);
+            if (count == 20) {
+                task.cancel();
+                getConsolePrinter().printInfo("Task 3 canceled after 15 iterations.");
+            }
+        }, 0L, 10L);
 
+        // Start Task 4
+        LightTimers.startTaskWithCounter((task, count) -> {
+            getConsolePrinter().printInfo("Task 4 with Consumer is running... Count: " + count);
+            if (count == 25) {
+                task.cancel();
+                getConsolePrinter().printInfo("Task 4 canceled after 15 iterations.");
+            }
+        }, 0L, 10L);
+
+        LightTimers.doAsync(task -> {
+            getConsolePrinter().printInfo("Task ASYNC with Consumer is running...");
+        }, 240L);
+
+        LightTimers.doAsync(task -> {
+            getConsolePrinter().printInfo("Task ASYNC with Consumer is running...");
+
+        }, 260L);
     }
 
     private void printLogo() {
@@ -166,9 +205,27 @@ public class LightCore extends JavaPlugin {
             Bukkit.getConsoleSender().sendMessage(line);
         }
 
+        String protocolLibVersion = "not found";
+        String placeholderAPIVersion = "not found";
+
+        Plugin placeholderAPI = Bukkit.getServer().getPluginManager().getPlugin("PlaceholderAPI");
+        Plugin protocolLib = Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib");
+
+        if(placeholderAPI != null) {
+            placeholderAPIVersion = placeholderAPI.getDescription().getVersion();
+        }
+
+        if(protocolLib != null) {
+            protocolLibVersion = protocolLib.getDescription().getVersion();
+        }
+
+
         Bukkit.getConsoleSender().sendMessage("          LightCore: §ev0.1.0");
         Bukkit.getConsoleSender().sendMessage("          Server: §e" + Bukkit.getServer().getVersion());
         Bukkit.getConsoleSender().sendMessage("          API-Version: §e" + getDescription().getAPIVersion());
+        Bukkit.getConsoleSender().sendMessage("          Dependency Versions: §e");
+        Bukkit.getConsoleSender().sendMessage("           - PlaceholderAPI: §e" + placeholderAPIVersion);
+        Bukkit.getConsoleSender().sendMessage("           - ProtocolLib: §e" + protocolLibVersion);
         Bukkit.getConsoleSender().sendMessage("          Java: §e" + System.getProperty("java.version"));
         Bukkit.getConsoleSender().sendMessage("          Authors: §e" + getDescription().getAuthors() + "\n");
         Bukkit.getConsoleSender().sendMessage("          If you need help, please visit our §eDiscord §7server.");
