@@ -93,7 +93,7 @@ public class ItemFromConfig {
     public ItemStack buildItem(Player player) {
 
         // Taking ItemMeta snapshot after changes to nbt
-        ItemMeta temporaryMeta = itemStack.getItemMeta();
+        ItemMeta temporaryMeta = this.itemStack.getItemMeta();
 
         if(temporaryMeta == null) {
             LightCore.instance.getConsolePrinter().printError(List.of(
@@ -101,7 +101,8 @@ public class ItemFromConfig {
                     "Please check if the item meta is not null.",
                     "Otherwise contact the developer."
             ));
-            return itemStack.clone();
+            // always clone itemStacks to prevent modifying the original item stack in this class !!!
+            return this.itemStack.clone();
         }
 
         for (Map.Entry<String, String> entry : placeholders.entrySet()) {
@@ -120,6 +121,7 @@ public class ItemFromConfig {
         // Do not set it again after this point
         itemStack.setItemMeta(temporaryMeta);
 
+        // always clone itemStacks to prevent modifying the original item stack in this class !!!
         return itemStack.clone();
 
     }
