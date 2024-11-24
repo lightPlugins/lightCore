@@ -119,10 +119,10 @@ public class ItemFromConfig {
 
         // finally set the item meta to the item stack
         // Do not set it again after this point
-        itemStack.setItemMeta(temporaryMeta);
+        this.itemStack.setItemMeta(temporaryMeta);
 
         // always clone itemStacks to prevent modifying the original item stack in this class !!!
-        return itemStack.clone();
+        return this.itemStack.clone();
 
     }
 
