@@ -42,7 +42,7 @@
 
         <repository>
             <id>dmulloy2-repo</id>
-            <url>https://repo.dmulloy2.net/nexus/repository/public/</url>
+            <url>https://repo.dmulloy2.net/repository/public/</url>
         </repository>
 
         <repository>
@@ -51,7 +51,7 @@
         </repository>
 
         <repository>
-            <id>glaremasters repo</id>
+            <id>glaremasters-repo</id>
             <url>https://repo.glaremasters.me/repository/towny/</url>
         </repository>
     </repositories>
@@ -148,9 +148,6 @@
                 <executions>
                     <execution>
                         <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
                         <configuration>
                             <relocations>
                                 <relocation>
@@ -166,10 +163,6 @@
                                     <shadedPattern>io.lightstudios.core.util.relocations.nbt</shadedPattern>
                                 </relocation>
                             </relocations>
-                            <!-- Desktop PC -->
-                            <outputFile>C:/Users/phili/Desktop/playnayz development/plugins/${project.artifactId}-${project.version}-SNAPSHOT.jar</outputFile>
-                            <!-- Laptop -->
-                            <!-- <outputFile>C:/Users/philipp/Desktop/mc/plugins/${project.artifactId}-${project.version}-SNAPSHOT.jar</outputFile> -->
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>
@@ -181,6 +174,9 @@
                                 </filter>
                             </filters>
                         </configuration>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
