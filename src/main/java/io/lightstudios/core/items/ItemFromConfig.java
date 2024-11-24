@@ -115,7 +115,7 @@ public class ItemFromConfig {
         translateLore(player);
 
         temporaryMeta.setDisplayName(LightCore.instance.getColorTranslation().adventureTranslator(displayname, player));
-        temporaryMeta.setLore(lore);
+        temporaryMeta.setLore(this.lore);
 
         // finally set the item meta to the item stack
         // Do not set it again after this point
