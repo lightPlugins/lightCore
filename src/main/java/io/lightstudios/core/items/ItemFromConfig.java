@@ -260,16 +260,25 @@ public class ItemFromConfig {
                             "Syntax: enchant:flame:1"
                     ));
                 } else {
-                    // Enchantment.getByName() is deprecated, but it is still used in this code
-                    // TODO: find a better way to get enchantments from the string
+                    // TODO: find a better way to get enchantments from the string, because
+                    //       Enchantment.getByName() is deprecated
                     Enchantment enchantment = Enchantment.getByName(enchantSplit[1].toUpperCase());
-                    int level = Integer.parseInt(enchantSplit[2]);
-                    if(enchantment != null) {
-                        temporaryMeta.addEnchant(enchantment, level, true);
+
+                    if(LightNumbers.isNumber(enchantSplit[2])) {
+                        int level = Integer.parseInt(enchantSplit[2]);
+                        if(enchantment != null) {
+                            temporaryMeta.addEnchant(enchantment, level, true);
+                        } else {
+                            LightCore.instance.getConsolePrinter().printError(List.of(
+                                    "Invalid enchantment: " + enchantSplit[1] + " in file " + this.file.getName(),
+                                    "Enchantment must be a valid enchantment.",
+                                    "Syntax: enchant:flame:1"
+                            ));
+                        }
                     } else {
                         LightCore.instance.getConsolePrinter().printError(List.of(
-                                "Invalid enchantment: " + enchantSplit[1] + " in file " + this.file.getName(),
-                                "Enchantment must be a valid enchantment.",
+                                "Invalid enchantment level: " + enchantSplit[2] + " in file " + this.file.getName(),
+                                "Enchantment level must be a number.",
                                 "Syntax: enchant:flame:1"
                         ));
                     }
