@@ -14,7 +14,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,7 +30,6 @@ public class ItemFromConfig {
     private final File file;
     private final String itemID;
     private final ItemStack itemStack;
-    private final ItemMeta itemMeta;
     private final FileConfiguration fileConfiguration;
     private String item;
     private int modelData;
@@ -63,7 +61,6 @@ public class ItemFromConfig {
         this.itemID = file.getName().replace(".yml", "");
 
         this.itemStack = new ItemStack(Material.STONE, 1);
-        this.itemMeta = itemStack.getItemMeta();
 
         // STEP-1: read all values from the file
         readFromConfig();
@@ -86,13 +83,16 @@ public class ItemFromConfig {
      * This method returns any time a new item stack with all values applied,
      * even if the item stack is misconfigured.
      *
-     * @NotNull is used to indicate that the method will never return null.
+     * @NotNull is used to indicate that the method will never return null. If
+     * it is not possible to return a valid item stack, the method will return a
+     * default item stack with the type Material.STONE.
      * @param player the player for whom the item is being built
      * @return the final item stack with all values applied
      */
     @NotNull
     public ItemStack buildItem(Player player) {
 
+        // Taking ItemMeta snapshot after changes to nbt
         ItemMeta temporaryMeta = itemStack.getItemMeta();
 
         if(temporaryMeta == null) {
@@ -219,6 +219,7 @@ public class ItemFromConfig {
             this.itemStack.setType(Material.STONE);
         }
 
+        // Taking ItemMeta snapshot after changes to nbt
         ItemMeta temporaryMeta = this.itemStack.getItemMeta();
 
         if(temporaryMeta == null) {
