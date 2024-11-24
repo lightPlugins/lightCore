@@ -8,6 +8,11 @@
     <artifactId>lightCore</artifactId>
     <version>0.1.0</version>
 
+    <organization>
+        <name>lightPlugins</name>
+        <url>https://github.com/lightplugins</url>
+    </organization>
+
     <properties>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

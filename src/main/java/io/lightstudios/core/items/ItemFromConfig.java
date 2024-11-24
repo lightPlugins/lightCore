@@ -33,8 +33,8 @@ public class ItemFromConfig {
     private final FileConfiguration fileConfiguration;
     private String item;
     private int modelData;
-    private Map<Enchantment, Integer> enchantments = new HashMap<>();
-    private Map<String, String> placeholders = new HashMap<>();
+    private final Map<Enchantment, Integer> enchantments = new HashMap<>();
+    private final Map<String, String> placeholders = new HashMap<>();
     private String headData;
     private String displayname;
     private List<String> lore = new ArrayList<>();
