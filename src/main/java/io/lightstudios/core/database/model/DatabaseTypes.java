@@ -5,5 +5,6 @@ package io.lightstudios.core.database.model;
 
 public enum DatabaseTypes {
     MYSQL,
-    SQLITE
+    SQLITE,
+    MARIADB
 }

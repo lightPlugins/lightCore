@@ -8,14 +8,13 @@ import io.lightstudios.core.database.model.ConnectionProperties;
 import io.lightstudios.core.database.model.DatabaseCredentials;
 import io.lightstudios.core.database.model.DatabaseTypes;
 
-public class MySQLDatabase extends PooledDatabase {
+public class MariaDatabase extends PooledDatabase {
 
     private final DatabaseCredentials credentials;
     private final ConnectionProperties connectionProperties;
-    private final String poolName = "light-";
     private HikariConfig hikari = new HikariConfig();
 
-    public MySQLDatabase(LightCore parent, DatabaseCredentials credentials, ConnectionProperties connectionProperties) {
+    public MariaDatabase(LightCore parent, DatabaseCredentials credentials, ConnectionProperties connectionProperties) {
         super(parent);
         this.connectionProperties = connectionProperties;
         this.credentials = credentials;
@@ -33,7 +32,7 @@ public class MySQLDatabase extends PooledDatabase {
     }
 
     private void applyCredentials(HikariConfig hikari, DatabaseCredentials credentials, ConnectionProperties connectionProperties) {
-        hikari.setJdbcUrl("jdbc:mysql://" + credentials.host() + ":" + credentials.port() + "/" + credentials.databaseName() + "?characterEncoding=" + connectionProperties.getCharacterEncoding());
+        hikari.setJdbcUrl("jdbc:mariadb://" + credentials.host() + ":" + credentials.port() + "/" + credentials.databaseName() + "?characterEncoding=" + connectionProperties.getCharacterEncoding());
         hikari.setUsername(credentials.userName());
         hikari.setPassword(credentials.password());
     }
@@ -48,6 +47,6 @@ public class MySQLDatabase extends PooledDatabase {
 
     @Override
     public DatabaseTypes getDatabaseType() {
-        return DatabaseTypes.MYSQL;
+        return DatabaseTypes.MARIADB;
     }
 }

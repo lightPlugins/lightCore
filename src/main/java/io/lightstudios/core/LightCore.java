@@ -5,6 +5,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.zaxxer.hikari.HikariDataSource;
 import de.tr7zw.changeme.nbtapi.NBT;
 import io.lightstudios.core.database.SQLDatabase;
+import io.lightstudios.core.database.impl.MariaDatabase;
 import io.lightstudios.core.database.impl.MySQLDatabase;
 import io.lightstudios.core.database.impl.SQLiteDatabase;
 import io.lightstudios.core.database.model.ConnectionProperties;
@@ -106,6 +107,10 @@ public class LightCore extends JavaPlugin {
                 case "mysql":
                     this.sqlDatabase = new MySQLDatabase(this, credentials, connectionProperties);
                     this.consolePrinter.printInfo("Using MySQL (remote) database.");
+                    break;
+                case "mariadb":
+                    this.sqlDatabase = new MariaDatabase(this, credentials, connectionProperties);
+                    this.consolePrinter.printInfo("Using MariaDB (remote) database.");
                     break;
                 default:
                     this.consolePrinter.printError(List.of(
