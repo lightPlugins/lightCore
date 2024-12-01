@@ -1,5 +1,6 @@
 package io.lightstudios.core.util;
 
+import io.lightstudios.core.LightCore;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -22,6 +23,7 @@ public class ColorTranslation {
      * @param player the player to translate placeholders for
      * @return the translated message string with color codes converted to ChatColor / PlaceholderAPI placeholders
      */
+
     public String adventureTranslator(String message, Player player) {
         Component parsed = MiniMessage.miniMessage().deserialize(message);
         return PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes(
@@ -67,6 +69,11 @@ public class ColorTranslation {
     public Component miniMessage(String message) {
         MiniMessage mm = MiniMessage.miniMessage();
         return mm.deserialize(message);
+    }
+
+    public String convertLegacyToMiniMessage(String legacyText) {
+        Component component = LegacyComponentSerializer.legacySection().deserialize(legacyText);
+        return MiniMessage.miniMessage().serialize(component);
     }
 
 }

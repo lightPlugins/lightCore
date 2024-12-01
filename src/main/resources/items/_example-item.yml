@@ -5,7 +5,7 @@ placeholders:
   another-placeholder: 'another-value'
   my-placeholderapi: '<red>Name: %player_name%'
 head-data: ''
-display-name: '#display-name#'
+displayname: '#display-name#'
 lore:
   - '<gray>This is an example lore.'
   - '<gray>You can use defined placeholders like <#ffdc73>#placeholdername# '

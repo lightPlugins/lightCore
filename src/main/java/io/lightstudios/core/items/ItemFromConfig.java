@@ -112,10 +112,10 @@ public class ItemFromConfig {
         }
 
         translateDisplayHeadData(player);
-        translateLore(player);
+        List<String> translatedLore = translateLore(player);
 
         temporaryMeta.setDisplayName(LightCore.instance.getColorTranslation().adventureTranslator(displayname, player));
-        temporaryMeta.setLore(this.lore);
+        temporaryMeta.setLore(translatedLore);
 
         // finally set the item meta to the item stack
         // Do not set it again after this point
@@ -149,18 +149,16 @@ public class ItemFromConfig {
      * Iterates through each line in the lore list and replaces
      * occurrences of each placeholder with their corresponding values.
      */
-    private void translateLore(Player player) {
+    private List<String> translateLore(Player player) {
         List<String> newLore = new ArrayList<>();
-        for(String line : lore) {
-            for(String key : placeholders.keySet()) {
-                line = line.replace("#" + key + "#", placeholders.get(key)
-                        .replace(key, PlaceholderAPI.setPlaceholders(player, key)));
+        for (String line : lore) {
+            for (String key : placeholders.keySet()) {
+                line = line.replace("#" + key + "#", placeholders.get(key))
+                        .replace(key, PlaceholderAPI.setPlaceholders(player, key));
             }
             newLore.add(LightCore.instance.getColorTranslation().adventureTranslator(line, player));
         }
-
-        this.lore = newLore;
-
+        return newLore;
     }
 
     /**
@@ -321,39 +319,39 @@ public class ItemFromConfig {
         }
         // read the "head-data" string from the file
         if (fileConfiguration.contains("head-data")) {
-            headData = fileConfiguration.getString("head-data");
+            this.headData = fileConfiguration.getString("head-data");
         }
         // read the "display-name" string from the file
-        if (fileConfiguration.contains("display-name")) {
-            displayname = fileConfiguration.getString("displayname");
+        if (fileConfiguration.contains("displayname")) {
+            this.displayname = fileConfiguration.getString("displayname");
         }
         // read the "lore" List<String> from the file
         if (fileConfiguration.contains("lore")) {
-            lore = fileConfiguration.getStringList("lore");
+            this.lore = fileConfiguration.getStringList("lore");
         }
         // read the "durability" int from the file
         if (fileConfiguration.contains("overrides.durability")) {
-            durability = fileConfiguration.getInt("durability");
+            this.durability = fileConfiguration.getInt("durability");
         }
         // read the "attack-damage" int from the file
         if (fileConfiguration.contains("overrides.attack-damage")) {
-            attackDamage = fileConfiguration.getInt("attack-damage");
+            this.attackDamage = fileConfiguration.getInt("attack-damage");
         }
         // read the "attack-speed" int from the file
         if (fileConfiguration.contains("overrides.attack-speed")) {
-            attackSpeed = fileConfiguration.getInt("attack-speed");
+            this.attackSpeed = fileConfiguration.getInt("attack-speed");
         }
         // read the "armor" int from the file
         if (fileConfiguration.contains("overrides.armor")) {
-            armor = fileConfiguration.getInt("armor");
+            this.armor = fileConfiguration.getInt("armor");
         }
         // read the "armor-toughness" int from the file
         if (fileConfiguration.contains("overrides.armor-toughness")) {
-            armorToughness = fileConfiguration.getInt("armor-toughness");
+            this.armorToughness = fileConfiguration.getInt("armor-toughness");
         }
         // read the "knockback-resistance" int from the file
         if (fileConfiguration.contains("overrides.knockback-resistance")) {
-            knockbackResistance = fileConfiguration.getInt("knockback-resistance");
+            this.knockbackResistance = fileConfiguration.getInt("knockback-resistance");
         }
     }
 }

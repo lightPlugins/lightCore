@@ -5,6 +5,9 @@ debug:
   # The level of the debug messages.
   # 1 = LOW_DEBUG, 2 = MEDIUM_DEBUG, 3 = HIGH_DEBUG
   level: 3
+# The Language system for the core plugin
+# Available languages: en, de, fr, es, it, pt, ru, zh, ja, ko
+language: en
 # The Storage system for all my plugins
 # All sub plugins will use the same storage system
 storage:

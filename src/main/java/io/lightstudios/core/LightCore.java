@@ -4,12 +4,16 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.zaxxer.hikari.HikariDataSource;
 import de.tr7zw.changeme.nbtapi.NBT;
+import io.lightstudios.core.commands.CoreReloadCommand;
+import io.lightstudios.core.commands.manager.CommandManager;
 import io.lightstudios.core.database.SQLDatabase;
 import io.lightstudios.core.database.impl.MariaDatabase;
 import io.lightstudios.core.database.impl.MySQLDatabase;
 import io.lightstudios.core.database.impl.SQLiteDatabase;
 import io.lightstudios.core.database.model.ConnectionProperties;
 import io.lightstudios.core.database.model.DatabaseCredentials;
+import io.lightstudios.core.items.ItemManager;
+import io.lightstudios.core.items.events.UpdateCustomItem;
 import io.lightstudios.core.player.MessageSender;
 import io.lightstudios.core.player.TitleSender;
 import io.lightstudios.core.register.ModuleRegister;
@@ -17,11 +21,17 @@ import io.lightstudios.core.util.ColorTranslation;
 import io.lightstudios.core.util.ConsolePrinter;
 import io.lightstudios.core.util.LightTimers;
 import io.lightstudios.core.util.files.FileManager;
+import io.lightstudios.core.util.files.MultiFileManager;
+import io.lightstudios.core.util.files.configs.CoreMessage;
+import io.lightstudios.core.util.files.configs.CoreSettings;
+import io.lightstudios.core.util.interfaces.LightCommand;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -29,14 +39,25 @@ public class LightCore extends JavaPlugin {
 
     public static LightCore instance;
     public boolean lightCoreEnabled;
-    private static LightTimers lightTimers;
+
+    private LightTimers lightTimers;
     private ModuleRegister moduleRegister;
     private ConsolePrinter consolePrinter;
     private ColorTranslation colorTranslation;
     private MessageSender messageSender;
     private TitleSender titleSender;
-    private FileManager coreFile;
     private ProtocolManager protocolManager;
+
+    private FileManager coreFile;
+    private FileManager messageFile;
+
+    private CoreSettings settings;
+    private CoreMessage messages;
+
+    private MultiFileManager itemFiles;
+    private ItemManager itemManager;
+
+    private final ArrayList<LightCommand> commands = new ArrayList<>();
 
     private SQLDatabase sqlDatabase;
     public HikariDataSource hikariDataSource;
@@ -68,6 +89,8 @@ public class LightCore extends JavaPlugin {
         this.lightCoreEnabled = true;
         this.consolePrinter.printInfo("Successfully initialized LightCore. Ready for third party plugins.");
         checkNBTAPI();
+        registerCommands();
+        registerEvents();
     }
 
     @Override
@@ -80,7 +103,26 @@ public class LightCore extends JavaPlugin {
 
     private void generateCoreFiles() {
         // Generate core files
-         this.coreFile = new FileManager(this, "core.yml", true);
+        this.coreFile = new FileManager(this, "core.yml", true);
+        this.settings = new CoreSettings(coreFile.getConfig());
+
+        String selectedLanguage = switch (settings.language()) {
+            case "de" -> "de";
+            case "pl" -> "pl";
+            default -> "en";
+        };
+
+        this.messageFile = new FileManager(this, "language/" + selectedLanguage + ".yml", true);
+        this.messages = new CoreMessage(messageFile.getConfig());
+
+        try {
+            this.itemFiles = new MultiFileManager("plugins/" + getName() + "/items/");
+            this.itemManager = new ItemManager(itemFiles);
+        }catch (Exception e) {
+            throw new RuntimeException("Error reading item files.", e);
+        }
+
+
     }
 
     private void initDatabase() {
@@ -236,6 +278,23 @@ public class LightCore extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage("          Discord: §ehttps://discord.gg/t9vS3hgWf8");
         Bukkit.getConsoleSender().sendMessage("          Thank you for using §eLightCore §7:)\n");
 
+    }
 
+    private void registerEvents() {
+        // Register Events
+        LightCore.instance.getConsolePrinter().printInfo("Registering Core Events ...");
+        getServer().getPluginManager().registerEvents(new UpdateCustomItem(), this);
+    }
+
+    public void registerCommands() {
+        PluginCommand pluginCommand = LightCore.instance.getCommand("lightcore");
+        this.commands.add(new CoreReloadCommand());
+
+        new CommandManager(pluginCommand, this.commands);
+    }
+
+    public void reloadCore() {
+        generateCoreFiles();
+        this.consolePrinter.printInfo("Reloaded the core files.");
     }
 }
