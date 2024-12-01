@@ -173,12 +173,12 @@ public class ItemFromConfig {
             nbt.setString("head_data", this.headData);
 
             // not sure if this is the correct way to store a list of strings
-            ReadWriteNBTList<String> stringList = nbt.getStringList("lore");
+            ReadWriteNBTList<String> nbtLore = nbt.getStringList("lore");
             // try to clear the list first before adding new values
             // TODO: check if this is the correct way to clear the list
-            stringList.clear();
+            nbtLore.clear();
             // add all lore lines to the list
-            for(String line : lore) { stringList.add(line); }
+            for(String line : lore) { nbtLore.add(line); }
 
             nbt.setInteger("durability", this.durability);
             nbt.setInteger("attack_damage", this.attackDamage);
