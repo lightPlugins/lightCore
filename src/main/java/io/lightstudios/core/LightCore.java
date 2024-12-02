@@ -66,21 +66,26 @@ public class LightCore extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        // generate the core.yml file
         instance = this;
-        protocolManager = ProtocolLibrary.getProtocolManager();
+        this.protocolManager = ProtocolLibrary.getProtocolManager();
+
         printLogo();
-        lightTimers = new LightTimers(this); // Initialize LightTimers instance
+
+        // Initialize LightTimers instance
+        this.lightTimers = new LightTimers(this);
         this.consolePrinter = new ConsolePrinter("§7[§rLight§eCore§7] §r");
+
         this.moduleRegister = new ModuleRegister();
         this.colorTranslation = new ColorTranslation();
         this.messageSender = new MessageSender();
         this.titleSender = new TitleSender();
+
         this.consolePrinter.printInfo("Generate core files ...");
+        // Generate core files
         generateCoreFiles();
         this.consolePrinter.printInfo("Initializing LightCore ...");
-        // Initialize and connect to the database
         this.consolePrinter.printInfo("Starting database connection ...");
+        // Initialize and connect to the database
         initDatabase();
 
     }
