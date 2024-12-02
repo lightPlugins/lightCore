@@ -12,6 +12,7 @@ import io.lightstudios.core.database.impl.MySQLDatabase;
 import io.lightstudios.core.database.impl.SQLiteDatabase;
 import io.lightstudios.core.database.model.ConnectionProperties;
 import io.lightstudios.core.database.model.DatabaseCredentials;
+import io.lightstudios.core.economy.VaultManager;
 import io.lightstudios.core.items.ItemManager;
 import io.lightstudios.core.items.events.UpdateCustomItem;
 import io.lightstudios.core.player.MessageSender;
@@ -47,6 +48,7 @@ public class LightCore extends JavaPlugin {
     private MessageSender messageSender;
     private TitleSender titleSender;
     private ProtocolManager protocolManager;
+    private VaultManager vaultManager;
 
     private FileManager coreFile;
     private FileManager messageFile;
@@ -85,12 +87,15 @@ public class LightCore extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // on success loading the core module
-        this.lightCoreEnabled = true;
         this.consolePrinter.printInfo("Successfully initialized LightCore. Ready for third party plugins.");
         checkNBTAPI();
         registerCommands();
         registerEvents();
+
+        this.vaultManager = new VaultManager();
+
+        // on success loading the core module
+        this.lightCoreEnabled = true;
     }
 
     @Override
