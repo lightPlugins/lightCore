@@ -2,14 +2,15 @@ package io.lightstudios.core.database.redis;
 
 import io.lightstudios.core.LightCore;
 import lombok.Getter;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.JedisPooled;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @Getter
 public class RedisManager {
 
-    private final JedisPool jedisPool;
+    private final JedisPooled jedisPooled;
 
     /**
      * Create a new RedisManager instance with redis credentials
@@ -19,9 +20,12 @@ public class RedisManager {
      * @param password the password of the Redis server
      */
     public RedisManager(String host, int port, String password) {
-
-        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        this.jedisPool = new JedisPool(jedisPoolConfig, host, port, 2000, password);
+        try {
+            URI redisURI = new URI("redis://" + password + "@" + host + ":" + port);
+            this.jedisPooled = new JedisPooled(redisURI);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("Invalid Redis URI", e);
+        }
 
         // test the connection to the Redis server
         if(testConnection()) {
@@ -33,24 +37,32 @@ public class RedisManager {
     }
 
     /**
-     * Get a connection to the Redis server
-     * @return a Jedis connection from the pool
-     */
-    public Jedis getConnection() {
-        return jedisPool.getResource();
-    }
-
-
-    /**
      * Test the connection to the Redis server
      * @return true if the connection was successful
      */
     private boolean testConnection() {
-        try (Jedis jedis = getConnection()) {
+        try {
             // test the connection with a ping
-            return "PONG".equals(jedis.ping());
+            return "PONG".equals(jedisPooled.ping());
         } catch (Exception e) {
             throw new RuntimeException("Could not connect to the provided Redis server", e);
+        }
+    }
+
+    public boolean set(String key, String value) {
+        try {
+            jedisPooled.set(key, value);
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException("Could not set the value for key: " + key, e);
+        }
+    }
+
+    public String get(String key) {
+        try {
+            return jedisPooled.get(key);
+        } catch (Exception e) {
+            throw new RuntimeException("Could not get the value for key: " + key, e);
         }
     }
 }

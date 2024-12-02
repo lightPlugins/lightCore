@@ -1,6 +1,5 @@
 package io.lightstudios.core.util;
 
-import io.lightstudios.core.util.files.FileManager;
 import org.bukkit.Bukkit;
 
 import java.util.List;
