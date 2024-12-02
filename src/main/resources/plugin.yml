@@ -8,7 +8,7 @@ api-version: 1.21
 depend: ["ProtocolLib", "PlaceholderAPI"]
 softdepend: [ ]
 loadbefore: [ ]
-libraries:
+libraries: [ ]
 #  - org.mariadb.jdbc:mariadb-java-client:3.5.0
 #  - com.zaxxer:HikariCP:6.0.0
 commands:
