@@ -12,6 +12,7 @@ import io.lightstudios.core.database.impl.MySQLDatabase;
 import io.lightstudios.core.database.impl.SQLiteDatabase;
 import io.lightstudios.core.database.model.ConnectionProperties;
 import io.lightstudios.core.database.model.DatabaseCredentials;
+import io.lightstudios.core.database.redis.RedisManager;
 import io.lightstudios.core.economy.VaultManager;
 import io.lightstudios.core.items.ItemManager;
 import io.lightstudios.core.items.events.UpdateCustomItem;
@@ -49,6 +50,7 @@ public class LightCore extends JavaPlugin {
     private TitleSender titleSender;
     private ProtocolManager protocolManager;
     private VaultManager vaultManager;
+    private RedisManager redisManager;
 
     private FileManager coreFile;
     private FileManager messageFile;
@@ -306,5 +308,15 @@ public class LightCore extends JavaPlugin {
     public void reloadCore() {
         generateCoreFiles();
         this.consolePrinter.printInfo("Reloaded the core files.");
+    }
+
+    private void enableRedisConnection() {
+        if(settings.redisEnabled()) {
+            this.redisManager = new RedisManager(
+                    settings.redisHost(),
+                    settings.redisPort(),
+                    settings.redisPassword()
+            );
+        }
     }
 }

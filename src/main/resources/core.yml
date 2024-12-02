@@ -8,10 +8,30 @@ debug:
 # The Language system for the core plugin
 # Available languages: en, de, fr, es, it, pt, ru, zh, ja, ko
 language: en
+# This system is used for synchronising data between multiple servers.
+# You NEED to have a Redis Server running to use this system on multiple servers !!!
+# INFO: If you are using a Pterodactyl Redis Server, you can use the docker
+#       internal network to connect to the redis server:
+#        - Default Docker Network Host: 172.18.0.1
+#        - Default Port: 6379
+server-synchronisation:
+  redis:
+    # only enable this if you have a redis server running,
+    # and you want to use the server synchronisation system.
+    enable: false
+    # The host of the redis server.
+    host: localhost
+    # The port of the redis server.
+    port: 6379
+    # The password of the redis server.
+    password: YourSecretPassword
 # The Storage system for all my plugins
-# All sub plugins will use the same storage system
+# All sub plugins will use this storage system
 storage:
-  # if disabled, the plugin will automatically use sqlite for single server setup.
+  # possible values:
+  # - sqlite -> for a SQLite database (local file)
+  # - mysql -> for a MySQL database
+  # - mariadb -> for a MariaDB database (recommended over MySQL)
   type: sqlite
   host: 127.0.0.1
   port: 3306

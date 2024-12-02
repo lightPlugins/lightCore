@@ -11,4 +11,10 @@ public class CoreSettings {
     }
 
     public String language() { return config.getString("language"); }
+
+    // redis server credentials
+    public boolean redisEnabled() { return config.getBoolean("server-synchronisation.redis.enable"); }
+    public String redisHost() { return config.getString("server-synchronisation.redis.host"); }
+    public int redisPort() { return config.getInt("server-synchronisation.redis.port"); }
+    public String redisPassword() { return config.getString("server-synchronisation.redis.password"); }
 }
