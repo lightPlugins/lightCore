@@ -48,21 +48,4 @@ public class RedisManager {
             throw new RuntimeException("Could not connect to the provided Redis server", e);
         }
     }
-
-    public boolean set(String key, String value) {
-        try {
-            jedisPooled.set(key, value);
-            return true;
-        } catch (Exception e) {
-            throw new RuntimeException("Could not set the value for key: " + key, e);
-        }
-    }
-
-    public String get(String key) {
-        try {
-            return jedisPooled.get(key);
-        } catch (Exception e) {
-            throw new RuntimeException("Could not get the value for key: " + key, e);
-        }
-    }
 }
