@@ -89,6 +89,8 @@ public class LightCore extends JavaPlugin {
         this.consolePrinter.printInfo("Starting database connection ...");
         // Initialize and connect to the database
         initDatabase();
+        // Initialize Redis connection and check if it is enabled
+        enableRedisConnection();
 
     }
 
@@ -133,8 +135,6 @@ public class LightCore extends JavaPlugin {
         }catch (Exception e) {
             throw new RuntimeException("Error reading item files.", e);
         }
-
-
     }
 
     private void initDatabase() {
@@ -311,12 +311,21 @@ public class LightCore extends JavaPlugin {
     }
 
     private void enableRedisConnection() {
+        getConsolePrinter().printInfo("Check for Redis connection ...");
         if(settings.redisEnabled()) {
+            getConsolePrinter().printInfo("Redis is enabled in config. Connecting to Redis ...");
             this.redisManager = new RedisManager(
                     settings.redisHost(),
                     settings.redisPort(),
                     settings.redisPassword()
             );
+            return;
         }
+        getConsolePrinter().printInfo(List.of(
+                "Redis is not enabled in config.",
+                "If you want to use Redis for server synchronisation,",
+                "please enable it in the config file.",
+                "Make sure to provide the correct credentials for the Redis server.")
+        );
     }
 }
