@@ -5,6 +5,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.zaxxer.hikari.HikariDataSource;
 import de.tr7zw.changeme.nbtapi.NBT;
 import io.lightstudios.core.commands.CoreReloadCommand;
+import io.lightstudios.core.commands.manager.CommandManager;
 import io.lightstudios.core.database.SQLDatabase;
 import io.lightstudios.core.database.impl.MariaDatabase;
 import io.lightstudios.core.database.impl.MySQLDatabase;
@@ -27,6 +28,8 @@ import io.lightstudios.core.util.files.configs.CoreSettings;
 import io.lightstudios.core.util.interfaces.LightCommand;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -101,6 +104,7 @@ public class LightCore extends JavaPlugin {
 
         // on success loading the core module
         this.lightCoreEnabled = true;
+
     }
 
     @Override
@@ -297,6 +301,7 @@ public class LightCore extends JavaPlugin {
     public void registerCommands() {
         PluginCommand pluginCommand = LightCore.instance.getCommand("lightcore");
         this.commands.add(new CoreReloadCommand());
+        new CommandManager(commands, "peterzwegert");
     }
 
     public void reloadCore() {

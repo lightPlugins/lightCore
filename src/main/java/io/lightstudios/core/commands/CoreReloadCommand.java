@@ -44,9 +44,6 @@ public class CoreReloadCommand implements LightCommand {
     public boolean performAsPlayer(Player player, String[] args) {
         LightCore.instance.reloadCore();
         LightCore.instance.getMessageSender().sendPlayerMessage(player, LightCore.instance.getMessages().coreReload());
-        ItemStack is = LightCore.instance.getItemManager().getItemByName("_example-item").buildItem(player);
-        player.getInventory().addItem(is);
-        LightCore.instance.getMessageSender().sendPlayerMessage(player, "<green>You have received an example item.");
         return false;
     }
 

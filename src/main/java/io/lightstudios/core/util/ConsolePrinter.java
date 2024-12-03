@@ -95,7 +95,7 @@ public class ConsolePrinter {
         Bukkit.getConsoleSender().sendMessage(prefix + "§8[§4ERROR§8] §c" + message);
     }
 
-    private void printDebug(String message) {
+    public void printDebug(String message) {
         Bukkit.getConsoleSender().sendMessage(message);
     }
 
