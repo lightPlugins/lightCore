@@ -5,7 +5,6 @@ import com.comphenix.protocol.ProtocolManager;
 import com.zaxxer.hikari.HikariDataSource;
 import de.tr7zw.changeme.nbtapi.NBT;
 import io.lightstudios.core.commands.CoreReloadCommand;
-import io.lightstudios.core.commands.manager.CommandManager;
 import io.lightstudios.core.database.SQLDatabase;
 import io.lightstudios.core.database.impl.MariaDatabase;
 import io.lightstudios.core.database.impl.MySQLDatabase;
@@ -18,7 +17,6 @@ import io.lightstudios.core.items.ItemManager;
 import io.lightstudios.core.items.events.UpdateCustomItem;
 import io.lightstudios.core.player.MessageSender;
 import io.lightstudios.core.player.TitleSender;
-import io.lightstudios.core.register.ModuleRegister;
 import io.lightstudios.core.util.ColorTranslation;
 import io.lightstudios.core.util.ConsolePrinter;
 import io.lightstudios.core.util.LightTimers;
@@ -43,7 +41,6 @@ public class LightCore extends JavaPlugin {
     public boolean lightCoreEnabled;
 
     private LightTimers lightTimers;
-    private ModuleRegister moduleRegister;
     private ConsolePrinter consolePrinter;
     private ColorTranslation colorTranslation;
     private MessageSender messageSender;
@@ -77,7 +74,6 @@ public class LightCore extends JavaPlugin {
         this.lightTimers = new LightTimers(this);
         this.consolePrinter = new ConsolePrinter("§7[§rLight§eCore§7] §r");
 
-        this.moduleRegister = new ModuleRegister();
         this.colorTranslation = new ColorTranslation();
         this.messageSender = new MessageSender();
         this.titleSender = new TitleSender();
@@ -301,8 +297,6 @@ public class LightCore extends JavaPlugin {
     public void registerCommands() {
         PluginCommand pluginCommand = LightCore.instance.getCommand("lightcore");
         this.commands.add(new CoreReloadCommand());
-
-        new CommandManager(pluginCommand, this.commands);
     }
 
     public void reloadCore() {

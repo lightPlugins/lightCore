@@ -1,5 +1,6 @@
 package io.lightstudios.core.commands.manager;
 
+import io.lightstudios.core.LightCore;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
@@ -8,6 +9,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -39,7 +41,7 @@ public class ExpertCommandManager {
         boolean onCommand(CommandSender sender, Command command, String label, String[] args);
     }
 
-    private static class CustomCommand extends BukkitCommand implements TabCompleter {
+    private static class CustomCommand extends Command implements TabCompleter {
         private final CommandExecutor executor;
         private final TabCompleter tabCompleter;
 
@@ -56,6 +58,7 @@ public class ExpertCommandManager {
 
         @Override
         public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
+            LightCore.instance.getConsolePrinter().printInfo("onTabComplete aufgerufen mit args: " + String.join(" ", args));
             return tabCompleter.onTabComplete(sender, command, alias, args);
         }
     }
