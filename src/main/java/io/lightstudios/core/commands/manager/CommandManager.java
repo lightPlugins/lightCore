@@ -87,11 +87,14 @@ public class CommandManager implements CommandExecutor {
             @NotNull String[] args) {
 
         for (LightCommand LightCommand : getLightCommands()) {
-            if (LightCommand.getSubcommand().contains(args[0])) {
-
+            if (LightCommand.getSubcommand().isEmpty() || (args.length > 0 && LightCommand.getSubcommand().contains(args[0]))) {
                 if (sender instanceof Player player) {
                     if (player.hasPermission(LightCommand.getPermission())) {
-                        if (args.length != LightCommand.maxArgs()) {
+                        if (args.length != LightCommand.maxArgs() && !LightCommand.getSubcommand().isEmpty()) {
+                            LightCore.instance.getMessageSender().sendPlayerMessage(player, LightCore.instance.getMessages().wrongSyntax()
+                                    .replace("#syntax#", LightCommand.getSyntax()));
+                            return false;
+                        } else if(args.length > LightCommand.maxArgs()) {
                             LightCore.instance.getMessageSender().sendPlayerMessage(player, LightCore.instance.getMessages().wrongSyntax()
                                     .replace("#syntax#", LightCommand.getSyntax()));
                             return false;
