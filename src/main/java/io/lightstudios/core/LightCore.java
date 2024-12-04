@@ -14,10 +14,12 @@ import io.lightstudios.core.database.model.ConnectionProperties;
 import io.lightstudios.core.database.model.DatabaseCredentials;
 import io.lightstudios.core.database.redis.RedisManager;
 import io.lightstudios.core.economy.VaultManager;
+import io.lightstudios.core.events.ProxyTeleportEvent;
 import io.lightstudios.core.items.ItemManager;
 import io.lightstudios.core.items.events.UpdateCustomItem;
 import io.lightstudios.core.player.MessageSender;
 import io.lightstudios.core.player.TitleSender;
+import io.lightstudios.core.proxy.messaging.backend.receive.ReceiveTeleportRequest;
 import io.lightstudios.core.util.ColorTranslation;
 import io.lightstudios.core.util.ConsolePrinter;
 import io.lightstudios.core.util.LightTimers;
@@ -28,6 +30,8 @@ import io.lightstudios.core.util.files.configs.CoreSettings;
 import io.lightstudios.core.util.interfaces.LightCommand;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -35,7 +39,9 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 public class LightCore extends JavaPlugin {
@@ -62,6 +68,8 @@ public class LightCore extends JavaPlugin {
     private ItemManager itemManager;
 
     private final ArrayList<LightCommand> commands = new ArrayList<>();
+    private final HashMap<UUID, Location> teleportRequests = new HashMap<>();
+    public static final String IDENTIFIER = "lightstudio:lightcore";
 
     private SQLDatabase sqlDatabase;
     public HikariDataSource hikariDataSource;
@@ -90,6 +98,11 @@ public class LightCore extends JavaPlugin {
         initDatabase();
         // Initialize Redis connection and check if it is enabled
         enableRedisConnection();
+
+        this.getServer().getMessenger().registerOutgoingPluginChannel(
+                this, IDENTIFIER);
+        this.getServer().getMessenger().registerIncomingPluginChannel(
+                this, IDENTIFIER, new ReceiveTeleportRequest());
 
     }
 
@@ -296,12 +309,11 @@ public class LightCore extends JavaPlugin {
         // Register Events
         LightCore.instance.getConsolePrinter().printInfo("Registering Core Events ...");
         getServer().getPluginManager().registerEvents(new UpdateCustomItem(), this);
+        getServer().getPluginManager().registerEvents(new ProxyTeleportEvent(), this);
     }
 
     public void registerCommands() {
-        PluginCommand pluginCommand = LightCore.instance.getCommand("lightcore");
-        this.commands.add(new CoreReloadCommand());
-        new CommandManager(commands, "peterzwegert");
+        new CommandManager(new ArrayList<>(List.of(new CoreReloadCommand())), "core");
     }
 
     public void reloadCore() {

@@ -17,4 +17,5 @@ public class CoreSettings {
     public String redisHost() { return config.getString("server-synchronisation.redis.host"); }
     public int redisPort() { return config.getInt("server-synchronisation.redis.port"); }
     public String redisPassword() { return config.getString("server-synchronisation.redis.password"); }
+    public String serverName() { return config.getString("server-synchronisation.server-name"); }
 }

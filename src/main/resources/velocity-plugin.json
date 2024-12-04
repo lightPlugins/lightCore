@@ -1,0 +1,13 @@
+{
+  "id": "lightcore",
+  "name": "LightCore",
+  "version": "0.1.7",
+  "authors": ["LightStudios"],
+  "main": "io.lightstudios.core.LightCoreProxy",
+  "dependencies": [
+    {
+      "id": "velocity",
+      "optional": false
+    }
+  ]
+}

@@ -27,4 +27,18 @@ public class ProxyConsolePrinter {
         System.out.println(ansiMessage);
     }
 
+    public void printSending(String message) {
+        String prefix = "[light<yellow>Core<reset>] <gray>[<white>SEND<gray>] <reset>";
+        Component formattedMessage = MiniMessage.miniMessage().deserialize(prefix + message);
+        String ansiMessage = ANSIComponentSerializer.ansi().serialize(formattedMessage);
+        System.out.println(ansiMessage);
+    }
+
+    public void printReceiving(String message) {
+        String prefix = "[light<#ffdc73>Core<reset>] <gray>[<white>RECEIVE<gray>] <reset>";
+        Component formattedMessage = MiniMessage.miniMessage().deserialize(prefix + message);
+        String ansiMessage = ANSIComponentSerializer.ansi().serialize(formattedMessage);
+        System.out.println(ansiMessage);
+    }
+
 }

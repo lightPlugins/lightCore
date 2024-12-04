@@ -1,5 +1,6 @@
 package io.lightstudios.core;
 
+import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
@@ -7,6 +8,7 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
+import io.lightstudios.core.proxy.messaging.proxy.receive.ReceiveBackendTeleportRequest;
 import io.lightstudios.core.util.ProxyConsolePrinter;
 import lombok.Getter;
 
@@ -17,25 +19,28 @@ import java.nio.file.Path;
         url = "https://example.org", description = "Core Plugin of LightStudios", authors = {"LightStudios"})
 public class LightCoreProxy {
 
+    public static final MinecraftChannelIdentifier IDENTIFIER =
+            MinecraftChannelIdentifier.from("lightstudio:lightcore");
+
     private final ProxyServer server;
     private final Path dataDirectory;
 
     public static LightCoreProxy instance;
     private final ProxyConsolePrinter consolePrinter;
 
-    public static final MinecraftChannelIdentifier IDENTIFIER =
-            MinecraftChannelIdentifier.from("lightcore:lightstudios");
-
+    @Inject
     public LightCoreProxy(ProxyServer server, @DataDirectory Path dataDirectory) {
         this.server = server;
         this.dataDirectory = dataDirectory;
-        this.instance = this;
+        instance = this;
         this.consolePrinter = new ProxyConsolePrinter();
+        consolePrinter.sendInfo("Starting LightCore plugin on Velocity...");
     }
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        consolePrinter.sendInfo("Registering LightCore plugin on Velocity...");
+        consolePrinter.sendInfo("Registering LightCore plugin on Velocity successfully!");
+        registerChannelRegistrars();
     }
 
     @Subscribe
@@ -45,8 +50,9 @@ public class LightCoreProxy {
     }
 
     public void registerChannelRegistrars() {
-        server.getChannelRegistrar().register(MinecraftChannelIdentifier.create("lightcore", "teleport"));
-
+        server.getChannelRegistrar().register(IDENTIFIER);
+        server.getEventManager().register(this, new ReceiveBackendTeleportRequest());
+        consolePrinter.sendInfo("Registering Channel Registrars for LightCore plugin on Velocity...");
     }
 
 
