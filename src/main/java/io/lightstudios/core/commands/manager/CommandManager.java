@@ -86,30 +86,28 @@ public class CommandManager implements CommandExecutor {
             @NotNull String label,
             @NotNull String[] args) {
 
-        if (args.length > 0) {
-            for (LightCommand LightCommand : getLightCommands()) {
-                if (LightCommand.getSubcommand().contains(args[0])) {
+        for (LightCommand LightCommand : getLightCommands()) {
+            if (LightCommand.getSubcommand().contains(args[0])) {
 
-                    if (sender instanceof Player player) {
-                        if (player.hasPermission(LightCommand.getPermission())) {
-                            if (args.length != LightCommand.maxArgs()) {
-                                LightCore.instance.getMessageSender().sendPlayerMessage(player, LightCore.instance.getMessages().wrongSyntax()
-                                        .replace("#syntax#", LightCommand.getSyntax()));
-                                return false;
-                            }
-                            LightCommand.performAsPlayer(player, args);
-                            return true;
-                        } else {
-                            LightCore.instance.getMessageSender().sendPlayerMessage(player, LightCore.instance.getMessages().noPermission()
-                                    .replace("#permission#", LightCommand.getSyntax()));
+                if (sender instanceof Player player) {
+                    if (player.hasPermission(LightCommand.getPermission())) {
+                        if (args.length != LightCommand.maxArgs()) {
+                            LightCore.instance.getMessageSender().sendPlayerMessage(player, LightCore.instance.getMessages().wrongSyntax()
+                                    .replace("#syntax#", LightCommand.getSyntax()));
                             return false;
                         }
-                    }
-
-                    if (sender instanceof ConsoleCommandSender console) {
-                        LightCommand.performAsConsole(console, args);
+                        LightCommand.performAsPlayer(player, args);
                         return true;
+                    } else {
+                        LightCore.instance.getMessageSender().sendPlayerMessage(player, LightCore.instance.getMessages().noPermission()
+                                .replace("#permission#", LightCommand.getSyntax()));
+                        return false;
                     }
+                }
+
+                if (sender instanceof ConsoleCommandSender console) {
+                    LightCommand.performAsConsole(console, args);
+                    return true;
                 }
             }
         }

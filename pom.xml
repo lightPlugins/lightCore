@@ -5,7 +5,7 @@
 
     <groupId>io.lightstudios.core</groupId>
     <artifactId>lightCore</artifactId>
-    <version>0.1.5</version>
+    <version>0.1.6</version>
 
     <organization>
         <name>lightPlugins</name>
@@ -66,12 +66,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>2.0.16</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
             <version>3.5.0</version>
@@ -116,14 +110,12 @@
             <groupId>net.kyori</groupId>
             <artifactId>adventure-api</artifactId>
             <version>4.17.0</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-text-minimessage</artifactId>
             <version>4.17.0</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -136,7 +128,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.34</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 
