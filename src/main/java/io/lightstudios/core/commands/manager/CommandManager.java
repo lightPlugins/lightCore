@@ -30,7 +30,7 @@ public class CommandManager implements CommandExecutor {
         PluginCommand command = createPluginCommand(name);
         if (command != null) {
             command.setExecutor(this);
-            Map<String, TabCompleter> LightCommandTabCompleter = new HashMap<>();
+            Map<String, TabCompleter> lightCommandTabCompleter = new HashMap<>();
             List<String> ecoLightCommands = new ArrayList<>(); // List of LightCommands for /eco
 
             LightCore.instance.getConsolePrinter().printInfo("Successfully registered command " + command.getName());
@@ -38,17 +38,22 @@ public class CommandManager implements CommandExecutor {
             for (LightCommand LightCommand : getLightCommands()) {
                 TabCompleter tabCompleter = LightCommand.registerTabCompleter();
                 if (tabCompleter != null) {
-                    List<String> LightCommandNames = LightCommand.getSubcommand();
-                    for (String LightCommandName : LightCommandNames) {
-                        LightCommandTabCompleter.put(LightCommandName, tabCompleter);
-                        ecoLightCommands.add(LightCommandName);
-                        LightCore.instance.getConsolePrinter().printDebug("Successfully registered tab completer for " + LightCommandName);
+                    List<String> lightCommandNames = LightCommand.getSubcommand();
+
+                    if(lightCommandNames.isEmpty()) {
+                        command.setTabCompleter(tabCompleter);
+                        continue;
+                    }
+                    for (String lightCommandName : lightCommandNames) {
+                        lightCommandTabCompleter.put(lightCommandName, tabCompleter);
+                        ecoLightCommands.add(lightCommandName);
+                        LightCore.instance.getConsolePrinter().printDebug("Successfully registered tab completer for " + lightCommandName);
                     }
                 }
             }
 
-            if (!LightCommandTabCompleter.isEmpty()) {
-                command.setTabCompleter(new CompositeTabCompleter(LightCommandTabCompleter, ecoLightCommands));
+            if (!lightCommandTabCompleter.isEmpty()) {
+                command.setTabCompleter(new CompositeTabCompleter(lightCommandTabCompleter, ecoLightCommands));
             }
 
             // Register the command with the server
