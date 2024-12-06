@@ -25,6 +25,14 @@ public class LightNumbers {
         return formatter.format(number);
     }
 
+    public static String formatForMessages(BigDecimal number, int decimalPlaces) {
+        Locale locale = Locale.getDefault();
+        NumberFormat formatter = NumberFormat.getInstance(locale);
+        formatter.setMaximumFractionDigits(decimalPlaces);
+        number = number.setScale(decimalPlaces, RoundingMode.HALF_UP);
+        return formatter.format(number);
+    }
+
     public static boolean isNumber(String s) {
         try {
             Double.parseDouble(s);
