@@ -1,4 +1,4 @@
-package io.lightstudios.core.inventory.actions;
+package io.lightstudios.core.actions.types;
 
 import io.lightstudios.core.util.interfaces.LightAction;
 import org.bukkit.Material;

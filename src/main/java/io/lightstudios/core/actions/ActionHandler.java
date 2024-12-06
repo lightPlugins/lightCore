@@ -1,12 +1,10 @@
-package io.lightstudios.core.inventory.handler;
+package io.lightstudios.core.actions;
 
-import io.lightstudios.core.inventory.actions.MessageAction;
+import io.lightstudios.core.actions.types.*;
 import io.lightstudios.core.util.interfaces.LightAction;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,6 +32,14 @@ public class ActionHandler {
 
     private static void initializeActions() {
         actions.put("send-message", new MessageAction());
+        actions.put("player-command", new PlayerCmdAction());
+        actions.put("console-command", new ConsoleCmdAction());
+        actions.put("give-item", new GiveItemAction());
+        actions.put("inventory-close", new InvCloseAction());
+        actions.put("title", new TitleAction());
+        actions.put("actionbar", new ActionBarAction());
+        actions.put("bossbar", new BossBarAction());
+        actions.put("play-sound", new PlaySoundAction());
     }
 
     public String[] getActions() {
@@ -51,5 +57,4 @@ public class ActionHandler {
             lightAction.execute(player, actionDataArray);
         }
     }
-
 }

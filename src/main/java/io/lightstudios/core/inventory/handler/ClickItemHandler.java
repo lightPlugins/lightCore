@@ -2,6 +2,7 @@ package io.lightstudios.core.inventory.handler;
 
 import com.github.stefvanschie.inventoryframework.pane.util.Slot;
 import io.lightstudios.core.LightCore;
+import io.lightstudios.core.actions.ActionHandler;
 import io.lightstudios.core.util.LightNumbers;
 import io.lightstudios.core.util.SkullUtil;
 import lombok.Getter;
