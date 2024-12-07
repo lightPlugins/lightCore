@@ -16,11 +16,16 @@ language: en
 #        - Default Docker Network Host: 172.18.0.1
 #        - Default Port: 6379
 server-synchronisation:
+  # How should we synchronise the data between the servers?
+  # - proxy -> Use the Velocity Proxy Messaging System
+  # - redis -> Use a Redis Server (pub/sub channels) (RECOMMENDED)
+  type: proxy
   # The Server name defined in your velocity.toml -> Case Sensitive !!!
   server-name: "ServerName"
   redis:
-    # only enable this if you have a redis server running,
-    # and you want to use the server synchronisation system.
+    # Only enable this if you have a redis server running,
+    # and you want to use the server synchronisation system without the velocity proxy messaging system.
+    # If you enable this, the velocity proxy messaging system will be disabled automatically.
     enable: false
     # The host of the redis server.
     host: localhost
