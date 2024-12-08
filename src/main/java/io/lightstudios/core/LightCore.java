@@ -292,7 +292,7 @@ public class LightCore extends JavaPlugin {
         }
 
 
-        Bukkit.getConsoleSender().sendMessage("          LightCore: §ev0.1.0");
+        Bukkit.getConsoleSender().sendMessage("          LightCore: §ev0.1.10");
         Bukkit.getConsoleSender().sendMessage("          Server: §e" + Bukkit.getServer().getVersion());
         Bukkit.getConsoleSender().sendMessage("          API-Version: §e" + getDescription().getAPIVersion());
         Bukkit.getConsoleSender().sendMessage("          Dependency Versions: §e");
