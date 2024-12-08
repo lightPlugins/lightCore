@@ -1,11 +1,16 @@
 package io.lightstudios.core.hooks.towny;
 
+import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.TownyEconomyHandler;
 import com.palmergames.bukkit.towny.TownyUniverse;
 
 import java.util.UUID;
 
 public class TownyInterface {
+
+    public String getVersion() {
+        return Towny.getPlugin().getVersion();
+    }
 
     public UUID getTownyObjectUUID(String account) {
         return TownyEconomyHandler.getTownyObjectUUID(account);
