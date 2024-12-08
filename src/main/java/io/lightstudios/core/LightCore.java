@@ -1,7 +1,5 @@
 package io.lightstudios.core;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
 import com.zaxxer.hikari.HikariDataSource;
 import de.tr7zw.changeme.nbtapi.NBT;
 import io.lightstudios.core.commands.CoreReloadCommand;
@@ -12,7 +10,7 @@ import io.lightstudios.core.database.impl.MySQLDatabase;
 import io.lightstudios.core.database.impl.SQLiteDatabase;
 import io.lightstudios.core.database.model.ConnectionProperties;
 import io.lightstudios.core.database.model.DatabaseCredentials;
-import io.lightstudios.core.database.redis.RedisManager;
+import io.lightstudios.core.redis.RedisManager;
 import io.lightstudios.core.economy.VaultManager;
 import io.lightstudios.core.events.ProxyTeleportEvent;
 import io.lightstudios.core.hooks.HookManager;
@@ -32,10 +30,6 @@ import io.lightstudios.core.util.interfaces.LightCommand;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 

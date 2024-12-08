@@ -1,4 +1,4 @@
-package io.lightstudios.core.database.redis.channels;
+package io.lightstudios.core.redis.channels;
 
 public enum RedisChannels {
 

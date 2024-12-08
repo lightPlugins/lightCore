@@ -1,4 +1,4 @@
-package io.lightstudios.core.database.redis.messaging;
+package io.lightstudios.core.redis.messaging;
 
 import io.lightstudios.core.util.interfaces.LightRedisSub;
 import redis.clients.jedis.JedisPooled;

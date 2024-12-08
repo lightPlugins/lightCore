@@ -1,4 +1,4 @@
-package io.lightstudios.core.database.redis;
+package io.lightstudios.core.redis;
 
 import io.lightstudios.core.LightCore;
 import lombok.Getter;
