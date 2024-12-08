@@ -15,6 +15,7 @@ import io.lightstudios.core.database.model.DatabaseCredentials;
 import io.lightstudios.core.database.redis.RedisManager;
 import io.lightstudios.core.economy.VaultManager;
 import io.lightstudios.core.events.ProxyTeleportEvent;
+import io.lightstudios.core.hooks.HookManager;
 import io.lightstudios.core.items.ItemManager;
 import io.lightstudios.core.items.events.UpdateCustomItem;
 import io.lightstudios.core.player.MessageSender;
@@ -54,9 +55,9 @@ public class LightCore extends JavaPlugin {
     private ColorTranslation colorTranslation;
     private MessageSender messageSender;
     private TitleSender titleSender;
-    private ProtocolManager protocolManager;
     private VaultManager vaultManager;
     private RedisManager redisManager;
+    private HookManager hookManager;
 
     private FileManager coreFile;
     private FileManager messageFile;
@@ -77,9 +78,9 @@ public class LightCore extends JavaPlugin {
     @Override
     public void onLoad() {
         instance = this;
-        this.protocolManager = ProtocolLibrary.getProtocolManager();
-
         printLogo();
+
+        this.hookManager = new HookManager();
 
         // Initialize LightTimers instance
         this.lightTimers = new LightTimers(this);
