@@ -56,7 +56,7 @@ public abstract class SQLDatabase {
                 future.complete(affectedLines);
             } catch (SQLException e) {
                 e.printStackTrace();
-                throw new RuntimeException("[LightCore] Could not execute SQL statement", e);
+                future.completeExceptionally(e);
             }
         });
         return future;
@@ -85,7 +85,7 @@ public abstract class SQLDatabase {
                 future.complete(results);
             } catch (SQLException e) {
                 e.printStackTrace();
-                future.completeExceptionally(new RuntimeException("[LightCore] Could not execute SQL query", e));
+                future.completeExceptionally(e);
             }
         });
         return future;
