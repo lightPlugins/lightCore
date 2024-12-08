@@ -55,6 +55,7 @@ public abstract class SQLDatabase {
                 int affectedLines = statement.executeUpdate();
                 future.complete(affectedLines);
             } catch (SQLException e) {
+                e.printStackTrace();
                 throw new RuntimeException("[LightCore] Could not execute SQL statement", e);
             }
         });
@@ -83,6 +84,7 @@ public abstract class SQLDatabase {
                 }
                 future.complete(results);
             } catch (SQLException e) {
+                e.printStackTrace();
                 future.completeExceptionally(new RuntimeException("[LightCore] Could not execute SQL query", e));
             }
         });
@@ -110,6 +112,7 @@ public abstract class SQLDatabase {
                 }
                 future.complete(results);
             } catch (SQLException e) {
+                e.printStackTrace();
                 future.completeExceptionally(new RuntimeException("[LightCore] Could not execute SQL query", e));
             }
         });
@@ -131,6 +134,7 @@ public abstract class SQLDatabase {
 
             return statement;
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException("[LightCore] Could not prepare/read SQL statement:" + sql, e);
         }
     }
@@ -148,6 +152,7 @@ public abstract class SQLDatabase {
                 try {
                     statement.setObject(position, value);
                 } catch (SQLException e) {
+                    e.printStackTrace();
                     throw new RuntimeException("Unable to set query parameter at position " + position + " to " +
                             value + " for query: " + statement, e);
                 }
