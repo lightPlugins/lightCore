@@ -10,6 +10,7 @@ import io.lightstudios.core.database.impl.MySQLDatabase;
 import io.lightstudios.core.database.impl.SQLiteDatabase;
 import io.lightstudios.core.database.model.ConnectionProperties;
 import io.lightstudios.core.database.model.DatabaseCredentials;
+import io.lightstudios.core.placeholder.PlaceholderRegistrar;
 import io.lightstudios.core.redis.RedisManager;
 import io.lightstudios.core.economy.VaultManager;
 import io.lightstudios.core.events.ProxyTeleportEvent;
