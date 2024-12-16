@@ -91,36 +91,38 @@ public class CommandManager implements CommandExecutor {
             @NotNull String label,
             @NotNull String[] args) {
 
-        for (LightCommand LightCommand : getLightCommands()) {
-            if (LightCommand.getSubcommand().isEmpty() || (args.length > 0 && LightCommand.getSubcommand().contains(args[0]))) {
+        for (LightCommand lightCommand : getLightCommands()) {
+            if (lightCommand.getSubcommand().isEmpty() || (args.length > 0 && lightCommand.getSubcommand().contains(args[0])) || (args.length == 0 && lightCommand.maxArgs() == -1)) {
                 if (sender instanceof Player player) {
-                    if (player.hasPermission(LightCommand.getPermission())) {
 
-                        if(LightCommand.maxArgs() == -1) {
-                            LightCommand.performAsPlayer(player, args);
-                            return true;
-                        }
+                    // check without permission if maxArgs is -1
+                    if(lightCommand.maxArgs() == -1) {
+                        lightCommand.performAsPlayer(player, args);
+                        return true;
+                    }
 
-                        if (args.length != LightCommand.maxArgs() && !LightCommand.getSubcommand().isEmpty()) {
+                    if (player.hasPermission(lightCommand.getPermission())) {
+
+                        if (args.length != lightCommand.maxArgs() && !lightCommand.getSubcommand().isEmpty()) {
                             LightCore.instance.getMessageSender().sendPlayerMessage(player, LightCore.instance.getMessages().wrongSyntax()
-                                    .replace("#syntax#", LightCommand.getSyntax()));
+                                    .replace("#syntax#", lightCommand.getSyntax()));
                             return false;
-                        } else if(args.length > LightCommand.maxArgs() && !LightCommand.getSubcommand().isEmpty()) {
+                        } else if(args.length > lightCommand.maxArgs() && !lightCommand.getSubcommand().isEmpty()) {
                             LightCore.instance.getMessageSender().sendPlayerMessage(player, LightCore.instance.getMessages().wrongSyntax()
-                                    .replace("#syntax#", LightCommand.getSyntax()));
+                                    .replace("#syntax#", lightCommand.getSyntax()));
                             return false;
                         }
-                        LightCommand.performAsPlayer(player, args);
+                        lightCommand.performAsPlayer(player, args);
                         return true;
                     } else {
                         LightCore.instance.getMessageSender().sendPlayerMessage(player, LightCore.instance.getMessages().noPermission()
-                                .replace("#permission#", LightCommand.getSyntax()));
+                                .replace("#permission#", lightCommand.getSyntax()));
                         return false;
                     }
                 }
 
                 if (sender instanceof ConsoleCommandSender console) {
-                    LightCommand.performAsConsole(console, args);
+                    lightCommand.performAsConsole(console, args);
                     return true;
                 }
             }

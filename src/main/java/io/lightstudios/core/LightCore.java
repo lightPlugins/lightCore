@@ -43,6 +43,8 @@ public class LightCore extends JavaPlugin {
 
     public static LightCore instance;
     public boolean lightCoreEnabled;
+    public boolean isVelocity;
+    public boolean isRedis;
 
     private LightTimers lightTimers;
     private ConsolePrinter consolePrinter;
