@@ -11,7 +11,7 @@ public class SendProxyKickRequest {
     public static void sendProxyPing(Player player, String kickMessage) {
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF(SubChannels.CHECK_PROXY_REQUEST.getId());
+        out.writeUTF(SubChannels.KICK_REQUEST.getId());
         out.writeUTF(player.getUniqueId().toString());
         out.writeUTF(LightCore.instance.getColorTranslation().adventureTranslator(kickMessage, player));
 
