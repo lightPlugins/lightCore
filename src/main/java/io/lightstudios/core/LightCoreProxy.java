@@ -8,6 +8,7 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
+import io.lightstudios.core.proxy.messaging.proxy.receive.ReceiveBackendKickRequest;
 import io.lightstudios.core.proxy.messaging.proxy.receive.ReceiveBackendTeleportRequest;
 import io.lightstudios.core.util.ProxyConsolePrinter;
 import lombok.Getter;
@@ -52,6 +53,7 @@ public class LightCoreProxy {
     public void registerChannelRegistrars() {
         server.getChannelRegistrar().register(IDENTIFIER);
         server.getEventManager().register(this, new ReceiveBackendTeleportRequest());
+        server.getEventManager().register(this, new ReceiveBackendKickRequest());
         consolePrinter.sendInfo("Registering Channel Registrars for LightCore plugin on Velocity...");
     }
 

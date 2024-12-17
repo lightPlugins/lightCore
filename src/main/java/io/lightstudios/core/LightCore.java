@@ -10,7 +10,7 @@ import io.lightstudios.core.database.impl.MySQLDatabase;
 import io.lightstudios.core.database.impl.SQLiteDatabase;
 import io.lightstudios.core.database.model.ConnectionProperties;
 import io.lightstudios.core.database.model.DatabaseCredentials;
-import io.lightstudios.core.placeholder.PlaceholderRegistrar;
+import io.lightstudios.core.player.PlayerPunishment;
 import io.lightstudios.core.redis.RedisManager;
 import io.lightstudios.core.economy.VaultManager;
 import io.lightstudios.core.events.ProxyTeleportEvent;
@@ -52,6 +52,7 @@ public class LightCore extends JavaPlugin {
     private ColorTranslation colorTranslation;
     private MessageSender messageSender;
     private TitleSender titleSender;
+    private PlayerPunishment playerPunishment;
     private VaultManager vaultManager;
     private RedisManager redisManager;
     private HookManager hookManager;
@@ -86,6 +87,7 @@ public class LightCore extends JavaPlugin {
         this.colorTranslation = new ColorTranslation();
         this.messageSender = new MessageSender();
         this.titleSender = new TitleSender();
+        this.playerPunishment = new PlayerPunishment();
 
         this.consolePrinter.printInfo("Generate core files ...");
         // Generate core files
