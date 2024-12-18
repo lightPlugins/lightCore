@@ -17,7 +17,7 @@ public class TownyInterface {
     }
 
     public boolean isTownyUUID(UUID uuid) {
-        // Towny's closed economy server account.
+        // Towny's economy server account.
         if (uuid.equals(UUID.fromString("a73f39b0-1b7c-4930-b4a3-ce101812d926"))) {
             return true;
         }

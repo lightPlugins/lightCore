@@ -78,11 +78,11 @@ public class LightCore extends JavaPlugin {
         instance = this;
         printLogo();
 
-        this.hookManager = new HookManager();
-
         // Initialize LightTimers instance
         this.lightTimers = new LightTimers(this);
         this.consolePrinter = new ConsolePrinter("§7[§rLight§eCore§7] §r");
+
+        this.hookManager = new HookManager();
 
         this.colorTranslation = new ColorTranslation();
         this.messageSender = new MessageSender();
