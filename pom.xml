@@ -5,7 +5,7 @@
 
     <groupId>io.lightstudios.core</groupId>
     <artifactId>lightCore</artifactId>
-    <version>0.2.3</version>
+    <version>0.2.4</version>
 
     <organization>
         <name>lightPlugins</name>
@@ -149,6 +149,14 @@
             <artifactId>lombok</artifactId>
             <version>1.18.34</version>
         </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.4.12</version>
+        </dependency>
+
+
     </dependencies>
 
 

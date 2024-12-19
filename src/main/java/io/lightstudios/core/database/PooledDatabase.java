@@ -5,6 +5,7 @@ import io.lightstudios.core.LightCore;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class PooledDatabase extends SQLDatabase {
@@ -28,6 +29,11 @@ public abstract class PooledDatabase extends SQLDatabase {
         try {
             return this.hikari.getConnection();
         } catch (SQLException e) {
+            LightCore.instance.getConsolePrinter().printError(List.of(
+                    "Failed to get connection from HikariCP",
+                    "Error: " + e.getMessage()
+            ));
+            e.printStackTrace();
             throw new RuntimeException("[LightCore] Failed to get connection from HikariCP", e);
         }
     }

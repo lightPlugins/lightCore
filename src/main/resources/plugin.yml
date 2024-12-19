@@ -2,7 +2,7 @@ name: lightCore
 author: LightStudios
 authors:
   - LightStudios
-version: '0.2.3'
+version: '0.2.4'
 main: io.lightstudios.core.LightCore
 api-version: 1.21
 depend: ["ProtocolLib", "PlaceholderAPI"]
