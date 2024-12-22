@@ -28,7 +28,6 @@ public abstract class PooledDatabase extends SQLDatabase {
     @Override
     public Connection getConnection() {
         try {
-            LightCore.instance.getConsolePrinter().printError("Get connection from LightCore...");
             return this.hikari.getConnection();
         } catch (SQLException e) {
             LightCore.instance.getConsolePrinter().printError(List.of(
