@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import de.tr7zw.changeme.nbtapi.NBT;
 import io.lightstudios.core.commands.CoreReloadCommand;
 import io.lightstudios.core.commands.manager.CommandManager;
+import io.lightstudios.core.commands.tabcomplete.HologramCommand;
 import io.lightstudios.core.database.SQLDatabase;
 import io.lightstudios.core.database.impl.MariaDatabase;
 import io.lightstudios.core.database.impl.MySQLDatabase;
@@ -314,7 +315,10 @@ public class LightCore extends JavaPlugin {
     }
 
     public void registerCommands() {
-        new CommandManager(new ArrayList<>(List.of(new CoreReloadCommand())), "core");
+        new CommandManager(new ArrayList<>(List.of(
+                new CoreReloadCommand(),
+                new HologramCommand()
+        )), "core");
     }
 
     public void reloadCore() {

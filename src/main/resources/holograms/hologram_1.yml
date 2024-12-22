@@ -1,0 +1,18 @@
+lines:
+  - '<red>Hello, world!'
+  - 'This is a hologram!'
+  - '<rainbow>It is very cool!'
+settings:
+  spaceBetweenLines: 0.25
+  alignment: CENTER
+  background: GREEN
+  shadow: true
+data:
+  location:
+    ==: org.bukkit.Location
+    world: example_world
+    x: 123.45
+    y: 64.0
+    z: 789.01
+    pitch: 0.0
+    yaw: 0.0
