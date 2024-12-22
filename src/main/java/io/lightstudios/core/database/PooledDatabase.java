@@ -19,6 +19,7 @@ public abstract class PooledDatabase extends SQLDatabase {
 
     @Override
     public void close() {
+        LightCore.instance.getConsolePrinter().printError("Attempting to close HikariCP connection pool...");
         if (this.hikari != null) {
             this.hikari.close();
         }
@@ -27,6 +28,7 @@ public abstract class PooledDatabase extends SQLDatabase {
     @Override
     public Connection getConnection() {
         try {
+            LightCore.instance.getConsolePrinter().printError("Get connection from LightCore...");
             return this.hikari.getConnection();
         } catch (SQLException e) {
             LightCore.instance.getConsolePrinter().printError(List.of(
@@ -34,7 +36,7 @@ public abstract class PooledDatabase extends SQLDatabase {
                     "Error: " + e.getMessage()
             ));
             e.printStackTrace();
-            throw new RuntimeException("[LightCore] Failed to get connection from HikariCP", e);
+            return null;
         }
     }
 }
