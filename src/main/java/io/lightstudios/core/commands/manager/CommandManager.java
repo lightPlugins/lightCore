@@ -73,8 +73,6 @@ public class CommandManager implements CommandExecutor {
                     for (String lightCommandName : lightCommandNames) {
                         lightCommandTabCompleter.put(lightCommandName, tabCompleter);
                         ecoLightCommands.add(lightCommandName);
-                        LightCore.instance.getConsolePrinter().printDebug("Successfully registered tab completer for " + lightCommandName);
-                        this.commandName = lightCommandName;
                     }
                 }
             }
@@ -93,6 +91,7 @@ public class CommandManager implements CommandExecutor {
                 // commandMap.register(name, command); /lightcore:lightcore reload
                 // commandMap.register("", command); /lightcore reload
                 commandMap.register("", command);
+                this.commandName = name;
             } catch (Exception e) {
                 throw new RuntimeException(new Exception("Could not register command " + name, e));
             }

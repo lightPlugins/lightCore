@@ -11,13 +11,13 @@ import io.lightstudios.core.database.impl.MySQLDatabase;
 import io.lightstudios.core.database.impl.SQLiteDatabase;
 import io.lightstudios.core.database.model.ConnectionProperties;
 import io.lightstudios.core.database.model.DatabaseCredentials;
+import io.lightstudios.core.placeholder.PlaceholderRegistrar;
 import io.lightstudios.core.player.PlayerPunishment;
 import io.lightstudios.core.redis.RedisManager;
 import io.lightstudios.core.economy.VaultManager;
 import io.lightstudios.core.events.ProxyTeleportEvent;
 import io.lightstudios.core.hooks.HookManager;
 import io.lightstudios.core.items.ItemManager;
-import io.lightstudios.core.items.events.UpdateCustomItem;
 import io.lightstudios.core.player.MessageSender;
 import io.lightstudios.core.player.TitleSender;
 import io.lightstudios.core.proxy.messaging.backend.receive.ReceiveTeleportRequest;
@@ -34,7 +34,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -278,11 +277,14 @@ public class LightCore extends JavaPlugin {
             Bukkit.getConsoleSender().sendMessage(line);
         }
 
-        String protocolLibVersion = "not found";
-        String placeholderAPIVersion = "not found";
+        String protocolLibVersion = "$&cnot found";
+        String placeholderAPIVersion = "&cnot found";
+        String townyVersion = "&cnot found";
 
         Plugin placeholderAPI = Bukkit.getServer().getPluginManager().getPlugin("PlaceholderAPI");
         Plugin protocolLib = Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib");
+        Plugin towny = Bukkit.getServer().getPluginManager().getPlugin("Towny");
+
 
         if(placeholderAPI != null) {
             placeholderAPIVersion = placeholderAPI.getDescription().getVersion();
@@ -292,13 +294,18 @@ public class LightCore extends JavaPlugin {
             protocolLibVersion = protocolLib.getDescription().getVersion();
         }
 
+        if(towny != null) {
+            townyVersion = towny.getDescription().getVersion();
+        }
 
-        Bukkit.getConsoleSender().sendMessage("          LightCore: §ev0.1.10");
+
+        Bukkit.getConsoleSender().sendMessage("          LightCore: §ev0.2.5");
         Bukkit.getConsoleSender().sendMessage("          Server: §e" + Bukkit.getServer().getVersion());
         Bukkit.getConsoleSender().sendMessage("          API-Version: §e" + getDescription().getAPIVersion());
-        Bukkit.getConsoleSender().sendMessage("          Dependency Versions: §e");
+        Bukkit.getConsoleSender().sendMessage("          Soft-Dependency Versions: §e");
         Bukkit.getConsoleSender().sendMessage("           - PlaceholderAPI: §e" + placeholderAPIVersion);
         Bukkit.getConsoleSender().sendMessage("           - ProtocolLib: §e" + protocolLibVersion);
+        Bukkit.getConsoleSender().sendMessage("           - Towny: §e" + townyVersion);
         Bukkit.getConsoleSender().sendMessage("          Java: §e" + System.getProperty("java.version"));
         Bukkit.getConsoleSender().sendMessage("          Authors: §e" + getDescription().getAuthors() + "\n");
         Bukkit.getConsoleSender().sendMessage("          If you need help, please visit our §eDiscord §7server.");
@@ -310,8 +317,9 @@ public class LightCore extends JavaPlugin {
     private void registerEvents() {
         // Register Events
         LightCore.instance.getConsolePrinter().printInfo("Registering Core Events ...");
-        getServer().getPluginManager().registerEvents(new UpdateCustomItem(), this);
+        // getServer().getPluginManager().registerEvents(new UpdateCustomItem(), this);
         getServer().getPluginManager().registerEvents(new ProxyTeleportEvent(), this);
+        new PlaceholderRegistrar("lightcore", "lightStudios", "1.0", true, new ArrayList<>()).register();
     }
 
     public void registerCommands() {
@@ -339,9 +347,7 @@ public class LightCore extends JavaPlugin {
         }
         getConsolePrinter().printInfo(List.of(
                 "Redis is not enabled in config.",
-                "If you want to use Redis for server synchronisation,",
-                "please enable it in the config file.",
-                "Make sure to provide the correct credentials for the Redis server.")
-        );
+                "If you want to use Redis for some server synchronisation,",
+                "please enable it in the config file."));
     }
 }

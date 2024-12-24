@@ -46,7 +46,10 @@ public class MultiFileManager {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 if (file.toString().endsWith(".yml")) {
-                    yamlFiles.add(file.toFile());
+                    String fileName = file.getFileName().toString();
+                    if (!fileName.equalsIgnoreCase("_example.yml")) {
+                        yamlFiles.add(file.toFile());
+                    }
                 }
                 return FileVisitResult.CONTINUE;
             }

@@ -1,5 +1,6 @@
 package io.lightstudios.core.placeholder;
 
+import io.lightstudios.core.LightCore;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
@@ -27,6 +28,7 @@ public class PlaceholderRegistrar extends PlaceholderExpansion {
         this.version = version;
         this.persist = persist;
         this.lightPlaceholder = lightPlaceholder;
+        register();
     }
 
     @Override
@@ -51,11 +53,12 @@ public class PlaceholderRegistrar extends PlaceholderExpansion {
 
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String params) {
-
         for (LightPlaceholder placeholder : lightPlaceholder) {
-            return placeholder.onRequest(player, params);
+            String response = placeholder.onRequest(player, params);
+            if (response != null) {
+                return response;
+            }
         }
-
         return null;
     }
 }

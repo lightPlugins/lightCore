@@ -27,7 +27,7 @@ public class VaultManager {
             return null;
         }
 
-        LightCore.instance.getConsolePrinter().printInfo("Hooked into " + rsp.getProvider().getName() + " economy plugin.");
+        LightCore.instance.getConsolePrinter().printInfo("Hooked into §e" + rsp.getProvider().getName() + "§r economy plugin.");
         return rsp.getProvider();
     }
 

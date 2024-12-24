@@ -20,6 +20,10 @@ public class HookManager {
     public HookManager () {
         // check if Towny is installed
         checkTowny();
+        // check if ProtocolLib is installed
+        checkProtocolLib();
+        // check if PlaceholderAPI is installed
+        checkPlaceholderAPI();
     }
 
     private void checkTowny() {

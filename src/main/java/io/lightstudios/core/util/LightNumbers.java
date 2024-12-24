@@ -29,6 +29,8 @@ public class LightNumbers {
         Locale locale = Locale.getDefault();
         NumberFormat formatter = NumberFormat.getInstance(locale);
         formatter.setMaximumFractionDigits(decimalPlaces);
+        formatter.setMinimumFractionDigits(decimalPlaces);
+        formatter.setGroupingUsed(true);
         number = number.setScale(decimalPlaces, RoundingMode.HALF_UP);
         return formatter.format(number);
     }

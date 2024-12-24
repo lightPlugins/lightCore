@@ -187,7 +187,6 @@ public abstract class SQLDatabase {
                         plugin.getConsolePrinter().printError(List.of("Failed to reconnect to the database.",
                                 "Please check your database configuration or contact the server administrator."));
                     }
-
                 }
             } catch (SQLException e) {
                 plugin.getConsolePrinter().printError(List.of(
@@ -202,7 +201,7 @@ public abstract class SQLDatabase {
                     throw new RuntimeException("Failed to reconnect to the database.", e);
                 }
             }
-        }, 1, 1, TimeUnit.MINUTES); // Adjust the interval as needed
+        }, 5, 30, TimeUnit.MINUTES); // Adjust the interval as needed
     }
 
 }
