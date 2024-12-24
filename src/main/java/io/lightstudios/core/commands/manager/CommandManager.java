@@ -16,6 +16,7 @@ import java.util.*;
 public class CommandManager implements CommandExecutor {
 
     private final ArrayList<LightCommand> LightCommands;
+    private String commandName;
 
     private ArrayList<LightCommand> getLightCommands() {
         return LightCommands;
@@ -24,6 +25,31 @@ public class CommandManager implements CommandExecutor {
     public CommandManager(ArrayList<LightCommand> LightCommands, String commandName) {
         this.LightCommands = LightCommands;
         registerCommand(commandName);
+    }
+
+    public void unregisterCommand() {
+        try {
+            Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+            commandMapField.setAccessible(true);
+            CommandMap commandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
+            if(commandMap == null) {
+                LightCore.instance.getConsolePrinter().printError(List.of(
+                        "Could not get commandMap from Bukkit",
+                        "Error: commandMap is null"
+                ));
+                return;
+            }
+            if(commandMap.getCommand(this.commandName).unregister(commandMap)) {
+                LightCore.instance.getConsolePrinter().printInfo("Successfully unregistered command " + this.commandName);
+            } else {
+                LightCore.instance.getConsolePrinter().printError(List.of(
+                        "Could not unregister command " + this.commandName,
+                        "Error: commandMap.getCommand(this.commandName).unregister(commandMap) returned false"
+                ));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(new Exception("Could not unregister command " + this.commandName, e));
+        }
     }
 
     public void registerCommand(String name) {
@@ -48,6 +74,7 @@ public class CommandManager implements CommandExecutor {
                         lightCommandTabCompleter.put(lightCommandName, tabCompleter);
                         ecoLightCommands.add(lightCommandName);
                         LightCore.instance.getConsolePrinter().printDebug("Successfully registered tab completer for " + lightCommandName);
+                        this.commandName = lightCommandName;
                     }
                 }
             }
