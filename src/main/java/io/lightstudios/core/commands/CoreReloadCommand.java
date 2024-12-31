@@ -1,12 +1,10 @@
 package io.lightstudios.core.commands;
 
 import io.lightstudios.core.LightCore;
-import io.lightstudios.core.proxy.messaging.backend.send.SendTeleportRequest;
 import io.lightstudios.core.util.interfaces.LightCommand;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
@@ -56,8 +54,6 @@ public class CoreReloadCommand implements LightCommand {
     public boolean performAsPlayer(Player player, String[] args) {
         LightCore.instance.reloadCore();
         LightCore.instance.getMessageSender().sendPlayerMessage(player, LightCore.instance.getMessages().coreReload());
-            //  70.5 76.0 527.5 10 15
-        SendTeleportRequest.sendTeleportRequest(player, args[1], "world", 70.5, 76, 527.5, 10, 15);
 
         return false;
     }

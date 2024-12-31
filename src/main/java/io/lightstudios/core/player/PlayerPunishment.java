@@ -1,6 +1,6 @@
 package io.lightstudios.core.player;
 
-import io.lightstudios.core.proxy.messaging.backend.send.SendProxyKickRequest;
+import io.lightstudios.core.proxy.messaging.SendProxyRequest;
 import io.lightstudios.core.util.LightTimers;
 import org.bukkit.entity.Player;
 
@@ -13,7 +13,7 @@ public class PlayerPunishment {
      * @param reason The reason for the kick
      */
     public void autoKickPlayer(Player player, String reason) {
-        SendProxyKickRequest.sendProxyPing(player, reason);
+        SendProxyRequest.kickPlayerFromProxy(player, reason);
 
         LightTimers.doSync(task -> {
             player.kickPlayer("SERVER-KICK\n" + reason);
