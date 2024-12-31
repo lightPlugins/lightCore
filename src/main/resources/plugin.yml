@@ -4,7 +4,7 @@ version: '0.2.9'
 main: io.lightstudios.core.LightCore
 api-version: 1.21
 depend: ["Vault"]
-softdepend: ["Towny", "ProtocolLib", "PlaceholderAPI"]
+softdepend: ["Towny", "ProtocolLib", "PlaceholderAPI", "LightCoins"]
 loadbefore: [ ]
 libraries: [ ]
 #  - org.mariadb.jdbc:mariadb-java-client:3.5.0

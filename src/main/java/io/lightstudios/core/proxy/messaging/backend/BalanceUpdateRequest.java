@@ -6,7 +6,6 @@ import io.lightstudios.core.LightCore;
 import io.lightstudios.core.proxy.util.SubChannels;
 import io.lightstudios.core.util.interfaces.LightMessageListener;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;

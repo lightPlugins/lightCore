@@ -14,7 +14,6 @@ import io.lightstudios.core.database.model.DatabaseCredentials;
 import io.lightstudios.core.placeholder.PlaceholderRegistrar;
 import io.lightstudios.core.player.PlayerPunishment;
 import io.lightstudios.core.proxy.messaging.ReceiveProxyRequest;
-import io.lightstudios.core.proxy.messaging.backend.BalanceUpdateRequest;
 import io.lightstudios.core.redis.RedisManager;
 import io.lightstudios.core.economy.VaultManager;
 import io.lightstudios.core.events.ProxyTeleportEvent;
@@ -22,7 +21,6 @@ import io.lightstudios.core.hooks.HookManager;
 import io.lightstudios.core.items.ItemManager;
 import io.lightstudios.core.player.MessageSender;
 import io.lightstudios.core.player.TitleSender;
-import io.lightstudios.core.proxy.messaging.backend.PlayerTeleportRequest;
 import io.lightstudios.core.util.ColorTranslation;
 import io.lightstudios.core.util.ConsolePrinter;
 import io.lightstudios.core.util.LightTimers;
@@ -232,53 +230,6 @@ public class LightCore extends JavaPlugin {
         }
     }
 
-    private void testTimer() {
-        // Start Task 1
-        LightTimers.startTaskWithCounter((task, count) -> {
-            getConsolePrinter().printInfo("Task 1 with Consumer is running... Count: " + count);
-            if (count == 10) {
-                task.cancel();
-                getConsolePrinter().printInfo("Task 1 canceled after 10 iterations.");
-            }
-        }, 0L, 10L);
-
-        // Start Task 2
-        LightTimers.startTaskWithCounter((task, count) -> {
-            getConsolePrinter().printInfo("Task 2 with Consumer is running... Count: " + count);
-            if (count == 15) {
-                task.cancel();
-                getConsolePrinter().printInfo("Task 2 canceled after 15 iterations.");
-            }
-        }, 0L, 10L);
-
-        // Start Task 3
-        LightTimers.startTaskWithCounter((task, count) -> {
-            getConsolePrinter().printInfo("Task 3 with Consumer is running... Count: " + count);
-            if (count == 20) {
-                task.cancel();
-                getConsolePrinter().printInfo("Task 3 canceled after 15 iterations.");
-            }
-        }, 0L, 10L);
-
-        // Start Task 4
-        LightTimers.startTaskWithCounter((task, count) -> {
-            getConsolePrinter().printInfo("Task 4 with Consumer is running... Count: " + count);
-            if (count == 25) {
-                task.cancel();
-                getConsolePrinter().printInfo("Task 4 canceled after 15 iterations.");
-            }
-        }, 0L, 10L);
-
-        LightTimers.doAsync(task -> {
-            getConsolePrinter().printInfo("Task ASYNC with Consumer is running...");
-        }, 240L);
-
-        LightTimers.doAsync(task -> {
-            getConsolePrinter().printInfo("Task ASYNC with Consumer is running...");
-
-        }, 260L);
-    }
-
     private void printLogo() {
 
         String[] logo = {
@@ -298,31 +249,33 @@ public class LightCore extends JavaPlugin {
         String protocolLibVersion = "$&cnot found";
         String placeholderAPIVersion = "&cnot found";
         String townyVersion = "&cnot found";
+        String lightCoinsVersion = "&cnot found";
 
         Plugin placeholderAPI = Bukkit.getServer().getPluginManager().getPlugin("PlaceholderAPI");
         Plugin protocolLib = Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib");
         Plugin towny = Bukkit.getServer().getPluginManager().getPlugin("Towny");
-
+        Plugin lightCoins = Bukkit.getServer().getPluginManager().getPlugin("LightCoins");
 
         if(placeholderAPI != null) {
             placeholderAPIVersion = placeholderAPI.getDescription().getVersion();
         }
-
         if(protocolLib != null) {
             protocolLibVersion = protocolLib.getDescription().getVersion();
         }
-
         if(towny != null) {
             townyVersion = towny.getDescription().getVersion();
         }
+        if(lightCoins != null) {
+            lightCoinsVersion = lightCoins.getDescription().getVersion();
+        }
 
-
-        Bukkit.getConsoleSender().sendMessage("          LightCore: §ev0.2.5");
+        Bukkit.getConsoleSender().sendMessage("          LightCore: §ev0.2.9");
         Bukkit.getConsoleSender().sendMessage("          Server: §e" + Bukkit.getServer().getVersion());
         Bukkit.getConsoleSender().sendMessage("          API-Version: §e" + getDescription().getAPIVersion());
         Bukkit.getConsoleSender().sendMessage("          Soft-Dependency Versions: §e");
         Bukkit.getConsoleSender().sendMessage("           - PlaceholderAPI: §e" + placeholderAPIVersion);
         Bukkit.getConsoleSender().sendMessage("           - ProtocolLib: §e" + protocolLibVersion);
+        Bukkit.getConsoleSender().sendMessage("           - LightCoins: §e" + lightCoinsVersion);
         Bukkit.getConsoleSender().sendMessage("           - Towny: §e" + townyVersion);
         Bukkit.getConsoleSender().sendMessage("          Java: §e" + System.getProperty("java.version"));
         Bukkit.getConsoleSender().sendMessage("          Authors: §e" + getDescription().getAuthors() + "\n");
