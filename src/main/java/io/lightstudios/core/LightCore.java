@@ -13,7 +13,8 @@ import io.lightstudios.core.database.model.ConnectionProperties;
 import io.lightstudios.core.database.model.DatabaseCredentials;
 import io.lightstudios.core.placeholder.PlaceholderRegistrar;
 import io.lightstudios.core.player.PlayerPunishment;
-import io.lightstudios.core.proxy.messaging.backend.receive.ReceiveProxyBalanceUpdateRequest;
+import io.lightstudios.core.proxy.messaging.ReceiveProxyRequest;
+import io.lightstudios.core.proxy.messaging.backend.BalanceUpdateRequest;
 import io.lightstudios.core.redis.RedisManager;
 import io.lightstudios.core.economy.VaultManager;
 import io.lightstudios.core.events.ProxyTeleportEvent;
@@ -21,7 +22,7 @@ import io.lightstudios.core.hooks.HookManager;
 import io.lightstudios.core.items.ItemManager;
 import io.lightstudios.core.player.MessageSender;
 import io.lightstudios.core.player.TitleSender;
-import io.lightstudios.core.proxy.messaging.backend.receive.ReceiveTeleportRequest;
+import io.lightstudios.core.proxy.messaging.backend.PlayerTeleportRequest;
 import io.lightstudios.core.util.ColorTranslation;
 import io.lightstudios.core.util.ConsolePrinter;
 import io.lightstudios.core.util.LightTimers;
@@ -214,12 +215,9 @@ public class LightCore extends JavaPlugin {
      * Register incoming messages from the proxy (Velocity)
      */
     private void registerIncomings() {
-        // Teleport request throw network
+        // Register the LightMessageListener -> requests from the proxy
         this.getServer().getMessenger().registerIncomingPluginChannel(
-                this, IDENTIFIER, new ReceiveTeleportRequest());
-        // Balance update throw network
-        this.getServer().getMessenger().registerIncomingPluginChannel(
-                this, IDENTIFIER, new ReceiveProxyBalanceUpdateRequest());
+                this, IDENTIFIER, new ReceiveProxyRequest());
     }
 
     private void checkNBTAPI() {

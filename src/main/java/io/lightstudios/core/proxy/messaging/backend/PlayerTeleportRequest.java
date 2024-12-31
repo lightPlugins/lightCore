@@ -1,9 +1,10 @@
-package io.lightstudios.core.proxy.messaging.backend.receive;
+package io.lightstudios.core.proxy.messaging.backend;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import io.lightstudios.core.LightCore;
 import io.lightstudios.core.proxy.util.SubChannels;
+import io.lightstudios.core.util.interfaces.LightMessageListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 
-public class ReceiveTeleportRequest implements PluginMessageListener {
+public class PlayerTeleportRequest implements LightMessageListener {
 
     //  70.5 76.0 527.5 10 15
 

@@ -8,10 +8,7 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
-import io.lightstudios.core.proxy.messaging.proxy.ReceiveBackendKickRequest;
-import io.lightstudios.core.proxy.messaging.proxy.ReceiveBackendMessageRequest;
-import io.lightstudios.core.proxy.messaging.proxy.ReceiveBackendTeleportRequest;
-import io.lightstudios.core.proxy.messaging.proxy.economy.ReceiveBackendBalanceUpdateRequest;
+import io.lightstudios.core.proxy.messaging.ReceiveBackendRequest;
 import io.lightstudios.core.util.ProxyConsolePrinter;
 import lombok.Getter;
 
@@ -56,18 +53,9 @@ public class LightCoreProxy {
         server.getChannelRegistrar().register(IDENTIFIER);
 
         /*
-         *   Registering Channel Registrars for LightCore plugin on Velocity...
+         *   Registering Channel Registrars for LightCore plugin on Velocity side...
          */
-
-        // Teleports the player to a different Server in the Network (exact location)
-        server.getEventManager().register(this, new ReceiveBackendTeleportRequest());
-        // Kicks a specified player from the network
-        server.getEventManager().register(this, new ReceiveBackendKickRequest());
-        // Send Color formatted Messages to players to different Servers in the Network
-        server.getEventManager().register(this, new ReceiveBackendMessageRequest());
-        // LightCoins Economy -> to update balances on different Servers
-        // only available for /pay command (global payments)
-        server.getEventManager().register(this, new ReceiveBackendBalanceUpdateRequest());
+        server.getEventManager().register(this, new ReceiveBackendRequest());
 
         consolePrinter.sendInfo("Registering Channel Registrars for LightCore plugin on Velocity...");
     }

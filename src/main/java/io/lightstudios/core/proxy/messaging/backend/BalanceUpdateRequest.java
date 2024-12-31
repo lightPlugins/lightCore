@@ -1,9 +1,10 @@
-package io.lightstudios.core.proxy.messaging.backend.receive;
+package io.lightstudios.core.proxy.messaging.backend;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import io.lightstudios.core.LightCore;
 import io.lightstudios.core.proxy.util.SubChannels;
+import io.lightstudios.core.util.interfaces.LightMessageListener;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public class ReceiveProxyBalanceUpdateRequest implements PluginMessageListener {
+public class BalanceUpdateRequest implements LightMessageListener {
 
 
     @Override
@@ -33,8 +34,8 @@ public class ReceiveProxyBalanceUpdateRequest implements PluginMessageListener {
         double balance = input.readDouble();
         BigDecimal bigDecimal = BigDecimal.valueOf(balance);
 
-        LightCore.instance.getHookManager().getLightCoinsManager().setRawBalance(uuid, bigDecimal);
         LightCore.instance.getConsolePrinter().printInfo("Received proxy balance update request for " + uuid + " with balance " + bigDecimal);
+        LightCore.instance.getHookManager().getLightCoinsManager().setRawBalance(uuid, bigDecimal);
 
 
     }
