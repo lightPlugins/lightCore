@@ -1,6 +1,7 @@
 package io.lightstudios.core.hooks;
 
 import io.lightstudios.core.LightCore;
+import io.lightstudios.core.hooks.lightcoins.LightCoinsManager;
 import io.lightstudios.core.hooks.placeholderapi.PlaceholderAPIManager;
 import io.lightstudios.core.hooks.protocollib.ProtocolLibManager;
 import io.lightstudios.core.hooks.towny.TownyInterface;
@@ -13,17 +14,31 @@ public class HookManager {
     private boolean existTowny = false;
     private boolean existProtocolLib = false;
     private boolean existPlaceholderAPI = false;
+    private boolean existLightCoins = false;
+
     private TownyInterface townyInterface;
     private ProtocolLibManager protocolLibManager;
     private PlaceholderAPIManager placeholderAPIManager;
+    private LightCoinsManager lightCoinsManager;
 
     public HookManager () {
+        // check if LightCoins is installed
+        checkLightCoins();
         // check if Towny is installed
         checkTowny();
         // check if ProtocolLib is installed
         checkProtocolLib();
         // check if PlaceholderAPI is installed
         checkPlaceholderAPI();
+    }
+
+
+    private void checkLightCoins() {
+        if(Bukkit.getServer().getPluginManager().getPlugin("LightCoins") != null) {
+            this.existLightCoins = true;
+            this.lightCoinsManager = new LightCoinsManager();
+            LightCore.instance.getConsolePrinter().printInfo("Found plugin LightCoins. Hooking into it.");
+        }
     }
 
     private void checkTowny() {

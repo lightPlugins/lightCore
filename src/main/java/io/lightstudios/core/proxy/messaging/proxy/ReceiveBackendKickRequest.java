@@ -1,4 +1,4 @@
-package io.lightstudios.core.proxy.messaging.proxy.receive;
+package io.lightstudios.core.proxy.messaging.proxy;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
@@ -20,12 +20,10 @@ public class ReceiveBackendKickRequest {
     public void onPluginMessageFromPlugin(PluginMessageEvent event) {
 
         if(!IDENTIFIER.equals(event.getIdentifier())) {
-            LightCoreProxy.instance.getConsolePrinter().sendInfo("Identifier does not match!");
             return;
         }
 
         if(!(event.getSource() instanceof ServerConnection)) {
-            LightCoreProxy.instance.getConsolePrinter().sendInfo("Source is not an instance of ServerConnection!");
             return;
         }
 
@@ -34,7 +32,6 @@ public class ReceiveBackendKickRequest {
         String subChannel = input.readUTF();
 
         if(!subChannel.equalsIgnoreCase(SubChannels.KICK_REQUEST.getId())) {
-            LightCoreProxy.instance.getConsolePrinter().sendInfo("SubChannel does not match!");
             return;
         }
 

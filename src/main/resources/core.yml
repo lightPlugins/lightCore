@@ -18,11 +18,11 @@ language: en
 server-synchronisation:
   # How should we synchronise the data between the servers?
   # - proxy -> Use the Velocity Proxy Messaging System
-  # - redis -> Use a Redis Server (pub/sub channels) (RECOMMENDED)
+  # - redis -> Use a Redis Server (pub/sub channels) (RECOMMENDED) (NOT_IMPLEMENTED_YET)
   type: proxy
   # The Server name defined in your velocity.toml -> Case Sensitive !!!
   server-name: "ServerName"
-  redis:
+  redis: # NOT IMPLEMENTED YET
     # Only enable this if you have a redis server running,
     # and you want to use the server synchronisation system without the velocity proxy messaging system.
     # If you enable this, the velocity proxy messaging system will be disabled automatically.
@@ -53,6 +53,11 @@ storage:
     keep-alive-time: 0
     max-life-time: 1800000
     minimum-idle: 10
+    # The maximum pool size of the connection pool for the database.
+    # Bigger pool size = more performance, but more RAM/CPU usage.
+    # If you installed more than 3 plugins from me, you should increase this value.
+    # For example: 3 plugins -> 15, 4 plugins -> 20, 5 plugins -> 25
+    # Default value is 10.
     maximum-pool-size: 10
     leak-detection-threshold: 0
     connection-test-query: "SELECT 1"

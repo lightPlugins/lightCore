@@ -13,6 +13,7 @@ import io.lightstudios.core.database.model.ConnectionProperties;
 import io.lightstudios.core.database.model.DatabaseCredentials;
 import io.lightstudios.core.placeholder.PlaceholderRegistrar;
 import io.lightstudios.core.player.PlayerPunishment;
+import io.lightstudios.core.proxy.messaging.backend.receive.ReceiveProxyBalanceUpdateRequest;
 import io.lightstudios.core.redis.RedisManager;
 import io.lightstudios.core.economy.VaultManager;
 import io.lightstudios.core.events.ProxyTeleportEvent;
@@ -99,11 +100,10 @@ public class LightCore extends JavaPlugin {
         initDatabase();
         // Initialize Redis connection and check if it is enabled
         enableRedisConnection();
+        // proxy messaging register
+        registerOutcoming();
+        registerIncomings();
 
-        this.getServer().getMessenger().registerOutgoingPluginChannel(
-                this, IDENTIFIER);
-        this.getServer().getMessenger().registerIncomingPluginChannel(
-                this, IDENTIFIER, new ReceiveTeleportRequest());
 
     }
 
@@ -200,6 +200,26 @@ public class LightCore extends JavaPlugin {
             this.lightCoreEnabled = false;
             throw new RuntimeException("Could not maintain Database Connection.", e);
         }
+    }
+
+    /**
+     * Register outcome message for the proxy (Velocity)
+     */
+    private void registerOutcoming() {
+        this.getServer().getMessenger().registerOutgoingPluginChannel(
+                this, IDENTIFIER);
+    }
+
+    /**
+     * Register incoming messages from the proxy (Velocity)
+     */
+    private void registerIncomings() {
+        // Teleport request throw network
+        this.getServer().getMessenger().registerIncomingPluginChannel(
+                this, IDENTIFIER, new ReceiveTeleportRequest());
+        // Balance update throw network
+        this.getServer().getMessenger().registerIncomingPluginChannel(
+                this, IDENTIFIER, new ReceiveProxyBalanceUpdateRequest());
     }
 
     private void checkNBTAPI() {

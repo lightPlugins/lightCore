@@ -5,7 +5,7 @@
 
     <groupId>io.lightstudios.core</groupId>
     <artifactId>lightCore</artifactId>
-    <version>0.2.5</version>
+    <version>0.2.6</version>
 
     <organization>
         <name>lightPlugins</name>
@@ -79,6 +79,13 @@
         </dependency>
 
         <dependency>
+            <groupId>com.github.lightPlugins</groupId>
+            <artifactId>lightCoins</artifactId>
+            <version>0.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
             <version>3.5.0</version>
@@ -149,13 +156,6 @@
             <artifactId>lombok</artifactId>
             <version>1.18.34</version>
         </dependency>
-
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.4.12</version>
-        </dependency>
-
 
     </dependencies>
 

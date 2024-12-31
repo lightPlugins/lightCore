@@ -1,4 +1,4 @@
-package io.lightstudios.core.proxy.messaging.proxy.receive;
+package io.lightstudios.core.proxy.messaging.proxy;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
@@ -17,15 +17,11 @@ public class ReceiveBackendTeleportRequest {
     @Subscribe
     public void onPluginMessageFromPlugin(PluginMessageEvent event) {
 
-        LightCoreProxy.instance.getConsolePrinter().sendInfo("Received plugin messaging ...");
-
         if(!IDENTIFIER.equals(event.getIdentifier())) {
-            LightCoreProxy.instance.getConsolePrinter().sendInfo("Identifier does not match!");
             return;
         }
 
         if(!(event.getSource() instanceof ServerConnection)) {
-            LightCoreProxy.instance.getConsolePrinter().sendInfo("Source is not an instance of ServerConnection!");
             return;
         }
 
@@ -33,7 +29,6 @@ public class ReceiveBackendTeleportRequest {
         String subChannel = input.readUTF();
 
         if(!subChannel.equalsIgnoreCase(SubChannels.TELEPORT_REQUEST.getId())) {
-            LightCoreProxy.instance.getConsolePrinter().sendInfo("SubChannel does not match!");
             return;
         }
 

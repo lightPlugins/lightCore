@@ -13,8 +13,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.UUID;
 
-import static io.lightstudios.core.LightCoreProxy.IDENTIFIER;
-
 
 public class ReceiveTeleportRequest implements PluginMessageListener {
 

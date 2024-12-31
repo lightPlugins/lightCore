@@ -1,6 +1,6 @@
 name: lightCore
 author: LightStudios
-version: '0.2.5'
+version: '0.2.6'
 main: io.lightstudios.core.LightCore
 api-version: 1.21
 depend: ["Vault"]
