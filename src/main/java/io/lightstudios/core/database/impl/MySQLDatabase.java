@@ -12,8 +12,7 @@ public class MySQLDatabase extends PooledDatabase {
 
     private final DatabaseCredentials credentials;
     private final ConnectionProperties connectionProperties;
-    private final String poolName = "light-";
-    private HikariConfig hikari = new HikariConfig();
+    private final String poolName = "light-mysql-";
 
     public MySQLDatabase(LightCore parent, DatabaseCredentials credentials, ConnectionProperties connectionProperties) {
         super(parent);
@@ -24,7 +23,9 @@ public class MySQLDatabase extends PooledDatabase {
     @Override
     public void connect() {
 
-        hikari.setPoolName("light-" + POOL_COUNTER.getAndIncrement());
+        HikariConfig hikari = new HikariConfig();
+
+        hikari.setPoolName(poolName + POOL_COUNTER.getAndIncrement());
 
         this.applyCredentials(hikari, credentials, connectionProperties);
         this.applyConnectionProperties(hikari, connectionProperties);

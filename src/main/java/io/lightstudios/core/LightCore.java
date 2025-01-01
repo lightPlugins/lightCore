@@ -99,10 +99,6 @@ public class LightCore extends JavaPlugin {
         initDatabase();
         // Initialize Redis connection and check if it is enabled
         enableRedisConnection();
-        // proxy messaging register
-        registerOutcoming();
-        registerIncomings();
-
 
     }
 
@@ -112,6 +108,10 @@ public class LightCore extends JavaPlugin {
         checkNBTAPI();
         registerCommands();
         registerEvents();
+
+        // proxy messaging register
+        registerOutcoming();
+        registerIncomings();
 
         this.vaultManager = new VaultManager();
 
@@ -314,6 +314,7 @@ public class LightCore extends JavaPlugin {
                     settings.redisPort(),
                     settings.redisPassword()
             );
+            this.isRedis = true;
             return;
         }
         getConsolePrinter().printInfo(List.of(

@@ -5,7 +5,7 @@
 
     <groupId>io.lightstudios.core</groupId>
     <artifactId>lightCore</artifactId>
-    <version>0.2.9</version>
+    <version>0.3.0</version>
 
     <organization>
         <name>lightPlugins</name>
@@ -81,7 +81,7 @@
         <dependency>
             <groupId>com.github.lightPlugins</groupId>
             <artifactId>lightCoins</artifactId>
-            <version>0.0.1</version>
+            <version>0.0.2</version>
             <scope>provided</scope>
         </dependency>
 

@@ -36,7 +36,7 @@ public class SQLiteDatabase extends PooledDatabase {
 
         final HikariConfig hikari = new HikariConfig();
 
-        hikari.setPoolName("light-" + POOL_COUNTER.getAndIncrement());
+        hikari.setPoolName("light-sqlite-" + POOL_COUNTER.getAndIncrement());
 
         hikari.setDriverClassName("org.sqlite.JDBC");
         hikari.setJdbcUrl("jdbc:sqlite:" + this.filePath);

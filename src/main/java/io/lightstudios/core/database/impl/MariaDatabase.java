@@ -12,7 +12,7 @@ public class MariaDatabase extends PooledDatabase {
 
     private final DatabaseCredentials credentials;
     private final ConnectionProperties connectionProperties;
-    private HikariConfig hikari = new HikariConfig();
+    private final String poolName = "light-mariadb-";
 
     public MariaDatabase(LightCore parent, DatabaseCredentials credentials, ConnectionProperties connectionProperties) {
         super(parent);
@@ -23,7 +23,9 @@ public class MariaDatabase extends PooledDatabase {
     @Override
     public void connect() {
 
-        hikari.setPoolName("light-" + POOL_COUNTER.getAndIncrement());
+        HikariConfig hikari = new HikariConfig();
+
+        hikari.setPoolName(poolName + POOL_COUNTER.getAndIncrement());
 
         this.applyCredentials(hikari, credentials, connectionProperties);
         this.applyConnectionProperties(hikari, connectionProperties);

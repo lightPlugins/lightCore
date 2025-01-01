@@ -2,6 +2,7 @@ package io.lightstudios.core.proxy.messaging.backend;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
+import io.lightstudios.coins.api.models.AccountData;
 import io.lightstudios.core.LightCore;
 import io.lightstudios.core.proxy.util.SubChannels;
 import io.lightstudios.core.util.interfaces.LightMessageListener;
@@ -22,19 +23,25 @@ public class BalanceUpdateRequest implements LightMessageListener {
         }
         ByteArrayDataInput input = ByteStreams.newDataInput(bytes);
         String subChannel = input.readUTF();
-
-        if(!subChannel.equalsIgnoreCase(SubChannels.TELEPORT_REQUEST.getId())) {
+        if(!subChannel.equalsIgnoreCase(SubChannels.BALANCE_UPDATE_REQUEST.getId())) {
             return;
         }
-
         String uuidString = input.readUTF();
         UUID uuid = UUID.fromString(uuidString);
 
         double balance = input.readDouble();
         BigDecimal bigDecimal = BigDecimal.valueOf(balance);
+        LightCore.instance.getHookManager().getLightCoinsManager().getAPI().createAccountDataAsync(LightCore.instance, uuid, player.getName())
+                .thenAccept(accountData -> {
+                    AccountData data = LightCore.instance.getHookManager().getLightCoinsManager().getAPI().getAccountData(uuid);
+                    if(data == null) {
+                        return;
+                    }
+                    data.getCoinsData().setCurrentCoins(bigDecimal);
+                    LightCore.instance.getConsolePrinter().printInfo("SUCCESS -> Received proxy balance update request for "
+                            + uuid + " with balance " + bigDecimal);
+        });
 
-        LightCore.instance.getConsolePrinter().printInfo("Received proxy balance update request for " + uuid + " with balance " + bigDecimal);
-        LightCore.instance.getHookManager().getLightCoinsManager().setRawBalance(uuid, bigDecimal);
 
 
     }

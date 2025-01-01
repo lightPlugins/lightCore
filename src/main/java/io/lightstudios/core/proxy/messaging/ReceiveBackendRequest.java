@@ -32,13 +32,12 @@ public class ReceiveBackendRequest {
         ByteArrayDataInput input = ByteStreams.newDataInput(event.getData());
         String subChannel = input.readUTF();
 
-        if(!subChannel.equalsIgnoreCase(SubChannels.TELEPORT_REQUEST.getId())) {
+        if(!subChannel.equalsIgnoreCase(SubChannels.BALANCE_UPDATE_REQUEST.getId())) {
             return;
         }
 
         String uuid = input.readUTF();
         double newBalance = input.readDouble();
-        BigDecimal balance = BigDecimal.valueOf(newBalance);
 
         Player target = LightCoreProxy.instance.getServer().getAllPlayers().stream().filter(p
                 -> p.getUniqueId().toString().equals(uuid)).findFirst().orElse(null);
@@ -56,7 +55,7 @@ public class ReceiveBackendRequest {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeUTF(SubChannels.BALANCE_UPDATE_REQUEST.getId());
         output.writeUTF(uuid);
-        output.writeDouble(balance.doubleValue());
+        output.writeDouble(newBalance);
 
         connection.getServer().sendPluginMessage(IDENTIFIER, output.toByteArray());
 

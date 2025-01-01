@@ -1,28 +1,33 @@
 package io.lightstudios.core.redis.messaging;
 
+import io.lightstudios.core.LightCore;
 import io.lightstudios.core.util.interfaces.LightRedisSub;
 import redis.clients.jedis.JedisPooled;
 import redis.clients.jedis.JedisPubSub;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
 
 public class RedisSubscriber {
 
-    private final JedisPooled jedisPooled;
-    private final ArrayList<LightRedisSub> subscribers = new ArrayList<>();
+    private final ArrayList<LightRedisSub> lightRedisListeners;
+    private final String channelName;
 
-    public RedisSubscriber(JedisPooled jedisPooled, LightRedisSub... subscribers) {
-        this.jedisPooled = jedisPooled;
-        this.subscribers.addAll(Arrays.asList(subscribers));
+    public RedisSubscriber(ArrayList<LightRedisSub> lightRedisListeners, String channelName) {
+        this.lightRedisListeners = lightRedisListeners;
+        this.channelName = channelName;
+        receiveData();
     }
 
-    public void subscribe(String channel) {
-        jedisPooled.subscribe(new JedisPubSub() {
+    private void receiveData() {
+        JedisPooled jedis = LightCore.instance.getRedisManager().getJedisPooled();
+        jedis.subscribe(new JedisPubSub() {
             @Override
             public void onMessage(String channel, String message) {
-                subscribers.forEach(sub -> sub.onMessage(channel, message));
+                for(LightRedisSub lightRedisSub : lightRedisListeners) {
+                    lightRedisSub.receiveData(channel, message);
+                }
             }
-        }, channel);
+        }, this.channelName);
     }
 }

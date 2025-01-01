@@ -1,9 +1,11 @@
 package io.lightstudios.core.proxy.messaging;
 
+import io.lightstudios.core.LightCore;
 import io.lightstudios.core.proxy.messaging.backend.BalanceUpdateRequest;
 import io.lightstudios.core.proxy.messaging.backend.PlayerTeleportRequest;
 import io.lightstudios.core.util.interfaces.LightMessageListener;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +26,7 @@ public class ReceiveProxyRequest implements PluginMessageListener {
 
     @Override
     public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, byte @NotNull [] bytes) {
-        for(LightMessageListener listener : listeners) {
+        for (LightMessageListener listener : listeners) {
             listener.onPluginMessageReceived(channel, player, bytes);
         }
     }

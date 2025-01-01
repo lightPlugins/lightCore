@@ -4,7 +4,9 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import io.lightstudios.core.LightCore;
 import io.lightstudios.core.proxy.util.SubChannels;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.messaging.PluginMessageRecipient;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -12,7 +14,7 @@ import java.util.UUID;
 public class SendProxyRequest {
 
     public static void sendBalanceLiveUpdate(Player player, UUID uuid, BigDecimal newBalance) {
-
+        LightCore.instance.getConsolePrinter().printInfo("Sending balance update request to proxy for " + uuid + " with balance " + newBalance);
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF(SubChannels.BALANCE_UPDATE_REQUEST.getId());
         out.writeUTF(uuid.toString());
@@ -20,6 +22,18 @@ public class SendProxyRequest {
 
         player.sendPluginMessage(LightCore.instance, "lightstudio:lightcore", out.toByteArray());
     }
+
+    public static void sendBalanceUpdateToServer(String serverName, UUID uuid, BigDecimal newBalance) {
+        LightCore.instance.getConsolePrinter().printInfo("Sending balance update request to server " + serverName + " for " + uuid + " with balance " + newBalance);
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF(SubChannels.BALANCE_UPDATE_REQUEST.getId());
+        out.writeUTF(uuid.toString());
+        out.writeDouble(newBalance.doubleValue());
+
+        // Send the plugin message to the BungeeCord proxy
+        Bukkit.getServer().sendPluginMessage(LightCore.instance, "lightstudio:lightcore", out.toByteArray());
+    }
+
 
     public static void kickPlayerFromProxy(Player player, String kickMessage) {
 
