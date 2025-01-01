@@ -21,8 +21,9 @@ public class RedisManager {
      */
     public RedisManager(String host, int port, String password) {
         try {
-            URI redisURI = new URI("redis://" + password + "@" + host + ":" + port);
-            this.jedisPooled = new JedisPooled(redisURI);
+            String redisURIString = "redis://" + (password != null && !password.isEmpty() ? password + "@" : "") + host + ":" + port;
+            URI redisURI = new URI(redisURIString);
+            this.jedisPooled = new JedisPooled("localhost", 6379);
         } catch (URISyntaxException e) {
             throw new RuntimeException("Invalid Redis URI", e);
         }
