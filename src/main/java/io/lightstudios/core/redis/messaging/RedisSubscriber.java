@@ -2,7 +2,7 @@ package io.lightstudios.core.redis.messaging;
 
 import io.lightstudios.core.LightCore;
 import io.lightstudios.core.util.interfaces.LightRedisSub;
-import redis.clients.jedis.JedisPooled;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
 import java.util.ArrayList;
@@ -20,14 +20,15 @@ public class RedisSubscriber {
     }
 
     private void receiveData() {
-        JedisPooled jedis = LightCore.instance.getRedisManager().getJedisPooled();
-        jedis.subscribe(new JedisPubSub() {
-            @Override
-            public void onMessage(String channel, String message) {
-                for(LightRedisSub lightRedisSub : lightRedisListeners) {
-                    lightRedisSub.receiveData(channel, message);
+        try(Jedis jedis = LightCore.instance.getRedisManager().getJedisPool().getResource()) {
+            jedis.subscribe(new JedisPubSub() {
+                @Override
+                public void onMessage(String channel, String message) {
+                    for(LightRedisSub lightRedisSub : lightRedisListeners) {
+                        lightRedisSub.receiveData(channel, message);
+                    }
                 }
-            }
-        }, this.channelName);
+            }, this.channelName);
+        }
     }
 }
