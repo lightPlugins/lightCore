@@ -17,15 +17,12 @@ language: en
 #        - Default Port: 6379
 server-synchronisation:
   # How should we synchronise the data between the servers?
-  # - proxy -> Use the Velocity Proxy Messaging System
-  # - redis -> Use a Redis Server (pub/sub channels) (RECOMMENDED) (NOT_IMPLEMENTED_YET)
-  type: proxy
-  # The Server name defined in your velocity.toml -> Case Sensitive !!!
-  server-name: "ServerName"
-  redis: # NOT IMPLEMENTED YET
+  # - mysql -> Use the mysql Database for server synchronisation
+  # - redis -> Use a Redis Server (pub/sub channels) for server synchronisation (RECOMMENDED)
+  type: mysql
+  redis:
     # Only enable this if you have a redis server running,
-    # and you want to use the server synchronisation system without the velocity proxy messaging system.
-    # If you enable this, the velocity proxy messaging system will be disabled automatically.
+    # and you want to use the server synchronisation system without the mysql database synchronisation.
     enable: false
     # The host of the redis server.
     host: localhost

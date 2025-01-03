@@ -5,7 +5,7 @@
 
     <groupId>io.lightstudios.core</groupId>
     <artifactId>lightCore</artifactId>
-    <version>0.3.3</version>
+    <version>0.3.4</version>
 
     <organization>
         <name>lightPlugins</name>
