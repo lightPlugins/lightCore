@@ -14,6 +14,7 @@ public class CoreSettings {
     }
 
     public String language() { return config.getString("language"); }
+    public Boolean multiServerEnabled() { return config.getBoolean("server-synchronisation.enable"); }
 
     public String syncType() {
         String data = config.getString("server-synchronisation.type");

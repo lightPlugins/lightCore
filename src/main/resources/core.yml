@@ -16,6 +16,9 @@ language: en
 #        - Default Docker Network Host: 172.18.0.1
 #        - Default Port: 6379
 server-synchronisation:
+  # If enabled, the server synchronisation system will be enabled.
+  # If you have only one server, you can leave this disabled.
+  enable: false
   # How should we synchronise the data between the servers?
   # - mysql -> Use the mysql Database for server synchronisation
   # - redis -> Use a Redis Server (pub/sub channels) for server synchronisation (RECOMMENDED)
