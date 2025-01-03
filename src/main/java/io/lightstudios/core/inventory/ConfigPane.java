@@ -3,17 +3,19 @@ package io.lightstudios.core.inventory;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
-import io.lightstudios.core.inventory.constructor.InvConstructor;
+import io.lightstudios.core.inventory.constructor.InventoryConstructor;
 import io.lightstudios.core.actions.ActionHandler;
 import io.lightstudios.core.inventory.handler.ClickItemHandler;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
 
+@Getter
 public class ConfigPane {
 
-    private PatternPane patternPane(InvConstructor invConstructor, Player player) {
+    public PatternPane patternPane(InventoryConstructor invConstructor, Player player) {
 
         String[] patternList = invConstructor.getPattern().toArray(new String[0]);
         Pattern pattern = new Pattern(patternList);

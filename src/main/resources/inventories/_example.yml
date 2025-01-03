@@ -11,6 +11,7 @@ settings:
       - '000000000' #3
       - '100000001' #4
       - '1100b0011' #5
+    clickCooldown: 3
 contents:
   'a':
     id: gui_item

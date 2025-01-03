@@ -386,7 +386,7 @@ public class ClickItemHandler {
      */
     private void readExtraActions() {
         this.extraActionsSection = EXTRA_SECTION.getStringList("actions");
-        LightCore.instance.getConsolePrinter().printError("Extra actions: " + extraActionsSection);
+        LightCore.instance.getConsolePrinter().printInfo("Extra actions: " + extraActionsSection);
 
         extraActionsSection.forEach(action -> {
             for(String key : placeholders.keySet()) {

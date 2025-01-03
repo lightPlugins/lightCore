@@ -38,6 +38,18 @@ public class ConsolePrinter {
         sendEmptyLine();
     }
 
+    public void printConfigError(String message) {
+        Bukkit.getConsoleSender().sendMessage(prefix + "§8[§4CONFIG-ERROR§8] §c" + message);
+    }
+
+    public void printConfigError(List<String> messages) {
+        sendEmptyLine();
+        for (String message : messages) {
+            Bukkit.getConsoleSender().sendMessage(prefix + "§8[§4CONFIG-ERROR§8] §c" + message);
+        }
+        sendEmptyLine();
+    }
+
     public void printDebug(List<String> messages, int debugLevel) {
         switch (debugLevel) {
             case 1:
