@@ -89,6 +89,7 @@ public class LightCore extends JavaPlugin {
         this.messageSender = new MessageSender();
         this.titleSender = new TitleSender();
         this.playerPunishment = new PlayerPunishment();
+        this.itemManager = new ItemManager();
 
         this.consolePrinter.printInfo("Generate core files ...");
         // Generate core files
@@ -144,7 +145,6 @@ public class LightCore extends JavaPlugin {
 
         try {
             this.itemFiles = new MultiFileManager("plugins/" + getName() + "/items/");
-            this.itemManager = new ItemManager(itemFiles);
         }catch (Exception e) {
             throw new RuntimeException("Error reading item files.", e);
         }

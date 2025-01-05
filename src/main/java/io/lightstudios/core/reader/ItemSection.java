@@ -1,84 +1,69 @@
-package io.lightstudios.core.items;
+package io.lightstudios.core.reader;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBTList;
+import io.lightstudios.coins.LightCoins;
 import io.lightstudios.core.LightCore;
 import io.lightstudios.core.util.LightNumbers;
-import lombok.Getter;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-@Getter
-public class ItemFromConfig {
+public class ItemSection {
 
-    // value sections from the file
-    private final File file;
-    private final JavaPlugin plugin;
-    private final String itemID;
-    private final ItemStack itemStack;
-    private final FileConfiguration fileConfiguration;
-    private String item;
-    private int modelData;
-    private final Map<Enchantment, Integer> enchantments = new HashMap<>();
+    private final ConfigurationSection section;
     private final Map<String, String> placeholders = new HashMap<>();
-    private String headData;
-    private String displayname;
-    private List<String> lore = new ArrayList<>();
+    private final File file;
 
-    // Item attributes overrides
-    private int durability;
-    private int attackDamage;
-    private int attackSpeed;
-    private int armor;
-    private int armorToughness;
-    private int knockbackResistance;
+    private final Player player;
 
-    /**
-     * Creates a new ItemFromConfig instance from a given file.
-     * The item stack is built from the values in the file.
-     * After checking ItemFromConfig != null, you can call buildItem()
-     * to get the final item stack.
-     *
-     * @param file the file containing the item configuration
-     */
-    public ItemFromConfig(JavaPlugin plugin, File file) {
+    private ItemStack itemStack;
+    private ItemMeta itemMeta;
+
+    private String item;
+    private String displayName;
+    private List<String> lore;
+    private int amount;
+    private int modelData;
+
+    private final Map<Enchantment, Integer> enchantments = new HashMap<>();
+
+    public ItemSection(ConfigurationSection section, File file, Player player) {
+
+        this.section = section;
         this.file = file;
-        this.plugin = plugin;
-        this.fileConfiguration = YamlConfiguration.loadConfiguration(file);
-        this.itemID = file.getName().replace(".yml", "");
+        this.player = player;
 
-        this.itemStack = new ItemStack(Material.STONE, 1);
+        if(section == null) {
+            this.itemStack = new ItemStack(Material.STONE, 1);
+            return;
+        }
 
-        // STEP-1: read all values from the file
+        if(!Objects.requireNonNull(section.getString("id")).equalsIgnoreCase("item")) {
+            this.itemStack = new ItemStack(Material.STONE, 1);
+            LightCoins.instance.getConsolePrinter().printConfigError(List.of(
+                    "The section " + section.getName() + " is not an item section!",
+                    "The section must have the id 'item'!",
+                    "Returning fallback item (STONE)"
+            ));
+            return;
+        }
+
         readFromConfig();
-
-        // STEP-2: apply all values to the item stack as NBT data
-        // only set nbt data after modifying the item meta !!!
-        // https://github.com/tr7zw/Item-NBT-API/wiki/Using-the-NBT-API#working-with-items
         applyNBTData();
-
-        // STEP-3: split the item string and handle it
         handleItemString();
 
-        // If all values are set, buildItem() can be called to get the final item stack
-
     }
+
     /**
      * Builds the item stack from the values in the file.
      * This method should be called after creating a new ItemFromConfig instance.
@@ -114,10 +99,10 @@ public class ItemFromConfig {
             entry.setValue(value.replace(value, PlaceholderAPI.setPlaceholders(player, value)));
         }
 
-        translateDisplayHeadData(player);
+        translateDisplayName(player);
         List<String> translatedLore = translateLore(player);
 
-        temporaryMeta.setDisplayName(LightCore.instance.getColorTranslation().adventureTranslator(displayname, player));
+        temporaryMeta.setDisplayName(LightCore.instance.getColorTranslation().adventureTranslator(displayName, player));
         temporaryMeta.setLore(translatedLore);
 
         // finally set the item meta to the item stack
@@ -135,16 +120,13 @@ public class ItemFromConfig {
      * occurrences of each placeholder in the displayName and headData
      * with their corresponding values.
      */
-    private void translateDisplayHeadData(Player player) {
+    private void translateDisplayName(Player player) {
         for(String key : placeholders.keySet()) {
-            this.displayname = this.displayname
+            this.displayName = this.displayName
                     .replace("#" + key + "#", placeholders.get(key))
                     .replace(key, PlaceholderAPI.setPlaceholders(player, key));
             // apply colors to the display name here
-            this.displayname = LightCore.instance.getColorTranslation().adventureTranslator(displayname, player);
-            this.headData = this.headData
-                    .replace("#" + key + "#", placeholders.get(key))
-                    .replace(key, PlaceholderAPI.setPlaceholders(player, key));
+            this.displayName = LightCore.instance.getColorTranslation().adventureTranslator(displayName, player);
         }
     }
     /**
@@ -164,46 +146,8 @@ public class ItemFromConfig {
         return newLore;
     }
 
-    /**
-     * Applies all important values to the item file
-     * and stores them in the item stack as NBT data.
-     */
-    private void applyNBTData() {
-
-        NBT.modify(itemStack, nbt -> {
-            nbt.setString("plugin_name", this.plugin.getName());
-            nbt.setString("item_id", this.itemID);
-            nbt.setString("displayname", this.displayname);
-            nbt.setString("head_data", this.headData);
-
-            // not sure if this is the correct way to store a list of strings
-            ReadWriteNBTList<String> nbtLore = nbt.getStringList("lore");
-            // try to clear the list first before adding new values
-            // TODO: check if this is the correct way to clear the list
-            nbtLore.clear();
-            // add all lore lines to the list
-            for(String line : lore) { nbtLore.add(line); }
-
-            nbt.setInteger("durability", this.durability);
-            nbt.setInteger("attack_damage", this.attackDamage);
-            nbt.setInteger("attack_speed", this.attackSpeed);
-            nbt.setInteger("armor", this.armor);
-            nbt.setInteger("armor_toughness", this.armorToughness);
-            nbt.setInteger("knockback_resistance", this.knockbackResistance);
-
-        });
-
-    }
 
     private void handleItemString() {
-        if (this.item == null || this.item.isEmpty()) {
-            this.itemStack.setType(Material.STONE);
-            LightCore.instance.getConsolePrinter().printError(List.of(
-                    "Item string is not set for item " + this.itemID + " in file " + this.file.getName(),
-                    "Please set the item string to a valid format.",
-                    "Example: item: `stone 1 hide_attributes`"
-            ));
-        }
 
         String[] splitItem = item.split(" ");
         Material material = Material.getMaterial(splitItem[0].toUpperCase());
@@ -304,59 +248,67 @@ public class ItemFromConfig {
         }
     }
 
+
+    private void applyNBTData() {
+
+        NBT.modify(itemStack, nbt -> {
+            nbt.setString("displayname", this.displayName);
+
+            // not sure if this is the correct way to store a list of strings
+            ReadWriteNBTList<String> nbtLore = nbt.getStringList("lore");
+            // try to clear the list first before adding new values
+            // TODO: check if this is the correct way to clear the list
+            nbtLore.clear();
+            // add all lore lines to the list
+            for(String line : lore) { nbtLore.add(line); }
+
+        });
+
+    }
+
+
     /**
      * Reads all values from the file
      * and stores them in the class fields.
      */
     private void readFromConfig() {
-        // read the "item" string from the file
-        if (fileConfiguration.contains("item")) {
-            item = fileConfiguration.getString("item");
-        }
         // read the "placeholders" section from the file
-        if (fileConfiguration.contains("placeholders")) {
-            ConfigurationSection placeholderSection = fileConfiguration.getConfigurationSection("placeholders");
-            if(placeholderSection != null) {
-                for(String path : placeholderSection.getKeys(false)) {
-                    placeholders.put(path, fileConfiguration.getString("placeholders." + path));
+        if (section.contains("placeholders")) {
+            if(section.get("placeholders") != null) {
+                for(String path : section.getKeys(false)) {
+                    placeholders.put(path, section.getString("placeholders." + path));
                 }
             }
         }
-        // read the "head-data" string from the file
-        if (fileConfiguration.contains("head-data")) {
-            this.headData = fileConfiguration.getString("head-data");
+
+        if(section.contains("item")) {
+            item = section.getString("item");
+        } else {
+            LightCore.instance.getConsolePrinter().printConfigError(List.of(
+                    "The item builder does not have an item attribute!",
+                    "Please add an item to the item!"
+            ));
         }
-        // read the "display-name" string from the file
-        if (fileConfiguration.contains("displayname")) {
-            this.displayname = fileConfiguration.getString("displayname");
+
+        if(section.contains("displayName")) {
+            displayName = section.getString("displayName");
+        } else {
+            LightCore.instance.getConsolePrinter().printConfigError(List.of(
+                    "The item builder does not have a displayName attribute!",
+                    "Please add a displayName to the item!"
+            ));
         }
-        // read the "lore" List<String> from the file
-        if (fileConfiguration.contains("lore")) {
-            this.lore = fileConfiguration.getStringList("lore");
-        }
-        // read the "durability" int from the file
-        if (fileConfiguration.contains("overrides.durability")) {
-            this.durability = fileConfiguration.getInt("durability");
-        }
-        // read the "attack-damage" int from the file
-        if (fileConfiguration.contains("overrides.attack-damage")) {
-            this.attackDamage = fileConfiguration.getInt("attack-damage");
-        }
-        // read the "attack-speed" int from the file
-        if (fileConfiguration.contains("overrides.attack-speed")) {
-            this.attackSpeed = fileConfiguration.getInt("attack-speed");
-        }
-        // read the "armor" int from the file
-        if (fileConfiguration.contains("overrides.armor")) {
-            this.armor = fileConfiguration.getInt("armor");
-        }
-        // read the "armor-toughness" int from the file
-        if (fileConfiguration.contains("overrides.armor-toughness")) {
-            this.armorToughness = fileConfiguration.getInt("armor-toughness");
-        }
-        // read the "knockback-resistance" int from the file
-        if (fileConfiguration.contains("overrides.knockback-resistance")) {
-            this.knockbackResistance = fileConfiguration.getInt("knockback-resistance");
+
+        if(section.contains("lore")) {
+            lore = section.getStringList("lore");
+        } else {
+            LightCore.instance.getConsolePrinter().printConfigError(List.of(
+                    "The item builder does not have a lore attribute!",
+                    "Please add a lore to the item!"
+            ));
         }
     }
+
+
+
 }

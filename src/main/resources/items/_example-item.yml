@@ -1,4 +1,28 @@
+#   ########################################################################################  #
+#
+# This file is generated with LightCore used in LightCoins
+#
+#    ___       ___  ________  ___  ___  _________  ________  ________  ________  _______
+#   |\  \     |\  \|\   ____\|\  \|\  \|\___   ___\\   ____\|\   __  \|\   __  \|\  ___ \
+#   \ \  \    \ \  \ \  \___|\ \  \\\  \|___ \  \_\ \  \___|\ \  \|\  \ \  \|\  \ \   __/|
+#    \ \  \    \ \  \ \  \  __\ \   __  \   \ \  \ \ \  \    \ \  \\\  \ \   _  _\ \  \_|/__
+#     \ \  \____\ \  \ \  \|\  \ \  \ \  \   \ \  \ \ \  \____\ \  \\\  \ \  \\  \\ \  \_|\ \
+#      \ \_______\ \__\ \_______\ \__\ \__\   \ \__\ \ \_______\ \_______\ \__\\ _\\ \_______\
+#       \|_______|\|__|\|_______|\|__|\|__|    \|__|  \|_______|\|_______|\|__|\|__|\|_______|
+#
+# -> powered LightCoins - A simple and lightweight coins /virtual currency plugin for your server.
+#    Copyright © 2024 LightStudios
+#
+#   ############################### LIGHTCORE -> ITEM BUILDER ###############################  #
+#
+# The item builder arguments. Possible arguments are:
+# minimum example: item: '<materialName> <amount>'
+# more complex example: item: 'diamond_pickaxe 1 enchant:efficiency:1 enchant:fortune:3 unbreakable hide_enchants hide_attributes hide_unbreakable'
 item: 'black_stained_glass_pane 1 hide_attributes'
+# You can create own placeholder extra for the item.
+# you can also use PlaceholderAPI placeholders here.
+# example for custom: my-placeholder: 'my-value'
+# example for PlaceholderAPI: my-placeholderapi: '<red>Name: %player_name%'
 placeholders:
   display-name: 'Example Item'
   my-placeholder: 'my-value'

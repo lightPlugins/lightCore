@@ -50,6 +50,18 @@ public class ConsolePrinter {
         sendEmptyLine();
     }
 
+    public void printItemSystem(String message) {
+        Bukkit.getConsoleSender().sendMessage(prefix + "§8[§rITEMS§8] §r" + message);
+    }
+
+    public void printItemSystem(List<String> messages) {
+        sendEmptyLine();
+        for (String message : messages) {
+            Bukkit.getConsoleSender().sendMessage(prefix + "§8[§rITEMS§8] §r" + message);
+        }
+        sendEmptyLine();
+    }
+
     public void printDebug(List<String> messages, int debugLevel) {
         switch (debugLevel) {
             case 1:

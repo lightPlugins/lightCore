@@ -3,47 +3,40 @@ package io.lightstudios.core.items;
 import io.lightstudios.core.LightCore;
 import io.lightstudios.core.util.files.MultiFileManager;
 import lombok.Getter;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 @Getter
 public class ItemManager {
 
-    private final MultiFileManager itemFiles;
-    private final HashMap<String, ItemFromConfig> items;
+    private JavaPlugin plugin;
+    private final HashMap<String, ItemFromConfig> items = new HashMap<>();
 
-    public ItemManager(MultiFileManager itemFiles) {
-        this.itemFiles = itemFiles;
-        this.items = new HashMap<>();
-
-        readItems();
+    public void addItemsToCache(@NotNull JavaPlugin plugin, @NotNull List<File> itemFiles) {
+        this.plugin = plugin;
+        readItems(itemFiles);
     }
 
+    @Nullable
     public ItemFromConfig getItemByName(String id) {
         return items.get(id);
     }
 
-    private void readItems() {
+    private void readItems(List<File> files) {
+        for (File file : files) {
+            ItemFromConfig item = new ItemFromConfig(LightCore.instance, file);
+            String id = plugin.getName() + "_" + item.getItemID();
 
-        if(!items.isEmpty()) {
-            items.clear();
-        }
-
-        for (File file : itemFiles.getYamlFiles()) {
-            ItemFromConfig item = new ItemFromConfig(file);
-            String id = item.getItemID();
-
-            if(items.containsKey(id)) {
-                LightCore.instance.getConsolePrinter().printError(List.of(
-                        "Duplicate item id found for item: " + id,
-                        "Please check your item files and make sure that each item has a unique id."
-                ));
-                continue;
+            if(!items.containsKey(id)) {
+                items.put(id, item);
+                LightCore.instance.getConsolePrinter().printItemSystem("Loaded item: " + id);
             }
-
-            items.put(id, item);
         }
     }
 }

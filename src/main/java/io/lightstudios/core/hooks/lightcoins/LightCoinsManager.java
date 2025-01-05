@@ -2,6 +2,7 @@ package io.lightstudios.core.hooks.lightcoins;
 
 import io.lightstudios.coins.LightCoins;
 import io.lightstudios.coins.api.LightCoinsAPI;
+import io.lightstudios.coins.api.VirtualResponse;
 import io.lightstudios.coins.api.models.AccountData;
 import io.lightstudios.coins.api.models.CoinsData;
 import io.lightstudios.coins.api.models.VirtualData;
