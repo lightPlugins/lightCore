@@ -18,7 +18,7 @@ import io.lightstudios.core.redis.RedisManager;
 import io.lightstudios.core.economy.VaultManager;
 import io.lightstudios.core.events.ProxyTeleportEvent;
 import io.lightstudios.core.hooks.HookManager;
-import io.lightstudios.core.items.ItemManager;
+import io.lightstudios.core.items.LightItemManager;
 import io.lightstudios.core.player.MessageSender;
 import io.lightstudios.core.player.TitleSender;
 import io.lightstudios.core.util.ColorTranslation;
@@ -65,7 +65,7 @@ public class LightCore extends JavaPlugin {
     private CoreMessage messages;
 
     private MultiFileManager itemFiles;
-    private ItemManager itemManager;
+    private LightItemManager itemManager;
 
     private final ArrayList<LightCommand> commands = new ArrayList<>();
     private final HashMap<UUID, Location> teleportRequests = new HashMap<>();
@@ -89,7 +89,7 @@ public class LightCore extends JavaPlugin {
         this.messageSender = new MessageSender();
         this.titleSender = new TitleSender();
         this.playerPunishment = new PlayerPunishment();
-        this.itemManager = new ItemManager();
+        this.itemManager = new LightItemManager();
 
         this.consolePrinter.printInfo("Generate core files ...");
         // Generate core files

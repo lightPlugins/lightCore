@@ -19,13 +19,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
-public class ItemFromConfig {
+public class LightItem {
 
     // value sections from the file
     private final File file;
@@ -57,7 +54,7 @@ public class ItemFromConfig {
      *
      * @param file the file containing the item configuration
      */
-    public ItemFromConfig(JavaPlugin plugin, File file) {
+    public LightItem(JavaPlugin plugin, File file) {
         this.file = file;
         this.plugin = plugin;
         this.fileConfiguration = YamlConfiguration.loadConfiguration(file);
