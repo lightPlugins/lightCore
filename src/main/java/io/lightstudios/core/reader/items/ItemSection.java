@@ -1,4 +1,4 @@
-package io.lightstudios.core.reader;
+package io.lightstudios.core.reader.items;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBTList;
