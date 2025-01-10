@@ -19,25 +19,12 @@
 # minimum example: item: '<materialName> <amount>'
 # more complex example: item: 'diamond_pickaxe 1 enchant:efficiency:1 enchant:fortune:3 unbreakable hide_enchants hide_attributes hide_unbreakable'
 item: 'black_stained_glass_pane 1 hide_attributes'
-# You can create own placeholder extra for the item.
-# you can also use PlaceholderAPI placeholders here.
-# example for custom: my-placeholder: 'my-value'
-# example for PlaceholderAPI: my-placeholderapi: '<red>Name: %player_name%'
-placeholders:
-  display-name: 'Example Item'
-  my-placeholder: 'my-value'
-  another-placeholder: 'another-value'
-  my-placeholderapi: '<red>Name: %player_name%'
-head-data: ''
-displayname: '#display-name#'
+# The Display name of the item.
+customName: '#display-name#'
+# The lore of the item.
 lore:
   - '<gray>This is an example lore.'
   - '<gray>You can use defined placeholders like <#ffdc73>#placeholdername# '
   - '<gray>from the placeholders section above.'
-overrides:
-  durability: -1
-  attack-damage: -1
-  attack-speed: -1
-  armor: -1
-  armor-toughness: -1
-  knockback-resistance: -1
+# The custom model data of the item. (from resource pack)
+modelData: 0

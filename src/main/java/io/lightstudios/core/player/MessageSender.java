@@ -2,7 +2,6 @@ package io.lightstudios.core.player;
 
 import io.lightstudios.core.LightCore;
 import io.lightstudios.core.util.LightTimers;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
@@ -17,15 +16,14 @@ public class MessageSender {
      */
     public void sendPlayerMessage(Player player, String rawMessage) {
         // convert a Player into an Audience
-        Audience audience = (Audience) player;
-        if(audience == null) {
+        if(player == null) {
             LightCore.instance.getConsolePrinter().printError("Cannot resolve Player as Audience");
             return;
         }
         Component component = LightCore.instance.getColorTranslation().universalColor(rawMessage, player);
 
         // send synchronously a message to the specified player
-        LightTimers.doSync(task -> { audience.sendMessage(component); }, 0L);
+        LightTimers.doSync(task -> { player.sendMessage(component); }, 0L);
     }
 
     /**
@@ -35,8 +33,7 @@ public class MessageSender {
      */
     public void sendPlayerMessage(Player player, List<String> rawMessages) {
         // convert a Player into an Audience
-        Audience audience = (Audience) player;
-        if(audience == null) {
+        if(player == null) {
             LightCore.instance.getConsolePrinter().printError("Cannot resolve Player as Audience");
             return;
         }
@@ -44,7 +41,7 @@ public class MessageSender {
         for(String message : rawMessages) {
             Component component = LightCore.instance.getColorTranslation().universalColor(message, player);
             // send synchronously a message to the specified player
-            LightTimers.doSync(task -> { audience.sendMessage(component); }, 0L);
+            LightTimers.doSync(task -> { player.sendMessage(component); }, 0L);
         }
     }
 

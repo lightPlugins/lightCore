@@ -2,6 +2,7 @@ package io.lightstudios.core.hooks;
 
 import io.lightstudios.core.LightCore;
 import io.lightstudios.core.hooks.lightcoins.LightCoinsManager;
+import io.lightstudios.core.hooks.nexo.NexoManager;
 import io.lightstudios.core.hooks.placeholderapi.PlaceholderAPIManager;
 import io.lightstudios.core.hooks.protocollib.ProtocolLibManager;
 import io.lightstudios.core.hooks.towny.TownyInterface;
@@ -15,11 +16,13 @@ public class HookManager {
     private boolean existProtocolLib = false;
     private boolean existPlaceholderAPI = false;
     private boolean existLightCoins = false;
+    private boolean existNexo = false;
 
     private TownyInterface townyInterface;
     private ProtocolLibManager protocolLibManager;
     private PlaceholderAPIManager placeholderAPIManager;
     private LightCoinsManager lightCoinsManager;
+    private NexoManager nexoManager;
 
     public HookManager () {
         // check if LightCoins is installed
@@ -30,6 +33,8 @@ public class HookManager {
         checkProtocolLib();
         // check if PlaceholderAPI is installed
         checkPlaceholderAPI();
+        // check if Nexo is installed
+        checkNexo();
     }
 
 
@@ -65,6 +70,14 @@ public class HookManager {
             this.existPlaceholderAPI = true;
             this.placeholderAPIManager = new PlaceholderAPIManager();
             LightCore.instance.getConsolePrinter().printInfo("Found plugin PlaceholderAPI. Hooking into it.");
+        }
+    }
+
+    private void checkNexo() {
+        if(Bukkit.getServer().getPluginManager().getPlugin("Nexo") != null) {
+            this.existNexo = true;
+            this.nexoManager = new NexoManager();
+            LightCore.instance.getConsolePrinter().printInfo("Found plugin Nexo. Hooking into it.");
         }
     }
 

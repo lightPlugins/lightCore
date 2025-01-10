@@ -24,7 +24,6 @@ public class TitleSender {
      */
     public void sendTitle(Player player, String upperTitle, String subtitle, long fadeIn, long stay, long fadeOut) {
 
-        Audience audience = (Audience) player;
         Component upperTitleComp = LightCore.instance.getColorTranslation().universalColor(upperTitle, player);
         Component lowerTitleComp = LightCore.instance.getColorTranslation().universalColor(subtitle, player);
 
@@ -48,7 +47,7 @@ public class TitleSender {
         };
 
         Title title = Title.title(upperTitleComp, lowerTitleComp, times);
-        audience.showTitle(title);
+        player.showTitle(title);
     }
 
     /**
@@ -59,12 +58,11 @@ public class TitleSender {
      */
     public void sendTitle(Player player, String upperTitle, String subtitle) {
 
-        Audience audience = (Audience) player;
         Component upperTitleComp = LightCore.instance.getColorTranslation().universalColor(upperTitle, player);
         Component lowerTitleComp = LightCore.instance.getColorTranslation().universalColor(subtitle, player);
 
         Title title = Title.title(upperTitleComp, lowerTitleComp);
-        audience.showTitle(title);
+        player.showTitle(title);
     }
 
 }

@@ -1,7 +1,5 @@
 package io.lightstudios.core.reader.items;
 
-import de.tr7zw.changeme.nbtapi.NBT;
-import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBTList;
 import io.lightstudios.coins.LightCoins;
 import io.lightstudios.core.LightCore;
 import io.lightstudios.core.util.LightNumbers;
@@ -251,18 +249,6 @@ public class ItemSection {
 
     private void applyNBTData() {
 
-        NBT.modify(itemStack, nbt -> {
-            nbt.setString("displayname", this.displayName);
-
-            // not sure if this is the correct way to store a list of strings
-            ReadWriteNBTList<String> nbtLore = nbt.getStringList("lore");
-            // try to clear the list first before adding new values
-            // TODO: check if this is the correct way to clear the list
-            nbtLore.clear();
-            // add all lore lines to the list
-            for(String line : lore) { nbtLore.add(line); }
-
-        });
 
     }
 
@@ -308,7 +294,4 @@ public class ItemSection {
             ));
         }
     }
-
-
-
 }

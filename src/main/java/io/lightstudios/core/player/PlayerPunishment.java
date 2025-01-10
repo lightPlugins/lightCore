@@ -1,7 +1,9 @@
 package io.lightstudios.core.player;
 
+import io.lightstudios.core.LightCore;
 import io.lightstudios.core.proxy.messaging.SendProxyRequest;
 import io.lightstudios.core.util.LightTimers;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
 public class PlayerPunishment {
@@ -15,8 +17,10 @@ public class PlayerPunishment {
     public void autoKickPlayer(Player player, String reason) {
         SendProxyRequest.kickPlayerFromProxy(player, reason);
 
+        Component component = LightCore.instance.getColorTranslation().universalColor(reason, player);
+
         LightTimers.doSync(task -> {
-            player.kickPlayer("SERVER-KICK\n" + reason);
+            player.kick(component);
         }, 10L);
     }
 }
