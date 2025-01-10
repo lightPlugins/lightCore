@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class UpdateCustomItem implements Listener {
+public class UpdateLightItem implements Listener {
 
     @EventHandler
     public void onItemPickup(EntityPickupItemEvent event) {
@@ -39,5 +39,4 @@ public class UpdateCustomItem implements Listener {
 
         }
     }
-
 }
