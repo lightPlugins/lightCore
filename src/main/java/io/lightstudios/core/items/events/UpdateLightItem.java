@@ -24,22 +24,17 @@ public class UpdateLightItem implements Listener {
         if(event.getWhoClicked() instanceof Player player) {
             if(event.getCurrentItem() != null) {
 
-                player.sendMessage(Component.text("§cClicked a not null item"));
-
                 if(event.getClickedInventory() == null) {
-                    player.sendMessage(Component.text("§cInventory is null"));
                     return;
                 }
 
                 // cant update items while a player is in game mode creative
                 if(player.getGameMode().equals(GameMode.CREATIVE)) {
-                    player.sendMessage(Component.text("§cPlayer is in creative mode"));
                     return;
                 }
 
                 // ignore empty slots / clicks
                 if(event.getCurrentItem().getType() == Material.AIR) {
-                    player.sendMessage(Component.text("§cMaterial is AIR"));
                     return;
                 }
 
@@ -51,7 +46,6 @@ public class UpdateLightItem implements Listener {
 
                 // it's not a light item, so we don't need to do anything
                 if(lightItem == null) {
-                    player.sendMessage(Component.text("§cIts not an LightItem"));
                     return;
                 }
                 // set the stack size from the clicked item to the LightItem,
@@ -67,11 +61,7 @@ public class UpdateLightItem implements Listener {
                     newLightItem.getItemStack().setAmount(stackSize);
                     event.getClickedInventory().setItem(slot, newLightItem.getItemStack());
                     player.sendMessage(Component.text("§aItem updated!"));
-                } else {
-                    player.sendMessage(Component.text("§cClicked LightItem is not different"));
                 }
-            } else {
-                player.sendMessage(Component.text("§cCurrent clicked Item is null!"));
             }
         }
     }
