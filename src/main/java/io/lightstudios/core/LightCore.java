@@ -1,16 +1,17 @@
 package io.lightstudios.core;
 
 import com.zaxxer.hikari.HikariDataSource;
-import de.tr7zw.changeme.nbtapi.NBT;
 import io.lightstudios.core.commands.CoreReloadCommand;
 import io.lightstudios.core.commands.manager.CommandManager;
-import io.lightstudios.core.commands.tabcomplete.HologramCommand;
+import io.lightstudios.core.commands.HologramCommand;
 import io.lightstudios.core.database.SQLDatabase;
 import io.lightstudios.core.database.impl.MariaDatabase;
 import io.lightstudios.core.database.impl.MySQLDatabase;
 import io.lightstudios.core.database.impl.SQLiteDatabase;
 import io.lightstudios.core.database.model.ConnectionProperties;
 import io.lightstudios.core.database.model.DatabaseCredentials;
+import io.lightstudios.core.items.LightItem;
+import io.lightstudios.core.items.events.UpdateLightItem;
 import io.lightstudios.core.placeholder.PlaceholderRegistrar;
 import io.lightstudios.core.player.PlayerPunishment;
 import io.lightstudios.core.proxy.messaging.ReceiveProxyRequest;
@@ -35,6 +36,7 @@ import org.bukkit.Location;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -100,13 +102,15 @@ public class LightCore extends JavaPlugin {
         initDatabase();
         // Initialize Redis connection and check if it is enabled
         enableRedisConnection();
+        this.consolePrinter.printInfo("Reading core items ...");
+        // Read core items and add them to the cache
+        readCoreItems();
 
     }
 
     @Override
     public void onEnable() {
-        this.consolePrinter.printInfo("Successfully initialized LightCore. Ready for third party plugins.");
-        checkNBTAPI();
+
         registerCommands();
         registerEvents();
 
@@ -119,13 +123,15 @@ public class LightCore extends JavaPlugin {
         // on success loading the core module
         this.lightCoreEnabled = true;
 
+        this.consolePrinter.printInfo("Successfully initialized LightCore. Ready for third party plugins.");
+
     }
 
     @Override
     public void onDisable() {
-        this.consolePrinter.printInfo("Stopping LightCore instance ...");
         this.consolePrinter.printInfo("Stopping database connection ...");
         this.sqlDatabase.close();
+        this.consolePrinter.printInfo("Stopping LightCore instance ...");
         this.consolePrinter.printInfo("Successfully stopped LightCore instance.");
     }
 
@@ -145,7 +151,7 @@ public class LightCore extends JavaPlugin {
 
         try {
             this.itemFiles = new MultiFileManager("plugins/" + getName() + "/items/");
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Error reading item files.", e);
         }
     }
@@ -218,18 +224,6 @@ public class LightCore extends JavaPlugin {
                 this, IDENTIFIER, new ReceiveProxyRequest());
     }
 
-    private void checkNBTAPI() {
-
-        if(!NBT.preloadApi()) {
-            this.consolePrinter.printError(List.of(
-                    "There is a problem with NBT-API. Please contact the developer",
-                    "Disabling all core related plugins."));
-            this.lightCoreEnabled = false;
-        } else {
-            this.consolePrinter.printInfo("NBT-API successfully loaded.");
-        }
-    }
-
     private void printLogo() {
 
         String[] logo = {
@@ -246,21 +240,16 @@ public class LightCore extends JavaPlugin {
             Bukkit.getConsoleSender().sendMessage(line);
         }
 
-        String protocolLibVersion = "$&cnot found";
-        String placeholderAPIVersion = "&cnot found";
-        String townyVersion = "&cnot found";
-        String lightCoinsVersion = "&cnot found";
+        String placeholderAPIVersion = "§cnot found";
+        String townyVersion = "§cnot found";
+        String lightCoinsVersion = "§cnot found";
 
         Plugin placeholderAPI = Bukkit.getServer().getPluginManager().getPlugin("PlaceholderAPI");
-        Plugin protocolLib = Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib");
         Plugin towny = Bukkit.getServer().getPluginManager().getPlugin("Towny");
         Plugin lightCoins = Bukkit.getServer().getPluginManager().getPlugin("LightCoins");
 
         if(placeholderAPI != null) {
             placeholderAPIVersion = placeholderAPI.getDescription().getVersion();
-        }
-        if(protocolLib != null) {
-            protocolLibVersion = protocolLib.getDescription().getVersion();
         }
         if(towny != null) {
             townyVersion = towny.getDescription().getVersion();
@@ -274,7 +263,6 @@ public class LightCore extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage("          API-Version: §e" + getDescription().getAPIVersion());
         Bukkit.getConsoleSender().sendMessage("          Soft-Dependency Versions: §e");
         Bukkit.getConsoleSender().sendMessage("           - PlaceholderAPI: §e" + placeholderAPIVersion);
-        Bukkit.getConsoleSender().sendMessage("           - ProtocolLib: §e" + protocolLibVersion);
         Bukkit.getConsoleSender().sendMessage("           - LightCoins: §e" + lightCoinsVersion);
         Bukkit.getConsoleSender().sendMessage("           - Towny: §e" + townyVersion);
         Bukkit.getConsoleSender().sendMessage("          Java: §e" + System.getProperty("java.version"));
@@ -288,7 +276,7 @@ public class LightCore extends JavaPlugin {
     private void registerEvents() {
         // Register Events
         LightCore.instance.getConsolePrinter().printInfo("Registering Core Events ...");
-        // getServer().getPluginManager().registerEvents(new UpdateCustomItem(), this);
+        getServer().getPluginManager().registerEvents(new UpdateLightItem(), this);
         getServer().getPluginManager().registerEvents(new ProxyTeleportEvent(), this);
         new PlaceholderRegistrar("lightcore", "lightStudios", "1.0", true, new ArrayList<>()).register();
     }
@@ -321,5 +309,20 @@ public class LightCore extends JavaPlugin {
                 "Redis is not enabled in config.",
                 "If you want to use Redis for some server synchronisation,",
                 "please enable it in the config file."));
+    }
+    public void readCoreItems() {
+
+        List<File> files = itemFiles.getYamlFiles();
+        if(files.isEmpty()) {
+            getConsolePrinter().printError(List.of(
+                    "No item files found in the items folder.",
+                    "Skipping this part ..."));
+            return;
+        }
+        float start = System.currentTimeMillis();
+        HashMap<String, LightItem> foundItems = itemManager.addItemsToCache(this, files);
+        float end = System.currentTimeMillis();
+        this.consolePrinter.printInfo("Successfully read " + foundItems.size() + " items in " + (end - start) + "ms.");
+
     }
 }

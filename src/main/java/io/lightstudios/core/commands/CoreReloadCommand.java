@@ -1,11 +1,14 @@
 package io.lightstudios.core.commands;
 
 import io.lightstudios.core.LightCore;
+import io.lightstudios.core.items.LightItem;
+import io.lightstudios.core.util.files.FileManager;
 import io.lightstudios.core.util.interfaces.LightCommand;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class CoreReloadCommand implements LightCommand {
@@ -53,6 +56,12 @@ public class CoreReloadCommand implements LightCommand {
     @Override
     public boolean performAsPlayer(Player player, String[] args) {
         LightCore.instance.reloadCore();
+
+        HashMap<String, LightItem> updatedItems =
+                LightCore.instance.getItemManager().updateItems(LightCore.instance, LightCore.instance.getItemFiles().getYamlFiles());
+
+        LightCore.instance.getConsolePrinter().printInfo("Updated " + updatedItems.size() + " items");
+
         LightCore.instance.getMessageSender().sendPlayerMessage(player, LightCore.instance.getMessages().coreReload());
 
         return false;

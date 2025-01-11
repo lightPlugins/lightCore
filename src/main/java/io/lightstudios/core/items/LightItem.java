@@ -1,13 +1,16 @@
 package io.lightstudios.core.items;
 
-import com.nexomc.nexo.api.NexoItems;
 import io.lightstudios.core.LightCore;
 import lombok.Getter;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -17,6 +20,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
@@ -24,7 +28,7 @@ public class LightItem {
 
     private final ItemStack itemStack;
     private final ItemMeta itemMeta;
-    private final Component itemCustomName;
+    private final Component itemDisplayName;
     private final List<Component> itemLore;
     private final Material itemMaterial;
     private final int itemStackSize;
@@ -39,7 +43,7 @@ public class LightItem {
         this.nexoItem = builder.nexoItem;
         this.itemMaterial = builder.itemMaterial;
         this.itemStackSize = builder.itemStackSize;
-        this.itemCustomName = builder.itemCustomName;
+        this.itemDisplayName = builder.itemDisplayName;
         this.itemLore = builder.itemLore;
         this.enchantments = builder.enchantments;
         this.itemFlags = builder.itemFlags;
@@ -47,7 +51,17 @@ public class LightItem {
         this.itemID = builder.itemID;
 
         if(nexoItem) {
-            this.itemStack = LightCore.instance.getHookManager().getNexoManager().getNexoItemByID(itemID);
+            ItemStack nexoStack = LightCore.instance.getHookManager().getNexoManager().getNexoItemByID(itemID);
+            if(nexoStack != null) {
+                this.itemStack = nexoStack;
+            } else {
+                LightCore.instance.getConsolePrinter().printConfigError(List.of(
+                        "NexoItem is null for item id: §4" + itemID,
+                        "Please check if the item is registered in the Nexo plugin",
+                        "and the item ID is correct!"
+                ));
+                this.itemStack = new ItemStack(Material.STONE, itemStackSize);
+            }
         } else {
             this.itemStack = new ItemStack(itemMaterial, itemStackSize);
         }
@@ -57,12 +71,20 @@ public class LightItem {
         if(itemStackSize > 64 && itemStackSize <= 99) {
             this.itemMeta.setMaxStackSize(itemStackSize);
         }
-        if (itemCustomName != null) {
-            itemMeta.customName(itemCustomName);
+        if (itemDisplayName != null) {
+            itemMeta.displayName(itemDisplayName.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE));
         }
         if (itemLore != null) {
-            itemMeta.lore(itemLore);
+            PlainTextComponentSerializer plainTextSerializer = PlainTextComponentSerializer.plainText();
+            MiniMessage miniMessage = MiniMessage.miniMessage();
+
+            List<Component> translatedLore = itemLore.stream()
+                    .map(lore -> miniMessage.deserialize(plainTextSerializer.serialize(lore))
+                            .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
+                    .collect(Collectors.toList());
+            itemMeta.lore(translatedLore);
         }
+
 
         // apply enchantments from the hashmap
         for (Enchantment enchantment : enchantments.keySet()) {
@@ -75,6 +97,12 @@ public class LightItem {
             }
         }
 
+        // apply existing attribute modifiers into the meta, before adding new ones !
+        // -> https://github.com/PaperMC/Paper/issues/10693
+        for (Map.Entry<Attribute, AttributeModifier> modifier : itemStack.getType().getDefaultAttributeModifiers().entries()) {
+            itemMeta.addAttributeModifier(modifier.getKey(), modifier.getValue());
+        }
+
         // apply item flags from the list
         for (ItemFlag itemFlag : itemFlags) {
             if(itemFlag != null) {
@@ -85,27 +113,25 @@ public class LightItem {
                 ));
             }
         }
-
-        // Add a key-value pair to indicate this is a LightItem powered by lightCore
-        NamespacedKey isLightItem = new NamespacedKey("lightcore", "is_light_item");
         // Add a key-value pair to store the item ID (the config file name without the extension)
+        // example: "pluginname:itemid" -> 'lightcore:example_item' -> 'nexo:example-item'.
         NamespacedKey fromConfig = new NamespacedKey("lightcore", "item_id");
-        itemMeta.getPersistentDataContainer().set(isLightItem, PersistentDataType.BOOLEAN, true);
         itemMeta.getPersistentDataContainer().set(fromConfig, PersistentDataType.STRING, this.itemID);
         // finally, set the item meta to the item stack
-        itemStack.setItemMeta(itemMeta);
+        this.itemStack.setItemMeta(itemMeta);
     }
 
     public ItemStack translatePlaceholders(Player player) {
         PlainTextComponentSerializer plainTextSerializer = PlainTextComponentSerializer.plainText();
 
-        if (itemCustomName != null) {
-            String plainName = plainTextSerializer.serialize(itemCustomName);
+        if (itemDisplayName != null) {
+            String plainName = plainTextSerializer.serialize(itemDisplayName);
             Component translatedName = Component.text(PlaceholderAPI.setPlaceholders(player, plainName));
-            itemMeta.customName(translatedName);
+            itemMeta.displayName(translatedName);
         }
 
         if (itemLore != null) {
+
             List<Component> translatedLore = itemLore.stream()
                     .map(lore -> {
                         String plainLore = plainTextSerializer.serialize(lore);
@@ -122,7 +148,7 @@ public class LightItem {
     public static class Builder {
         private Material itemMaterial = Material.STONE;
         private int itemStackSize = 1;
-        private Component itemCustomName = Component.text("No Display Name Set");
+        private Component itemDisplayName = Component.text("No Display Name Set");
         private List<Component> itemLore = List.of(Component.text("No Lore Set"));
         private int customModelData = 0;
         private String itemID;
@@ -141,7 +167,7 @@ public class LightItem {
         }
 
         public Builder setCustomName(Component displayName) {
-            this.itemCustomName = displayName;
+            this.itemDisplayName = displayName;
             return this;
         }
 

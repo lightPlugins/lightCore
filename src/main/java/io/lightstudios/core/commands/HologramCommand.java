@@ -1,6 +1,9 @@
-package io.lightstudios.core.commands.tabcomplete;
+package io.lightstudios.core.commands;
 
+import io.lightstudios.core.LightCore;
+import io.lightstudios.core.items.LightItem;
 import io.lightstudios.core.util.interfaces.LightCommand;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
@@ -10,7 +13,7 @@ import java.util.List;
 public class HologramCommand implements LightCommand {
     @Override
     public List<String> getSubcommand() {
-        return List.of("holo");
+        return List.of("lightitem");
     }
 
     @Override
@@ -20,7 +23,7 @@ public class HologramCommand implements LightCommand {
 
     @Override
     public String getSyntax() {
-        return "/lightcore holo <text>";
+        return "/core <item-id>";
     }
 
     @Override
@@ -36,8 +39,9 @@ public class HologramCommand implements LightCommand {
     @Override
     public TabCompleter registerTabCompleter() {
         return (sender, command, alias, args) -> {
-            if (args.length == 1) {
-                return getSubcommand();
+            if (args.length == 2) {
+                return LightCore.instance.getItemManager().getItems().keySet().stream()
+                        .map(lightItemID -> lightItemID.split(":")[1]).toList();
             }
             return null;
         };
@@ -45,6 +49,16 @@ public class HologramCommand implements LightCommand {
 
     @Override
     public boolean performAsPlayer(Player player, String[] args) {
+
+        LightItem lightItem = LightCore.instance.getItemManager().getItemByName("lightcore:" + args[1]);
+
+        if(lightItem != null) {
+            player.getInventory().addItem(lightItem.getItemStack());
+            return true;
+        }
+
+        player.sendMessage(Component.text("§clightItem is null for id: " + args[1]));
+
         return false;
     }
 

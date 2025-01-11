@@ -8,7 +8,20 @@ debug:
 # The Language system for the core plugin
 # Available languages: en, de, fr, es, it, pt, ru, zh, ja, ko
 language: en
-
+# This is LightCore own item lookup system.
+# All plugins from me are using this system.
+# Any custom item will be updated if the item in the config file is different as the current item.
+itemLookUp:
+  # If enabled, LightCore updates all custom items, if the current item is different as
+  # the item in the config file.
+  # If disabled, LightCore will not update any existing custom items in the World.
+  updateItemStack: true
+  # The methods to update the item stack.
+  # - inventoryclickevent -> Update the item stack on inventory clicks
+  # - pickupitemevent -> Update the item stack on pickup an item (only player)
+  checkMethods:
+    - inventoryclickevent
+    - pickupitemevent
 # This system is used for synchronising data between multiple servers.
 # You NEED to have a Redis Server running to use this system on multiple servers !!!
 # INFO: If you are using a Pterodactyl Redis Server, you can use the docker

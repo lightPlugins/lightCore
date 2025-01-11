@@ -2,6 +2,7 @@ package io.lightstudios.core.hooks.nexo;
 
 import com.nexomc.nexo.api.NexoItems;
 import com.nexomc.nexo.items.ItemBuilder;
+import com.nexomc.nexo.items.NexoMeta;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -14,5 +15,4 @@ public class NexoManager {
         }
         return new ItemStack(Material.STONE, 1);
     }
-
 }

@@ -18,13 +18,13 @@
 # The item builder arguments. Possible arguments are:
 # minimum example: item: '<materialName> <amount>'
 # more complex example: item: 'diamond_pickaxe 1 enchant:efficiency:1 enchant:fortune:3 unbreakable hide_enchants hide_attributes hide_unbreakable'
-item: 'black_stained_glass_pane 1 hide_attributes'
+item: 'diamond_sword 1 hide_attributes'
 # The Display name of the item.
-customName: '#display-name#'
+customName: 'Example Item'
 # The lore of the item.
 lore:
   - '<gray>This is an example lore.'
-  - '<gray>You can use defined placeholders like <#ffdc73>#placeholdername# '
+  - '<rainbow>Rainbow lore!'
   - '<gray>from the placeholders section above.'
 # The custom model data of the item. (from resource pack)
 modelData: 0
