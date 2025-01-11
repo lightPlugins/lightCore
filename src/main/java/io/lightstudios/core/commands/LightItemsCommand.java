@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class HologramCommand implements LightCommand {
+public class LightItemsCommand implements LightCommand {
     @Override
     public List<String> getSubcommand() {
         return List.of("lightitem");

@@ -3,7 +3,7 @@ package io.lightstudios.core;
 import com.zaxxer.hikari.HikariDataSource;
 import io.lightstudios.core.commands.CoreReloadCommand;
 import io.lightstudios.core.commands.manager.CommandManager;
-import io.lightstudios.core.commands.HologramCommand;
+import io.lightstudios.core.commands.LightItemsCommand;
 import io.lightstudios.core.database.SQLDatabase;
 import io.lightstudios.core.database.impl.MariaDatabase;
 import io.lightstudios.core.database.impl.MySQLDatabase;
@@ -242,10 +242,12 @@ public class LightCore extends JavaPlugin {
 
         String placeholderAPIVersion = "§cnot found";
         String townyVersion = "§cnot found";
+        String fancyHologramsVersion = "§cnot found";
         String lightCoinsVersion = "§cnot found";
 
         Plugin placeholderAPI = Bukkit.getServer().getPluginManager().getPlugin("PlaceholderAPI");
         Plugin towny = Bukkit.getServer().getPluginManager().getPlugin("Towny");
+        Plugin fancyHolograms = Bukkit.getServer().getPluginManager().getPlugin("FancyHolograms");
         Plugin lightCoins = Bukkit.getServer().getPluginManager().getPlugin("LightCoins");
 
         if(placeholderAPI != null) {
@@ -253,6 +255,9 @@ public class LightCore extends JavaPlugin {
         }
         if(towny != null) {
             townyVersion = towny.getDescription().getVersion();
+        }
+        if(fancyHolograms != null) {
+            fancyHologramsVersion = fancyHolograms.getDescription().getVersion();
         }
         if(lightCoins != null) {
             lightCoinsVersion = lightCoins.getDescription().getVersion();
@@ -264,6 +269,7 @@ public class LightCore extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage("          Soft-Dependency Versions: §e");
         Bukkit.getConsoleSender().sendMessage("           - PlaceholderAPI: §e" + placeholderAPIVersion);
         Bukkit.getConsoleSender().sendMessage("           - LightCoins: §e" + lightCoinsVersion);
+        Bukkit.getConsoleSender().sendMessage("           - FancyHolograms: §e" + fancyHologramsVersion);
         Bukkit.getConsoleSender().sendMessage("           - Towny: §e" + townyVersion);
         Bukkit.getConsoleSender().sendMessage("          Java: §e" + System.getProperty("java.version"));
         Bukkit.getConsoleSender().sendMessage("          Authors: §e" + getDescription().getAuthors() + "\n");
@@ -284,7 +290,7 @@ public class LightCore extends JavaPlugin {
     public void registerCommands() {
         new CommandManager(new ArrayList<>(List.of(
                 new CoreReloadCommand(),
-                new HologramCommand()
+                new LightItemsCommand()
         )), "core");
     }
 
