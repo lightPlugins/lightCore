@@ -30,6 +30,8 @@ import io.lightstudios.core.util.files.MultiFileManager;
 import io.lightstudios.core.util.files.configs.CoreMessage;
 import io.lightstudios.core.util.files.configs.CoreSettings;
 import io.lightstudios.core.util.interfaces.LightCommand;
+import io.lightstudios.core.world.WorldManager;
+import io.lightstudios.core.world.events.BlockPlacedByPlayer;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -59,6 +61,7 @@ public class LightCore extends JavaPlugin {
     private RedisManager redisManager;
     private HookManager hookManager;
     private EconomyManager economyManager;
+    private WorldManager worldManager;
 
     private FileManager coreFile;
     private FileManager messageFile;
@@ -92,6 +95,7 @@ public class LightCore extends JavaPlugin {
         this.titleSender = new TitleSender();
         this.playerPunishment = new PlayerPunishment();
         this.itemManager = new LightItemManager();
+        this.worldManager = new WorldManager();
 
         this.consolePrinter.printInfo("Generate core files ...");
         // Generate core files
@@ -118,7 +122,9 @@ public class LightCore extends JavaPlugin {
         registerOutcoming();
         registerIncomings();
 
-        // this.vaultManager = new VaultManager();
+        // the economy manager is only enabled if a vault economy plugin is found
+        // automatically checks for LightCoins as economy plugin or use the default vault economy as provider
+        // used in all of my plugins
         this.economyManager = new EconomyManager();
 
         // on success loading the core module
@@ -283,8 +289,12 @@ public class LightCore extends JavaPlugin {
     private void registerEvents() {
         // Register Events
         LightCore.instance.getConsolePrinter().printInfo("Registering Core Events ...");
+        // update custom light items in player inventory
         getServer().getPluginManager().registerEvents(new UpdateLightItem(), this);
+        // teleport player to another server event throw proxy (velocity)
         getServer().getPluginManager().registerEvents(new ProxyTeleportEvent(), this);
+        // set nbt data to blocks placed by player
+        getServer().getPluginManager().registerEvents(new BlockPlacedByPlayer(), this);
         new PlaceholderRegistrar("lightcore", "lightStudios", "1.0", true, new ArrayList<>()).register();
     }
 
