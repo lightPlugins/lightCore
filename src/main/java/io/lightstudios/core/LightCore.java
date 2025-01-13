@@ -10,13 +10,13 @@ import io.lightstudios.core.database.impl.MySQLDatabase;
 import io.lightstudios.core.database.impl.SQLiteDatabase;
 import io.lightstudios.core.database.model.ConnectionProperties;
 import io.lightstudios.core.database.model.DatabaseCredentials;
+import io.lightstudios.core.economy.EconomyManager;
 import io.lightstudios.core.items.LightItem;
 import io.lightstudios.core.items.events.UpdateLightItem;
 import io.lightstudios.core.placeholder.PlaceholderRegistrar;
 import io.lightstudios.core.player.PlayerPunishment;
 import io.lightstudios.core.proxy.messaging.ReceiveProxyRequest;
 import io.lightstudios.core.redis.RedisManager;
-import io.lightstudios.core.economy.VaultManager;
 import io.lightstudios.core.events.ProxyTeleportEvent;
 import io.lightstudios.core.hooks.HookManager;
 import io.lightstudios.core.items.LightItemManager;
@@ -56,9 +56,9 @@ public class LightCore extends JavaPlugin {
     private MessageSender messageSender;
     private TitleSender titleSender;
     private PlayerPunishment playerPunishment;
-    private VaultManager vaultManager;
     private RedisManager redisManager;
     private HookManager hookManager;
+    private EconomyManager economyManager;
 
     private FileManager coreFile;
     private FileManager messageFile;
@@ -118,7 +118,8 @@ public class LightCore extends JavaPlugin {
         registerOutcoming();
         registerIncomings();
 
-        this.vaultManager = new VaultManager();
+        // this.vaultManager = new VaultManager();
+        this.economyManager = new EconomyManager();
 
         // on success loading the core module
         this.lightCoreEnabled = true;
