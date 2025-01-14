@@ -45,4 +45,9 @@ public class MessageSender {
         }
     }
 
+    public void sendPlayerMessage(Player player, Component component) {
+        // send synchronously a message to the specified player
+        LightTimers.doSync(task -> { player.sendMessage(component); }, 0L);
+    }
+
 }
