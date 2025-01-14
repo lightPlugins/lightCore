@@ -294,7 +294,7 @@ public class LightCore extends JavaPlugin {
         // teleport player to another server event throw proxy (velocity)
         getServer().getPluginManager().registerEvents(new ProxyTeleportEvent(), this);
         // set nbt data to blocks placed by player
-        getServer().getPluginManager().registerEvents(new BlockPlacedByPlayer(), this);
+        // getServer().getPluginManager().registerEvents(new BlockPlacedByPlayer(), this);
         new PlaceholderRegistrar("lightcore", "lightStudios", "1.0", true, new ArrayList<>()).register();
     }
 
