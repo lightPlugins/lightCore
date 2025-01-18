@@ -96,3 +96,16 @@ tasks {
         relocate("com.github.stefvanschie.inventoryframework", "io.lightstudios.core.util.libs.inv")
     }
 }
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                from (components["java"])
+                groupId = "com.github.lightPlugins"
+                artifactId = "lightCore"
+                version = rootProject.version.toString()
+            }
+        }
+    }
+}
