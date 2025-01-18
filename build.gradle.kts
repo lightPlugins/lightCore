@@ -91,21 +91,21 @@ tasks {
     }
 
     shadowJar {
+        archiveClassifier.set("")
         relocate("com.zaxxer.hikari", "io.lightstudios.core.util.libs.hikari")
         relocate("redis.clients.jedis", "io.lightstudios.core.util.libs.jedis")
         relocate("com.github.stefvanschie.inventoryframework", "io.lightstudios.core.util.libs.inv")
     }
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            create<MavenPublication>("maven") {
-                from (components["java"])
-                groupId = "com.github.lightPlugins"
-                artifactId = "lightCore"
-                version = rootProject.version.toString()
-            }
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+            artifact(tasks.shadowJar.get())
+            groupId = "com.github.lightPlugins"
+            artifactId = "lightCore"
+            version = rootProject.version.toString()
         }
     }
 }
