@@ -110,3 +110,7 @@ publishing {
         }
     }
 }
+
+tasks.named("publishMavenPublicationToMavenLocal") {
+    dependsOn(tasks.jar)
+}
