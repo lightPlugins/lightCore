@@ -101,8 +101,9 @@ tasks {
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            from(components["java"])
-            artifact(tasks.shadowJar.get())
+            artifact(tasks.shadowJar.get()) {
+                classifier = null
+            }
             groupId = "com.github.lightPlugins"
             artifactId = "lightCore"
             version = rootProject.version.toString()
