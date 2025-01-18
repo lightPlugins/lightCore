@@ -2,6 +2,7 @@ plugins {
     java
     id("io.freefair.lombok") version "8.11"
     id("com.gradleup.shadow") version "8.3.5"
+    id("maven-publish")
 }
 
 group = "io.lightstudios.core"
