@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "io.lightstudios.core"
-version = "0.4.0"
+version = "0.4.1"
 
 repositories {
     mavenCentral()
@@ -112,5 +112,5 @@ publishing {
 }
 
 tasks.named("publishMavenPublicationToMavenLocal") {
-    dependsOn(tasks.jar)
+    dependsOn(tasks.shadowJar)
 }
