@@ -62,7 +62,9 @@ public class CoreReloadCommand implements LightCommand {
 
         LightCore.instance.getConsolePrinter().printInfo("Updated " + updatedItems.size() + " items");
 
-        LightCore.instance.getMessageSender().sendPlayerMessage(player, LightCore.instance.getMessages().coreReload());
+        LightCore.instance.getMessageSender().sendPlayerMessage(player,
+                LightCore.instance.getMessages().prefix() +
+                        LightCore.instance.getMessages().coreReload());
 
         return false;
     }
