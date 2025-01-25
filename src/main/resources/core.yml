@@ -1,3 +1,21 @@
+#   ########################################################################################  #
+#
+# This file is generated with LightCore
+#
+#    ___       ___  ________  ___  ___  _________  ________  ________  ________  _______
+#   |\  \     |\  \|\   ____\|\  \|\  \|\___   ___\\   ____\|\   __  \|\   __  \|\  ___ \
+#   \ \  \    \ \  \ \  \___|\ \  \\\  \|___ \  \_\ \  \___|\ \  \|\  \ \  \|\  \ \   __/|
+#    \ \  \    \ \  \ \  \  __\ \   __  \   \ \  \ \ \  \    \ \  \\\  \ \   _  _\ \  \_|/__
+#     \ \  \____\ \  \ \  \|\  \ \  \ \  \   \ \  \ \ \  \____\ \  \\\  \ \  \\  \\ \  \_|\ \
+#      \ \_______\ \__\ \_______\ \__\ \__\   \ \__\ \ \_______\ \_______\ \__\\ _\\ \_______\
+#       \|_______|\|__|\|_______|\|__|\|__|    \|__|  \|_______|\|_______|\|__|\|__|\|_______|
+#
+# -> powered LightCore - A complex and lightweight core plugin for the Light plugin series.
+#    Copyright © 2024 LightStudios
+#
+# ######################################################  #
+#                     DEBUG SYSTEM                        #
+# ######################################################  #
 # The Debug system for the core plugin
 debug:
   # If enabled, the plugin will log all debug messages.
@@ -8,6 +26,25 @@ debug:
 # The Language system for the core plugin
 # Available languages: en, de, fr, es, it, pt, ru, zh, ja, ko
 language: en
+# ######################################################  #
+#                   PROTECTION SYSTEM                     #
+# ######################################################  #
+#
+# Here you can manage some protection systems for all of my
+# Plugins. It can prevent dupes or other exploits.
+protections:
+  # If a player joins a server, the plugin will add the player
+  # to the command cooldown list. This will prevent the player
+  # can execute any command until the cooldown is over.
+  # IMPORTANT: It is highly recommended to enable this feature.
+  commandCooldown:
+    # If enabled, the command cooldown system will be enabled.
+    enable: true
+    # The command cooldown in seconds.
+    cooldown: 5
+# ######################################################  #
+#                   ITEM LOOKUP SYSTEM                    #
+# ######################################################  #
 # This is LightCore own item lookup system.
 # All plugins from me are using this system.
 # Any custom item will be updated if the item in the config file is different as the current item.
@@ -22,6 +59,9 @@ itemLookUp:
   checkMethods:
     - inventoryclickevent
     - pickupitemevent
+# ######################################################  #
+#                  MULTI SERVER SETTINGS                  #
+# ######################################################  #
 # This system is used for synchronising data between multiple servers.
 # You NEED to have a Redis Server running to use this system on multiple servers !!!
 # INFO: If you are using a Pterodactyl Redis Server, you can use the docker
@@ -46,6 +86,9 @@ server-synchronisation:
     port: 6379
     # The password of the redis server.
     password: YourSecretPassword
+# ######################################################  #
+#                     STORAGE SYSTEM                      #
+# ######################################################  #
 # The Storage system for all my plugins
 # All sub plugins will use this storage system
 storage:

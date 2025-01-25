@@ -2,6 +2,7 @@ package io.lightstudios.core;
 
 import com.zaxxer.hikari.HikariDataSource;
 import io.lightstudios.core.commands.CoreReloadCommand;
+import io.lightstudios.core.commands.events.OnJoinCommandDelay;
 import io.lightstudios.core.commands.manager.CommandManager;
 import io.lightstudios.core.commands.LightItemsCommand;
 import io.lightstudios.core.database.SQLDatabase;
@@ -293,6 +294,8 @@ public class LightCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new UpdateLightItem(), this);
         // teleport player to another server event throw proxy (velocity)
         getServer().getPluginManager().registerEvents(new ProxyTeleportEvent(), this);
+        // delay command execution on player join (protection for dupes or other exploits)
+        getServer().getPluginManager().registerEvents(new OnJoinCommandDelay(), this);
         // set nbt data to blocks placed by player
         // getServer().getPluginManager().registerEvents(new BlockPlacedByPlayer(), this);
         new PlaceholderRegistrar("lightcore", "lightStudios", "1.0", true, new ArrayList<>()).register();

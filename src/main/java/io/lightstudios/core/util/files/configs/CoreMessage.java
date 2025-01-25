@@ -17,4 +17,5 @@ public class CoreMessage {
     public String coreReload() { return config.getString("coreReload"); }
     public String wrongSyntax() { return config.getString("wrongSyntax"); }
     public String noNumber() { return config.getString("noNumber"); }
+    public String commandCooldown() { return config.getString("protections.commandCooldown"); }
 }

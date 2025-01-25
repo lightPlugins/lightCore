@@ -45,4 +45,8 @@ public class CoreSettings {
     public int redisPort() { return config.getInt("server-synchronisation.redis.port"); }
     public String redisPassword() { return config.getString("server-synchronisation.redis.password"); }
     public String serverName() { return config.getString("server-synchronisation.server-name"); }
+
+    //protections
+    public boolean protectionCommandCooldownEnable() { return config.getBoolean("protections.commandCooldown.enable"); }
+    public long protectionCommandCooldownTime() { return config.getLong("protections.commandCooldown.cooldown"); }
 }

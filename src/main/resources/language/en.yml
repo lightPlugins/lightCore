@@ -6,3 +6,5 @@ coreReload: '<gray>Core plugin <#ffdc73>successfully<gray> reloaded!'
 noNumber: '<red>This is not a number! Please use valid numbers.'
 pushToNoMySQL: '<red>You have to enable the MySQL storage system to use this feature!'
 pushToSuccess: '<gray>Successfully pushed the data from local storage (sqlite) to the MySQL database.'
+protections:
+  commandCooldown: '<red>Please wait <dark_red>some seconds <red>before using a command after joining the server!'

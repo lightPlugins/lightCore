@@ -7,7 +7,7 @@
   "dependencies": [
     {
       "id": "velocity",
-      "optional": false
+      "optional": true
     }
   ]
 }

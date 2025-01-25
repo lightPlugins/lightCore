@@ -6,6 +6,7 @@ import io.lightstudios.core.hooks.lightcoins.LightCoinsManager;
 import io.lightstudios.core.hooks.nexo.NexoManager;
 import io.lightstudios.core.hooks.placeholderapi.PlaceholderAPIManager;
 import io.lightstudios.core.hooks.towny.TownyInterface;
+import io.lightstudios.core.world.WorldManager;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -18,12 +19,14 @@ public class HookManager {
     private boolean existLightCoins = false;
     private boolean existNexo = false;
     private boolean existFancyHolograms = false;
+    private boolean existWorldGuard = false;
 
     private TownyInterface townyInterface;
     private PlaceholderAPIManager placeholderAPIManager;
     private LightCoinsManager lightCoinsManager;
     private NexoManager nexoManager;
     private HologramManager hologramManager;
+    private WorldManager worldManager;
 
     public HookManager() {
         existLightCoins = checkPlugin("LightCoins", LightCoinsManager.class);
@@ -31,6 +34,7 @@ public class HookManager {
         existPlaceholderAPI = checkPlugin("PlaceholderAPI", PlaceholderAPIManager.class);
         existNexo = checkPlugin("Nexo", NexoManager.class);
         existFancyHolograms = checkPlugin("FancyHolograms", HologramManager.class);
+        existWorldGuard = checkPlugin("WorldGuard", WorldManager.class);
     }
 
     private <T> boolean checkPlugin(String pluginName, Class<T> managerClass) {
@@ -59,6 +63,8 @@ public class HookManager {
             nexoManager = (NexoManager) manager;
         } else if (managerClass == HologramManager.class) {
             hologramManager = (HologramManager) manager;
+        } else {
+            worldManager = (WorldManager) manager;
         }
     }
 

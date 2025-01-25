@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "io.lightstudios.core"
-version = "0.4.2"
+version = "0.4.3"
 
 repositories {
     mavenCentral()
@@ -27,6 +27,11 @@ repositories {
     maven {
         name = "placeholderapi"
         url = uri("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+    }
+
+    maven {
+        name = "worldguard"
+        url = uri("https://maven.enginehub.org/repo/")
     }
 
     maven {
@@ -59,6 +64,7 @@ dependencies {
     implementation("com.zaxxer:HikariCP:6.0.0")
     implementation("com.github.stefvanschie.inventoryframework:IF:0.10.17")
     implementation("commons-lang:commons-lang:2.6")
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.13-SNAPSHOT")
     compileOnly("com.palmergames.bukkit.towny:towny:0.100.2.0")
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("com.nexomc:nexo:0.7.0")
