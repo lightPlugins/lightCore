@@ -64,6 +64,7 @@ dependencies {
     implementation("com.zaxxer:HikariCP:6.0.0")
     implementation("com.github.stefvanschie.inventoryframework:IF:0.10.17")
     implementation("commons-lang:commons-lang:2.6")
+    implementation("org.bstats:bstats-bukkit:3.0.2")
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.13-SNAPSHOT")
     compileOnly("com.palmergames.bukkit.towny:towny:0.100.2.0")
     compileOnly("me.clip:placeholderapi:2.11.6")
@@ -101,6 +102,8 @@ tasks {
         relocate("com.zaxxer.hikari", "io.lightstudios.core.util.libs.hikari")
         relocate("redis.clients.jedis", "io.lightstudios.core.util.libs.jedis")
         relocate("com.github.stefvanschie.inventoryframework", "io.lightstudios.core.util.libs.inv")
+        relocate("org.bstats", "io.lightstudios.core.util.libs.bstats")
+
     }
 }
 
