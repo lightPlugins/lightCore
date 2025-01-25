@@ -34,6 +34,7 @@ import io.lightstudios.core.util.interfaces.LightCommand;
 import io.lightstudios.core.world.WorldManager;
 import io.lightstudios.core.world.events.BlockPlacedByPlayer;
 import lombok.Getter;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.plugin.Plugin;
@@ -130,6 +131,10 @@ public class LightCore extends JavaPlugin {
 
         // on success loading the core module
         this.lightCoreEnabled = true;
+
+        this.consolePrinter.printInfo("Starting new bStats metrics instance ...");
+        // bStats metrics for LightCoins -> ID: 24559
+        new Metrics(this, 24559);
 
         this.consolePrinter.printInfo("Successfully initialized LightCore. Ready for third party plugins.");
 

@@ -65,6 +65,7 @@ dependencies {
     implementation("com.github.stefvanschie.inventoryframework:IF:0.10.17")
     implementation("commons-lang:commons-lang:2.6")
     implementation("org.bstats:bstats-bukkit:3.0.2")
+    implementation("org.bstats:bstats-velocity:3.0.2")
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.13-SNAPSHOT")
     compileOnly("com.palmergames.bukkit.towny:towny:0.100.2.0")
     compileOnly("me.clip:placeholderapi:2.11.6")
