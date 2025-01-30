@@ -1,0 +1,10 @@
+title: 'Example Title'
+size: 54
+content:
+  '0':
+    item: 'diamond_ore 1 hide_enchantments hide_attributes'
+    displayName: 'Diamond Ore'
+    lore:
+      - '<blue>This is a diamond ore.'
+    clickActions:
+      - 'close-inventory'

@@ -12,6 +12,7 @@ import io.lightstudios.core.database.impl.SQLiteDatabase;
 import io.lightstudios.core.database.model.ConnectionProperties;
 import io.lightstudios.core.database.model.DatabaseCredentials;
 import io.lightstudios.core.economy.EconomyManager;
+import io.lightstudios.core.inventory.events.MenuEvent;
 import io.lightstudios.core.items.LightItem;
 import io.lightstudios.core.items.events.UpdateLightItem;
 import io.lightstudios.core.placeholder.PlaceholderRegistrar;
@@ -296,6 +297,8 @@ public class LightCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ProxyTeleportEvent(), this);
         // delay command execution on player join (protection for dupes or other exploits)
         getServer().getPluginManager().registerEvents(new OnJoinCommandDelay(), this);
+        // InventoryClickEvent for LightMenus
+        getServer().getPluginManager().registerEvents(new MenuEvent(), this);
         // set nbt data to blocks placed by player
         // getServer().getPluginManager().registerEvents(new BlockPlacedByPlayer(), this);
         new PlaceholderRegistrar("lightcore", "lightStudios", "1.0", true, new ArrayList<>()).register();
