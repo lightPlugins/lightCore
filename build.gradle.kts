@@ -1,12 +1,13 @@
 plugins {
     java
+    kotlin("jvm") version "1.8.0" // Ensure you have the Kotlin plugin applied
     id("io.freefair.lombok") version "8.11"
     id("com.gradleup.shadow") version "8.3.5"
     id("maven-publish")
 }
 
 group = "io.lightstudios.core"
-version = "0.4.4"
+version = "0.4.5"
 
 repositories {
     mavenCentral()
@@ -104,6 +105,13 @@ tasks {
         relocate("redis.clients.jedis", "io.lightstudios.core.util.libs.jedis")
         relocate("com.github.stefvanschie.inventoryframework", "io.lightstudios.core.util.libs.inv")
         relocate("org.bstats", "io.lightstudios.core.util.libs.bstats")
+        dependencies {
+            include(dependency("com.zaxxer:HikariCP"))
+            include(dependency("redis.clients:jedis"))
+            include(dependency("com.github.stefvanschie.inventoryframework:IF"))
+            include(dependency("org.bstats:bstats-bukkit"))
+            include(dependency("org.bstats:bstats-velocity"))
+        }
 
     }
 }
