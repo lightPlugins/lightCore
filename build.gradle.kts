@@ -105,14 +105,6 @@ tasks {
         relocate("redis.clients.jedis", "io.lightstudios.core.util.libs.jedis")
         relocate("com.github.stefvanschie.inventoryframework", "io.lightstudios.core.util.libs.inv")
         relocate("org.bstats", "io.lightstudios.core.util.libs.bstats")
-        dependencies {
-            include(dependency("com.zaxxer:HikariCP"))
-            include(dependency("redis.clients:jedis"))
-            include(dependency("com.github.stefvanschie.inventoryframework:IF"))
-            include(dependency("org.bstats:bstats-bukkit"))
-            include(dependency("org.bstats:bstats-velocity"))
-        }
-
     }
 }
 
