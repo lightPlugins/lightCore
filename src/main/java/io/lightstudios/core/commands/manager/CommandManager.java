@@ -52,28 +52,28 @@ public class CommandManager implements CommandExecutor {
         }
     }
 
-    public void registerCommand(String name) {
+    private void registerCommand(String name) {
         PluginCommand command = createPluginCommand(name);
         if (command != null) {
             command.setExecutor(this);
             Map<String, TabCompleter> lightCommandTabCompleter = new HashMap<>();
-            List<String> ecoLightCommands = new ArrayList<>(); // List of LightCommands for /eco
+            List<LightCommand> ecoLightCommands = new ArrayList<>(); // List of LightCommands for /eco
 
             LightCore.instance.getConsolePrinter().printInfo("Successfully registered command " + command.getName());
 
-            for (LightCommand LightCommand : getLightCommands()) {
-                TabCompleter tabCompleter = LightCommand.registerTabCompleter();
+            for (LightCommand lightCommand : getLightCommands()) {
+                TabCompleter tabCompleter = lightCommand.registerTabCompleter();
                 if (tabCompleter != null) {
-                    List<String> lightCommandNames = LightCommand.getSubcommand();
+                    List<String> lightCommandNames = lightCommand.getSubcommand();
 
-                    if(lightCommandNames.isEmpty()) {
+                    if (lightCommandNames.isEmpty()) {
                         command.setTabCompleter(tabCompleter);
                         continue;
                     }
                     for (String lightCommandName : lightCommandNames) {
                         lightCommandTabCompleter.put(lightCommandName, tabCompleter);
-                        ecoLightCommands.add(lightCommandName);
                     }
+                    ecoLightCommands.add(lightCommand);
                 }
             }
 
@@ -84,12 +84,8 @@ public class CommandManager implements CommandExecutor {
             // Register the command with the server
             try {
                 Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-                // make the field accessible, because its private by default
                 commandMapField.setAccessible(true);
                 CommandMap commandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
-                // use "" to register the command without the namespace
-                // commandMap.register(name, command); /lightcore:lightcore reload
-                // commandMap.register("", command); /lightcore reload
                 commandMap.register("", command);
                 this.commandName = name;
             } catch (Exception e) {
