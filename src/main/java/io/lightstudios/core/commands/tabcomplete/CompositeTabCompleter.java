@@ -25,7 +25,7 @@ public class CompositeTabCompleter implements TabCompleter {
         if (args.length == 1) {
             if (sender instanceof Player player) {
                 return subCommands.stream()
-                        .filter(lightCommand -> player.hasPermission(lightCommand.getPermission()))
+                        .filter(lightCommand -> player.hasPermission(lightCommand.getPermission()) || lightCommand.getPermission().isEmpty())
                         .map(LightCommand::getSubcommand)
                         .flatMap(List::stream)
                         .collect(Collectors.toList());

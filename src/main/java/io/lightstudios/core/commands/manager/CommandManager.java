@@ -123,7 +123,7 @@ public class CommandManager implements CommandExecutor {
                         return true;
                     }
 
-                    if (player.hasPermission(lightCommand.getPermission())) {
+                    if (player.hasPermission(lightCommand.getPermission()) || lightCommand.getPermission().isEmpty()) {
 
                         if (args.length != lightCommand.maxArgs() && !lightCommand.getSubcommand().isEmpty()) {
                             LightCore.instance.getMessageSender().sendPlayerMessage(player, LightCore.instance.getMessages().wrongSyntax()
