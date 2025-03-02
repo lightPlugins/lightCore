@@ -44,7 +44,10 @@ public class CoreSettings {
     public String redisHost() { return config.getString("server-synchronisation.redis.host"); }
     public int redisPort() { return config.getInt("server-synchronisation.redis.port"); }
     public String redisPassword() { return config.getString("server-synchronisation.redis.password"); }
+    public boolean redisUseSSL() { return config.getBoolean("server-synchronisation.redis.useSSL"); }
     public String serverName() { return config.getString("server-synchronisation.server-name"); }
+
+    public boolean checkForUpdates() { return config.getBoolean("checkForUpdates"); }
 
     //protections
     public boolean protectionCommandCooldownEnable() { return config.getBoolean("protections.commandCooldown.enable"); }

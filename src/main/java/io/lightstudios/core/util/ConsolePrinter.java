@@ -26,6 +26,18 @@ public class ConsolePrinter {
         sendEmptyLine();
     }
 
+    public void printWarning(String message) {
+        Bukkit.getConsoleSender().sendMessage(prefix + "§8[§6WARNING§8] §e" + message);
+    }
+
+    public void printWarning(List<String> messages) {
+        sendEmptyLine();
+        for (String message : messages) {
+            Bukkit.getConsoleSender().sendMessage(prefix + "§8[§6WARNING§8] §e" + message);
+        }
+        sendEmptyLine();
+    }
+
     public void printError(String message) {
         Bukkit.getConsoleSender().sendMessage(prefix + "§8[§4ERROR§8] §c" + message);
     }

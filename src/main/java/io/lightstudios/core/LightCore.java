@@ -12,6 +12,7 @@ import io.lightstudios.core.database.impl.SQLiteDatabase;
 import io.lightstudios.core.database.model.ConnectionProperties;
 import io.lightstudios.core.database.model.DatabaseCredentials;
 import io.lightstudios.core.economy.EconomyManager;
+import io.lightstudios.core.github.VersionChecker;
 import io.lightstudios.core.inventory.events.MenuEvent;
 import io.lightstudios.core.items.LightItem;
 import io.lightstudios.core.items.events.UpdateLightItem;
@@ -33,7 +34,6 @@ import io.lightstudios.core.util.files.configs.CoreMessage;
 import io.lightstudios.core.util.files.configs.CoreSettings;
 import io.lightstudios.core.util.interfaces.LightCommand;
 import io.lightstudios.core.world.WorldManager;
-import io.lightstudios.core.world.events.BlockPlacedByPlayer;
 import lombok.Getter;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -65,6 +65,7 @@ public class LightCore extends JavaPlugin {
     private HookManager hookManager;
     private EconomyManager economyManager;
     private WorldManager worldManager;
+    private VersionChecker versionChecker;
 
     private FileManager coreFile;
     private FileManager messageFile;
@@ -129,6 +130,12 @@ public class LightCore extends JavaPlugin {
         // automatically checks for LightCoins as economy plugin or use the default vault economy as provider
         // used in all of my plugins
         this.economyManager = new EconomyManager();
+        // GitHub version checker for all my “Light” plugin series
+
+        if(this.settings.checkForUpdates()) {
+            this.versionChecker = new VersionChecker();
+        }
+
 
         // on success loading the core module
         this.lightCoreEnabled = true;
@@ -319,6 +326,18 @@ public class LightCore extends JavaPlugin {
     public void reloadCore() {
         generateCoreFiles();
         this.consolePrinter.printInfo("Reloaded the core files.");
+
+        if (!this.settings.checkForUpdates()) {
+            if (this.versionChecker != null) {
+                this.versionChecker.getScheduler().shutdown();
+            }
+            this.versionChecker = null;
+        } else {
+            if(this.versionChecker == null) {
+                this.consolePrinter.printInfo("Enable version checker after reload.");
+                this.versionChecker = new VersionChecker();
+            }
+        }
     }
 
     private void enableRedisConnection() {
@@ -328,7 +347,8 @@ public class LightCore extends JavaPlugin {
             this.redisManager = new RedisManager(
                     settings.redisHost(),
                     settings.redisPort(),
-                    settings.redisPassword()
+                    settings.redisPassword(),
+                    settings.redisUseSSL()
             );
             this.isRedis = true;
             return;
@@ -342,7 +362,7 @@ public class LightCore extends JavaPlugin {
 
         List<File> files = itemFiles.getYamlFiles();
         if(files.isEmpty()) {
-            getConsolePrinter().printError(List.of(
+            getConsolePrinter().printWarning(List.of(
                     "No item files found in the items folder.",
                     "Skipping this part ..."));
             return;

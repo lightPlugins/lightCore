@@ -85,7 +85,10 @@ server-synchronisation:
     # The port of the redis server.
     port: 6379
     # The password of the redis server.
-    password: YourSecretPassword
+    # If you don't have a password, set password to an empty string. (password: '')
+    password: 'YourSecretPassword'
+    # Enable SSL for the redis server.
+    useSSL: false
 # ######################################################  #
 #                     STORAGE SYSTEM                      #
 # ######################################################  #
@@ -118,3 +121,5 @@ storage:
     leak-detection-threshold: 0
     connection-test-query: "SELECT 1"
     character-encoding: "utf8"
+# Should we check for updates for all “Light” plugins?
+checkForUpdates: true
