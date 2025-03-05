@@ -1,5 +1,6 @@
 package io.lightstudios.core.inventory;
 
+import io.lightstudios.core.LightCore;
 import io.lightstudios.core.inventory.model.MenuItem;
 import io.lightstudios.core.util.LightTimers;
 import net.kyori.adventure.text.Component;
@@ -24,6 +25,9 @@ public abstract class LightMenu implements InventoryHolder {
     protected int totalPages;
     private final Map<UUID, Integer> clickTracker = new HashMap<>();
     private final Map<UUID, Long> cooldownTracker = new HashMap<>();
+
+    private int updaterTaskId = -1;
+
 
     public LightMenu(Component title, int size) {
         this.inventory = Bukkit.createInventory(this, size, title);
@@ -58,6 +62,11 @@ public abstract class LightMenu implements InventoryHolder {
 
     public void open(Player player) {
         player.openInventory(inventory);
+        // Starte den Update-Timer, wenn er nicht läuft
+        if (updaterTaskId == -1) {
+            startUpdateTimer();
+        }
+
     }
 
     public void handleMenuClick(InventoryClickEvent event) {
@@ -123,6 +132,12 @@ public abstract class LightMenu implements InventoryHolder {
     protected abstract void updateInventory();
 
     protected void addNavigationItems() {
+
+        // only apply navigation items if there are more than 1 page
+        if(totalPages <= 1) {
+            return;
+        }
+
         // Add next page item
         setItem(List.of(0, 1), 53, new MenuItem(new ItemStack(Material.ARROW), (event, item) -> {
             nextPage((Player) event.getWhoClicked());
@@ -144,4 +159,35 @@ public abstract class LightMenu implements InventoryHolder {
             }
         }
     }
+
+    /**
+     * Startet einen regelmäßigen Timer, der alle 1 Sekunde `updateInventory()` aufruft.
+     */
+    private void startUpdateTimer() {
+        updaterTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(
+                LightCore.instance,
+                () -> {
+                    LightCore.instance.getConsolePrinter().printDebug("Update timer triggered");
+                    if (inventory.getViewers().isEmpty()) {
+                        stopUpdateTimer(); // Stoppe den Timer, wenn keine Spieler das Menü geöffnet haben
+                        return;
+                    }
+                    updateInventory(); // Aktualisiere das Inventar
+                },
+                0L, // Sofort starten
+                20L // Alle 20 Ticks = 1 Sekunde
+        );
+    }
+
+    /**
+     * Beendet den Timer, wenn kein Spieler mehr das Menü geöffnet hat.
+     */
+    private void stopUpdateTimer() {
+        if (updaterTaskId != -1) {
+            Bukkit.getScheduler().cancelTask(updaterTaskId);
+            updaterTaskId = -1;
+            LightCore.instance.getConsolePrinter().printDebug("Update timer stopped!");
+        }
+    }
+
 }

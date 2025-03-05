@@ -18,7 +18,7 @@ public class MenuEvent implements Listener {
         }
     }
 
-    // @EventHandler
+    @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         TestMenu menu = new TestMenu();
