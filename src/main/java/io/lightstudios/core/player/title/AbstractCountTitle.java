@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import java.time.Duration;
 
-public abstract class AbstractTitle {
+public abstract class AbstractCountTitle {
 
     // Default times for fadeIn, stay, and fadeOut
     protected Title.Times defaultTimes = Title.Times.times(

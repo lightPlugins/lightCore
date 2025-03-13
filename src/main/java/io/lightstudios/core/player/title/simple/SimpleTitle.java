@@ -1,10 +1,11 @@
-package io.lightstudios.core.player.title;
+package io.lightstudios.core.player.title.simple;
 
+import io.lightstudios.core.player.title.AbstractCountTitle;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.entity.Player;
 
-public class SimpleTitleSender extends AbstractTitle {
+public class SimpleTitle extends AbstractCountTitle {
 
     @Override
     public void sendTitle(Player player, Component upperTitle, Component subtitle, Title.Times times) {

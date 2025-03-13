@@ -61,6 +61,7 @@ dependencies {
     compileOnly("de.oliver:FancyHolograms:2.4.1")
     compileOnly("com.github.lightPlugins:lightCoins:0.0.2")
     compileOnly("org.mariadb.jdbc:mariadb-java-client:3.5.0")
+    implementation("org.yaml:snakeyaml:2.4")
     implementation("redis.clients:jedis:5.2.0")
     implementation("com.zaxxer:HikariCP:6.0.0")
     implementation("com.github.stefvanschie.inventoryframework:IF:0.10.17")
@@ -105,6 +106,7 @@ tasks {
         relocate("redis.clients.jedis", "io.lightstudios.core.util.libs.jedis")
         relocate("com.github.stefvanschie.inventoryframework", "io.lightstudios.core.util.libs.inv")
         relocate("org.bstats", "io.lightstudios.core.util.libs.bstats")
+        relocate("org.yaml.snakeyaml", "io.lightstudios.core.util.libs.snakeyaml")
     }
 }
 
