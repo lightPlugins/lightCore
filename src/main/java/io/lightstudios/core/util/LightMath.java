@@ -1,4 +1,4 @@
-package io.lightstudios.core.util.expressions;
+package io.lightstudios.core.util;
 
 import java.util.Stack;
 
