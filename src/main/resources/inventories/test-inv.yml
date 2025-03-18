@@ -1,0 +1,75 @@
+# The title of the Inventory (PlaceholderAPI support)
+title: 'Example Title'
+# The size of the Inventory
+size: 6
+# The update intervall, how often the inventory refreshes his content
+update-intervall: 2
+# The main section for the inventory content
+content:
+  # The Decoration subsection for the fill items
+  decoration:
+    # Populate empty slots with this item
+    # has no lore and no displayname and uses hide_attribute
+    enable: true
+    item: black_stained_glass_pane
+  # The Inventory Navigation subsection
+  # namespaces such as 'close' cannot be renamed!
+  navigation:
+    # Close Namespace for closing the inventory
+    close:
+      # The slots where the item will be populated
+      slots: [49]
+      # the ItemStack#setAmount for the page number
+      use-page-number-as-amount: false
+      # The Material from the ItemStack
+      item: redstone
+      # The Displayname from the ItemStack (PlaceholderAPI support)
+      display-name: '<red>Close Inventory'
+      # The custom model data from the ItemStack
+      custom-model-data: 1337
+      # The Lore from the ItemStack (PlaceholderAPI support)
+      lore:
+        - 'Close Inventory'
+    # Previous page Namespace for going one page back
+    previous-page:
+      slots: [47]
+      use-page-number-as-amount: false
+      item: arrow
+      display-name: '<yellow>Previous Page'
+      custom-model-data: 1337
+      lore:
+        - 'Previous page'
+    # Next page Namespace for going one page forward
+    next-page:
+      slots: [51]
+      use-page-number-as-amount: false
+      item: arrow
+      display-name: '<yellow>Next Page'
+      custom-model-data: 1337
+      lore:
+        - 'Next page'
+  # In this Static subsection will be necessary items be populated
+  # given by a plugin, that is required.
+  # Namespaces such as 'teleport' cannot be renamed!
+  static:
+    teleport:
+      slots: [10]
+      item: diamond
+      display-name: 'Static Item'
+      custom-model-data: 1337
+      lore:
+        - 'The namespace key `teleport` cant be'
+        - 'renamed or cloned. Only the params such'
+        - 'as lore and displayname and so on ...'
+  # In this Custom subsection can the user add their own items
+  # for visuals only.
+  # Namespaces such as 'my-own-item-one' CAN be renamed as your wishes!
+  custom:
+    my-own-item-one:
+      slots: [11]
+      item: paper
+      display-name: 'View only item'
+      custom-model-data: 1337
+      lore:
+        - 'Here you can setup your own'
+        - '`decorative` items.'

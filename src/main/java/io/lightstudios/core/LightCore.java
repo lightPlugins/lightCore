@@ -13,7 +13,9 @@ import io.lightstudios.core.database.model.ConnectionProperties;
 import io.lightstudios.core.database.model.DatabaseCredentials;
 import io.lightstudios.core.economy.EconomyManager;
 import io.lightstudios.core.github.VersionChecker;
+import io.lightstudios.core.inventory.LightInventory;
 import io.lightstudios.core.inventory.events.MenuEvent;
+import io.lightstudios.core.inventory.model.InventoryData;
 import io.lightstudios.core.items.LightItem;
 import io.lightstudios.core.items.events.UpdateLightItem;
 import io.lightstudios.core.placeholder.PlaceholderRegistrar;
@@ -38,14 +40,14 @@ import lombok.Getter;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.sql.SQLException;
+import java.util.*;
 
 @Getter
 public class LightCore extends JavaPlugin {
@@ -74,9 +76,11 @@ public class LightCore extends JavaPlugin {
     private CoreMessage messages;
 
     private MultiFileManager itemFiles;
+    private MultiFileManager inventoryFiles;
     private LightItemManager itemManager;
 
     private final ArrayList<LightCommand> commands = new ArrayList<>();
+    private final Map<String, InventoryData> lightInventories = new HashMap<>();
     private final HashMap<UUID, Location> teleportRequests = new HashMap<>();
     public static final String IDENTIFIER = "lightstudio:lightcore";
 
@@ -113,6 +117,7 @@ public class LightCore extends JavaPlugin {
         this.consolePrinter.printInfo("Reading core items ...");
         // Read core items and add them to the cache
         readCoreItems();
+        loadInventories();
 
     }
 
@@ -151,7 +156,18 @@ public class LightCore extends JavaPlugin {
     @Override
     public void onDisable() {
         this.consolePrinter.printInfo("Stopping database connection ...");
-        this.sqlDatabase.close();
+
+        try {
+            this.sqlDatabase.getConnection().close();
+            this.consolePrinter.printInfo("Successfully closed database connection.");
+        } catch (SQLException e) {
+            LightCore.instance.getConsolePrinter().printError(List.of(
+                    "Could not close database connection.",
+                    "Error: " + e.getMessage()
+            ));
+        }
+
+
         this.consolePrinter.printInfo("Stopping LightCore instance ...");
         this.consolePrinter.printInfo("Successfully stopped LightCore instance.");
     }
@@ -172,6 +188,7 @@ public class LightCore extends JavaPlugin {
 
         try {
             this.itemFiles = new MultiFileManager("plugins/" + getName() + "/items/");
+            this.inventoryFiles = new MultiFileManager("plugins/" + getName() + "/inventories/");
         } catch (Exception e) {
             throw new RuntimeException("Error reading item files.", e);
         }
@@ -325,6 +342,7 @@ public class LightCore extends JavaPlugin {
 
     public void reloadCore() {
         generateCoreFiles();
+        loadInventories();
         this.consolePrinter.printInfo("Reloaded the core files.");
 
         if (!this.settings.checkForUpdates()) {
@@ -372,5 +390,37 @@ public class LightCore extends JavaPlugin {
         float end = System.currentTimeMillis();
         this.consolePrinter.printInfo("Successfully read " + foundItems.size() + " items in " + (end - start) + "ms.");
 
+    }
+    
+    public void loadInventories() {
+
+        getConsolePrinter().printInfo("Loading inventories ...");
+        this.lightInventories.clear();
+
+        // create InventoryData from inventoryfiles
+        List<File> files = inventoryFiles.getYamlFiles();
+        if (files.isEmpty()) {
+            getConsolePrinter().printWarning(List.of(
+                    "No inventory files found in the inventories folder.",
+                    "Skipping this part ..."));
+            return;
+        }
+
+        files.forEach(file -> {
+            try {
+                FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+                String id = file.getName().replace(".yml", "");
+                InventoryData inventoryData = new InventoryData(config);
+                this.lightInventories.put(id, inventoryData);
+                getConsolePrinter().printInfo("Loaded inventory: §e" + id);
+            } catch (Exception e) {
+                e.printStackTrace();
+                getConsolePrinter().printError(List.of(
+                        "Failed to load inventory from file: " + file.getName(),
+                        "Error: " + e.getMessage()));
+            }
+        });
+
+        getConsolePrinter().printInfo("Successfully loaded " + this.lightInventories.size() + " inventories.");
     }
 }
