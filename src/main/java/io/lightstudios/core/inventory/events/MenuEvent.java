@@ -28,7 +28,7 @@ public class MenuEvent implements Listener {
         }
     }
 
-    @EventHandler
+    // @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         // Test-Menü greifen
         InventoryData invData = LightCore.instance.getLightInventories().get("test-inv");
