@@ -3,18 +3,15 @@ package io.lightstudios.core.player.title.countupdown;
 import io.lightstudios.core.LightCore;
 import io.lightstudios.core.player.title.AbstractCountTitle;
 import io.lightstudios.core.util.ColorTranslation;
-import io.lightstudios.core.util.LightNumbers;
 import io.lightstudios.core.util.LightTimers;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.title.Title;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
-import java.util.Map;
 
 public class AnimatedCountTitle extends AbstractCountTitle {
 
