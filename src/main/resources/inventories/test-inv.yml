@@ -2,6 +2,8 @@
 title: 'Example Title'
 # The size of the Inventory
 size: 6
+# How many pages you want
+max-pages: 1
 # The update intervall, how often the inventory refreshes his content
 update-intervall: 2
 # The main section for the inventory content

@@ -28,6 +28,14 @@ public class MenuEvent implements Listener {
         }
     }
 
+    @EventHandler
+    public void onBlockBreakSecond(BlockBreakEvent event) {
+        InventoryData invData = LightCore.instance.getLightInventories().get("test-inv");
+        LightInventory lightInventory = new LightInventory(invData);
+        lightInventory.open(event.getPlayer());
+
+    }
+
     // @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         // Test-Menü greifen
@@ -67,6 +75,4 @@ public class MenuEvent implements Listener {
         // Öffne das Menü für den Spieler
         lightInventory.open(event.getPlayer());
     }
-
-
 }

@@ -133,8 +133,6 @@ public class LightInventory extends LightMenu {
                         if (customActions.containsKey(namespaceKey)) {
                             customActions.get(namespaceKey).accept(player, itemStack); // Führe die Aktion aus
                             inventory.setItem(event.getSlot(), itemStack); // Aktualisiere das geänderte Item im Menü
-                        } else {
-                            player.sendMessage("Du hast auf ein Item geklickt: " + namespaceKey);
                         }
 
                         // Beispiel: Schließe das Inventar, wenn das Item "close" ist

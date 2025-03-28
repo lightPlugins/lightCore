@@ -4,11 +4,13 @@ import io.lightstudios.core.LightCore;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,16 +20,19 @@ import java.util.Map;
 public class InventoryData {
 
     private final Component title;
+    private final FileConfiguration fileConfiguration;
     private final int size;
     private final int updateInterval;
     private final ItemStack decorationItem;
     private final Map<String, InventoryItem> navigationItems;
     private final Map<String, InventoryItem> staticItems;
     private final Map<String, InventoryItem> customItems;
+    private final ConfigurationSection extraSettings;
 
     public InventoryData(FileConfiguration config) {
         // Basiswerte aus der Konfiguration laden
         this.title = colorize(config.getString("title", "Default Title"));
+        this.fileConfiguration = config;
         this.size = config.getInt("size", 6);
         this.updateInterval = config.getInt("update-intervall", 2);
 
@@ -47,6 +52,9 @@ public class InventoryData {
 
         // Benutzerdefinierte Items laden
         this.customItems = loadItems(config, "content.custom");
+
+        // read extra settings from the inventory file
+        this.extraSettings = config.getConfigurationSection("content.extra-settings");
     }
 
     /**
@@ -93,18 +101,22 @@ public class InventoryData {
      */
     private Component colorize(String text) {
         if (text == null) return Component.text("Not Found");
-        return LightCore.instance.getColorTranslation().miniMessage(text);
+        return LightCore.instance.getColorTranslation()
+                .miniMessage(text)
+                .decoration(net.kyori.adventure.text.format.TextDecoration.ITALIC, false);
     }
 
     @Getter
     public static class InventoryItem {
         private final List<Integer> slots;
+        private final int page;
         private final boolean usePageAsAmount;
         private final ItemStack itemStack;
 
         public InventoryItem(FileConfiguration config, String path) {
             // Slots auslesen
             this.slots = config.getIntegerList(path + ".slots");
+            this.page = config.getInt(path + ".page", 1);
             this.usePageAsAmount = config.getBoolean(path + ".use-page-number-as-amount", false);
 
             // Material laden
@@ -128,7 +140,9 @@ public class InventoryData {
                 // Displayname
                 String displayName = config.getString(path + ".display-name");
                 if (displayName != null) {
-                    Component displayNameComponent = LightCore.instance.getColorTranslation().miniMessage(displayName);
+                    Component displayNameComponent = LightCore.instance.getColorTranslation()
+                            .miniMessage(displayName)
+                            .decoration(net.kyori.adventure.text.format.TextDecoration.ITALIC, false);
                     meta.displayName(displayNameComponent);
                 }
 
@@ -137,7 +151,9 @@ public class InventoryData {
                 if (!lore.isEmpty()) {
                     List<Component> loreComponents = new ArrayList<>();
                     for (String line : lore) {
-                        loreComponents.add(LightCore.instance.getColorTranslation().miniMessage(line));
+                        loreComponents.add(LightCore.instance.getColorTranslation()
+                                .miniMessage(line)
+                                .decoration(net.kyori.adventure.text.format.TextDecoration.ITALIC, false));
                     }
                     meta.lore(loreComponents);
                 }
