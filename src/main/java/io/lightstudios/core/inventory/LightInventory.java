@@ -68,6 +68,9 @@ public class LightInventory extends LightMenu {
 
     }
 
+    public void test() {
+    }
+
     /**
      * Füllt das Inventar basierend auf der aktuellen ConfigInventory-Instanz mit Items.
      */
