@@ -69,6 +69,7 @@ public class LightInventory extends LightMenu {
     }
 
     public void test() {
+        System.out.println("test");
     }
 
     /**
