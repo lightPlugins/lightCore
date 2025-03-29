@@ -172,20 +172,12 @@ public abstract class SQLDatabase {
             String currentTime = simpleDateFormat.format(date);
 
             try (Connection connection = getConnection()) {
-                if (connection != null && !connection.isClosed()) {
-                    plugin.getConsolePrinter().printDebug(List.of(
-                            "Database connection is active.",
-                            "Last checked at: " + currentTime),
-                            1);
-                } else {
+                if (connection != null && connection.isClosed()) {
                     plugin.getConsolePrinter().printError(List.of("Database connection is inactive.",
                             "Attempting to reconnect..."));
                     LightCore.instance.getSqlDatabase().connect();
-                    if(connection != null && !connection.isClosed()) {
+                    if(!connection.isClosed()) {
                         plugin.getConsolePrinter().printInfo(List.of("Database connection has been re-established."));
-                    } else {
-                        plugin.getConsolePrinter().printError(List.of("Failed to reconnect to the database.",
-                                "Please check your database configuration or contact the server administrator."));
                     }
                 }
             } catch (SQLException e) {
@@ -195,13 +187,9 @@ public abstract class SQLDatabase {
                 LightCore.instance.getSqlDatabase().connect();
                 if(getConnection() != null) {
                     plugin.getConsolePrinter().printInfo(List.of("Database connection has been re-established."));
-                } else {
-                    plugin.getConsolePrinter().printError(List.of("Failed to reconnect to the database.",
-                            "Please check your database configuration or contact the server administrator."));
-                    throw new RuntimeException("Failed to reconnect to the database.", e);
                 }
             }
-        }, 5, 30, TimeUnit.MINUTES); // Adjust the interval as needed
+        }, 5, 5, TimeUnit.MINUTES); // Adjust the interval as needed
     }
 
 }

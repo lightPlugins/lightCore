@@ -32,6 +32,10 @@ public class SQLiteDatabase extends PooledDatabase {
     @Override
     public void connect() {
 
+        if(this.hikari != null) {
+            this.hikari.close();
+        }
+
         this.createDBFile();
 
         final HikariConfig hikari = new HikariConfig();

@@ -2,6 +2,7 @@ package io.lightstudios.core;
 
 import com.zaxxer.hikari.HikariDataSource;
 import io.lightstudios.core.commands.CoreReloadCommand;
+import io.lightstudios.core.commands.events.OnJoinCommandDelay;
 import io.lightstudios.core.commands.manager.CommandManager;
 import io.lightstudios.core.commands.LightItemsCommand;
 import io.lightstudios.core.database.SQLDatabase;
@@ -11,6 +12,10 @@ import io.lightstudios.core.database.impl.SQLiteDatabase;
 import io.lightstudios.core.database.model.ConnectionProperties;
 import io.lightstudios.core.database.model.DatabaseCredentials;
 import io.lightstudios.core.economy.EconomyManager;
+import io.lightstudios.core.github.VersionChecker;
+import io.lightstudios.core.inventory.LightInventory;
+import io.lightstudios.core.inventory.events.MenuEvent;
+import io.lightstudios.core.inventory.model.InventoryData;
 import io.lightstudios.core.items.LightItem;
 import io.lightstudios.core.items.events.UpdateLightItem;
 import io.lightstudios.core.placeholder.PlaceholderRegistrar;
@@ -31,18 +36,18 @@ import io.lightstudios.core.util.files.configs.CoreMessage;
 import io.lightstudios.core.util.files.configs.CoreSettings;
 import io.lightstudios.core.util.interfaces.LightCommand;
 import io.lightstudios.core.world.WorldManager;
-import io.lightstudios.core.world.events.BlockPlacedByPlayer;
 import lombok.Getter;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.sql.SQLException;
+import java.util.*;
 
 @Getter
 public class LightCore extends JavaPlugin {
@@ -62,6 +67,7 @@ public class LightCore extends JavaPlugin {
     private HookManager hookManager;
     private EconomyManager economyManager;
     private WorldManager worldManager;
+    private VersionChecker versionChecker;
 
     private FileManager coreFile;
     private FileManager messageFile;
@@ -70,9 +76,11 @@ public class LightCore extends JavaPlugin {
     private CoreMessage messages;
 
     private MultiFileManager itemFiles;
+    private MultiFileManager inventoryFiles;
     private LightItemManager itemManager;
 
     private final ArrayList<LightCommand> commands = new ArrayList<>();
+    private final Map<String, InventoryData> lightInventories = new HashMap<>();
     private final HashMap<UUID, Location> teleportRequests = new HashMap<>();
     public static final String IDENTIFIER = "lightstudio:lightcore";
 
@@ -109,6 +117,7 @@ public class LightCore extends JavaPlugin {
         this.consolePrinter.printInfo("Reading core items ...");
         // Read core items and add them to the cache
         readCoreItems();
+        loadInventories();
 
     }
 
@@ -126,9 +135,19 @@ public class LightCore extends JavaPlugin {
         // automatically checks for LightCoins as economy plugin or use the default vault economy as provider
         // used in all of my plugins
         this.economyManager = new EconomyManager();
+        // GitHub version checker for all my “Light” plugin series
+
+        if(this.settings.checkForUpdates()) {
+            this.versionChecker = new VersionChecker();
+        }
+
 
         // on success loading the core module
         this.lightCoreEnabled = true;
+
+        this.consolePrinter.printInfo("Starting new bStats metrics instance ...");
+        // bStats metrics for LightCoins -> ID: 24559
+        new Metrics(this, 24559);
 
         this.consolePrinter.printInfo("Successfully initialized LightCore. Ready for third party plugins.");
 
@@ -137,7 +156,18 @@ public class LightCore extends JavaPlugin {
     @Override
     public void onDisable() {
         this.consolePrinter.printInfo("Stopping database connection ...");
-        this.sqlDatabase.close();
+
+        try {
+            this.sqlDatabase.getConnection().close();
+            this.consolePrinter.printInfo("Successfully closed database connection.");
+        } catch (SQLException e) {
+            LightCore.instance.getConsolePrinter().printError(List.of(
+                    "Could not close database connection.",
+                    "Error: " + e.getMessage()
+            ));
+        }
+
+
         this.consolePrinter.printInfo("Stopping LightCore instance ...");
         this.consolePrinter.printInfo("Successfully stopped LightCore instance.");
     }
@@ -158,6 +188,7 @@ public class LightCore extends JavaPlugin {
 
         try {
             this.itemFiles = new MultiFileManager("plugins/" + getName() + "/items/");
+            this.inventoryFiles = new MultiFileManager("plugins/" + getName() + "/inventories/");
         } catch (Exception e) {
             throw new RuntimeException("Error reading item files.", e);
         }
@@ -293,6 +324,10 @@ public class LightCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new UpdateLightItem(), this);
         // teleport player to another server event throw proxy (velocity)
         getServer().getPluginManager().registerEvents(new ProxyTeleportEvent(), this);
+        // delay command execution on player join (protection for dupes or other exploits)
+        getServer().getPluginManager().registerEvents(new OnJoinCommandDelay(), this);
+        // InventoryClickEvent for LightMenus
+        getServer().getPluginManager().registerEvents(new MenuEvent(), this);
         // set nbt data to blocks placed by player
         // getServer().getPluginManager().registerEvents(new BlockPlacedByPlayer(), this);
         new PlaceholderRegistrar("lightcore", "lightStudios", "1.0", true, new ArrayList<>()).register();
@@ -307,7 +342,20 @@ public class LightCore extends JavaPlugin {
 
     public void reloadCore() {
         generateCoreFiles();
+        loadInventories();
         this.consolePrinter.printInfo("Reloaded the core files.");
+
+        if (!this.settings.checkForUpdates()) {
+            if (this.versionChecker != null) {
+                this.versionChecker.getScheduler().shutdown();
+            }
+            this.versionChecker = null;
+        } else {
+            if(this.versionChecker == null) {
+                this.consolePrinter.printInfo("Enable version checker after reload.");
+                this.versionChecker = new VersionChecker();
+            }
+        }
     }
 
     private void enableRedisConnection() {
@@ -317,7 +365,8 @@ public class LightCore extends JavaPlugin {
             this.redisManager = new RedisManager(
                     settings.redisHost(),
                     settings.redisPort(),
-                    settings.redisPassword()
+                    settings.redisPassword(),
+                    settings.redisUseSSL()
             );
             this.isRedis = true;
             return;
@@ -331,7 +380,7 @@ public class LightCore extends JavaPlugin {
 
         List<File> files = itemFiles.getYamlFiles();
         if(files.isEmpty()) {
-            getConsolePrinter().printError(List.of(
+            getConsolePrinter().printWarning(List.of(
                     "No item files found in the items folder.",
                     "Skipping this part ..."));
             return;
@@ -341,5 +390,37 @@ public class LightCore extends JavaPlugin {
         float end = System.currentTimeMillis();
         this.consolePrinter.printInfo("Successfully read " + foundItems.size() + " items in " + (end - start) + "ms.");
 
+    }
+    
+    public void loadInventories() {
+
+        getConsolePrinter().printInfo("Loading inventories ...");
+        this.lightInventories.clear();
+
+        // create InventoryData from inventoryfiles
+        List<File> files = inventoryFiles.getYamlFiles();
+        if (files.isEmpty()) {
+            getConsolePrinter().printWarning(List.of(
+                    "No inventory files found in the inventories folder.",
+                    "Skipping this part ..."));
+            return;
+        }
+
+        files.forEach(file -> {
+            try {
+                FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+                String id = file.getName().replace(".yml", "");
+                InventoryData inventoryData = new InventoryData(config);
+                this.lightInventories.put(id, inventoryData);
+                getConsolePrinter().printInfo("Loaded inventory: §e" + id);
+            } catch (Exception e) {
+                e.printStackTrace();
+                getConsolePrinter().printError(List.of(
+                        "Failed to load inventory from file: " + file.getName(),
+                        "Error: " + e.getMessage()));
+            }
+        });
+
+        getConsolePrinter().printInfo("Successfully loaded " + this.lightInventories.size() + " inventories.");
     }
 }
