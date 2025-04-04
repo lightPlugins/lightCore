@@ -198,7 +198,6 @@ public abstract class LightMenu implements InventoryHolder {
         UUID playerId = player.getUniqueId();
 
         if (cooldownTracker.containsKey(playerId) && cooldownTracker.get(playerId) > System.currentTimeMillis()) {
-            player.sendMessage(Component.text("You clicked way too fast. Slow down!"));
             event.setCancelled(true);
             return;
         }
@@ -208,7 +207,6 @@ public abstract class LightMenu implements InventoryHolder {
         if (clickTracker.get(playerId) > 20) {
             cooldownTracker.put(playerId, System.currentTimeMillis() + 1000);
             clickTracker.put(playerId, 0);
-            player.sendMessage(Component.text("You clicked too fast! Cooldown applied."));
             event.setCancelled(true);
             return;
         }
@@ -276,8 +274,6 @@ public abstract class LightMenu implements InventoryHolder {
         if(totalPages <= 1) {
             return;
         }
-
-        LightCore.instance.getConsolePrinter().printInfo("Current page: " + currentPage + " / " + totalPages);
 
         // Apply stack amount in terms of current page
         if(pageAsAmount) {
