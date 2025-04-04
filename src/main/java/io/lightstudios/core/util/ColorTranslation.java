@@ -3,14 +3,18 @@ package io.lightstudios.core.util;
 import io.lightstudios.core.LightCore;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ColorTranslation {
 
@@ -29,6 +33,55 @@ public class ColorTranslation {
         return PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes(
                 '&', LegacyComponentSerializer.legacyAmpersand().serialize(parsed)));
     }
+
+    /**
+     * Übersetzt ein Component farblich und verwendet PlaceholderAPI, um es an einen Spieler anzupassen.
+     *
+     * @param inputComponent Das ursprüngliche Component, das übersetzt werden soll
+     * @param player         Der Spieler, für den PlaceholderAPI angewendet wird
+     * @return Das übersetzte Component
+     */
+    public Component translateComponent(Component inputComponent, Player player) {
+        // Serialisiere das ursprüngliche Component in einen Legacy-Text
+        String legacyText = LegacyComponentSerializer.legacyAmpersand().serialize(inputComponent);
+
+        // Übersetze PlaceholderAPI (falls verfügbar)
+        String translatedWithPlaceholders = PlaceholderAPI.setPlaceholders(player, legacyText);
+
+        // Wandle die Legacy-Farbcodes (&) in ein Component mithilfe von MiniMessage um
+        Component component = MiniMessage.miniMessage().deserialize(translatedWithPlaceholders);
+
+        // Setze standardmäßig "italic" auf false
+        return component.decoration(TextDecoration.ITALIC, false);
+    }
+
+    /**
+     * Übersetzt eine Liste von Components farblich und verwendet PlaceholderAPI, um sie an einen Spieler anzupassen.
+     *
+     * @param inputComponents Die ursprüngliche Liste von Components
+     * @param player          Der Spieler, für den PlaceholderAPI angewendet wird
+     * @return Die übersetzte Liste von Components
+     */
+    public List<Component> translateComponents(List<Component> inputComponents, Player player) {
+        return inputComponents.stream()
+                .map(component -> translateComponent(component, player))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Übersetzt eine Liste von Components farblich, verwendet PlaceholderAPI und ersetzt benutzerdefinierte Platzhalter.
+     *
+     * @param inputComponents Die ursprüngliche Liste von Components
+     * @param player          Der Spieler, für den PlaceholderAPI angewendet wird
+     * @param replacements    Eine Map, die benutzerdefinierte Platzhalter (Schlüssel) und deren Ersatzwerte (Werte) enthält
+     * @return Die übersetzte Liste von Components
+     */
+    public List<Component> translateComponents(List<Component> inputComponents, Player player, Map<String, String> replacements) {
+        return inputComponents.stream()
+                .map(component -> translateComponentWithReplacements(component, player, replacements))
+                .collect(Collectors.toList());
+    }
+
 
     /**
      * A method to convert color codes in the input message string to the corresponding ChatColor in Minecraft.
@@ -74,6 +127,35 @@ public class ColorTranslation {
     public String convertLegacyToMiniMessage(String legacyText) {
         Component component = LegacyComponentSerializer.legacySection().deserialize(legacyText);
         return MiniMessage.miniMessage().serialize(component);
+    }
+
+    /**
+     * Übersetzt ein einzelnes Component farblich, verwendet PlaceholderAPI und ersetzt benutzerdefinierte Platzhalter.
+     *
+     * @param inputComponent Das ursprüngliche Component
+     * @param player         Der Spieler, für den PlaceholderAPI angewendet wird
+     * @param replacements   Eine Map mit benutzerdefinierten Platzhaltern und deren Ersatzwerten
+     * @return Das übersetzte Component
+     */
+    private Component translateComponentWithReplacements(Component inputComponent, Player player, Map<String, String> replacements) {
+        // Serialisiere das ursprüngliche Component in einen Legacy-Text
+        String legacyText = LegacyComponentSerializer.legacyAmpersand().serialize(inputComponent);
+
+        // Übersetze PlaceholderAPI (falls verfügbar)
+        String translatedWithPlaceholders = PlaceholderAPI.setPlaceholders(player, legacyText);
+
+        // Ersetze benutzerdefinierte Platzhalter
+        for (Map.Entry<String, String> entry : replacements.entrySet()) {
+            String placeholder = entry.getKey();
+            String replacement = entry.getValue();
+            translatedWithPlaceholders = translatedWithPlaceholders.replace(placeholder, replacement);
+        }
+
+        // Wandle den finalen Text in ein Component um
+        Component component = MiniMessage.miniMessage().deserialize(translatedWithPlaceholders);
+
+        // Setze standardmäßig "italic" auf false
+        return component.decoration(TextDecoration.ITALIC, false);
     }
 
 }
