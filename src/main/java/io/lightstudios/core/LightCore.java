@@ -13,7 +13,6 @@ import io.lightstudios.core.database.model.ConnectionProperties;
 import io.lightstudios.core.database.model.DatabaseCredentials;
 import io.lightstudios.core.economy.EconomyManager;
 import io.lightstudios.core.github.VersionChecker;
-import io.lightstudios.core.inventory.LightInventory;
 import io.lightstudios.core.inventory.events.MenuEvent;
 import io.lightstudios.core.inventory.model.InventoryData;
 import io.lightstudios.core.items.LightItem;
@@ -30,6 +29,7 @@ import io.lightstudios.core.player.TitleSender;
 import io.lightstudios.core.util.ColorTranslation;
 import io.lightstudios.core.util.ConsolePrinter;
 import io.lightstudios.core.util.LightTimers;
+import io.lightstudios.core.util.TextFormating;
 import io.lightstudios.core.util.files.FileManager;
 import io.lightstudios.core.util.files.MultiFileManager;
 import io.lightstudios.core.util.files.configs.CoreMessage;
@@ -60,6 +60,7 @@ public class LightCore extends JavaPlugin {
     private LightTimers lightTimers;
     private ConsolePrinter consolePrinter;
     private ColorTranslation colorTranslation;
+    private TextFormating textFormating;
     private MessageSender messageSender;
     private TitleSender titleSender;
     private PlayerPunishment playerPunishment;
@@ -99,6 +100,7 @@ public class LightCore extends JavaPlugin {
         this.hookManager = new HookManager();
 
         this.colorTranslation = new ColorTranslation();
+        this.textFormating = new TextFormating();
         this.messageSender = new MessageSender();
         this.titleSender = new TitleSender();
         this.playerPunishment = new PlayerPunishment();
