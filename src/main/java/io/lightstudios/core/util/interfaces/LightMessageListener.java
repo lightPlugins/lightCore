@@ -5,5 +5,5 @@ import org.jetbrains.annotations.NotNull;
 
 public interface LightMessageListener {
 
-    void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, byte @NotNull [] bytes);
+    void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, @NotNull byte [] bytes);
 }

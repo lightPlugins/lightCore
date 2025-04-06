@@ -1,5 +1,6 @@
 package io.lightstudios.core.hooks.nexo;
 
+import com.nexomc.nexo.api.NexoBlocks;
 import com.nexomc.nexo.api.NexoItems;
 import com.nexomc.nexo.items.ItemBuilder;
 import com.nexomc.nexo.items.NexoMeta;
@@ -13,6 +14,6 @@ public class NexoManager {
         if(itemBuilder != null) {
             return itemBuilder.build();
         }
-        return new ItemStack(Material.STONE, 1);
+        return new ItemStack(Material.DIRT, 1);
     }
 }

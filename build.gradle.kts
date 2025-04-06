@@ -49,6 +49,16 @@ repositories {
         name = "fancyholograms"
         url = uri("https://repo.fancyplugins.de/releases")
     }
+
+    maven {
+        name = "mythicmobs"
+        url = uri("https://mvn.lumine.io/repository/maven-public/")
+    }
+
+    maven {
+        name = "mmoitems"
+        url = uri("https://nexus.phoenixdevt.fr/repository/maven-public/")
+    }
 }
 
 dependencies {
@@ -72,6 +82,9 @@ dependencies {
     compileOnly("com.palmergames.bukkit.towny:towny:0.100.2.0")
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("com.nexomc:nexo:0.7.0")
+    compileOnly("io.lumine:Mythic-Dist:5.6.1")
+    compileOnly("io.lumine:MythicLib-dist:1.7.1-SNAPSHOT")
+    compileOnly("net.Indyuce:MMOItems-API:6.10-SNAPSHOT")
 }
 
 java {
