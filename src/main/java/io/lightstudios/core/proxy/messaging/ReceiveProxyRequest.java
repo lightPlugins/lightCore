@@ -25,7 +25,7 @@ public class ReceiveProxyRequest implements PluginMessageListener {
     }
 
     @Override
-    public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, byte @NotNull [] bytes) {
+    public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, @NotNull byte [] bytes) {
         for (LightMessageListener listener : listeners) {
             listener.onPluginMessageReceived(channel, player, bytes);
         }

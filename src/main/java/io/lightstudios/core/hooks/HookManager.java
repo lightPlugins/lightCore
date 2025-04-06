@@ -3,6 +3,7 @@ package io.lightstudios.core.hooks;
 import io.lightstudios.core.LightCore;
 import io.lightstudios.core.hooks.fancyholograms.HologramManager;
 import io.lightstudios.core.hooks.lightcoins.LightCoinsManager;
+import io.lightstudios.core.hooks.mythicmobs.MythicMobsManager;
 import io.lightstudios.core.hooks.nexo.NexoManager;
 import io.lightstudios.core.hooks.placeholderapi.PlaceholderAPIManager;
 import io.lightstudios.core.hooks.towny.TownyInterface;
@@ -20,6 +21,7 @@ public class HookManager {
     private boolean existNexo = false;
     private boolean existFancyHolograms = false;
     private boolean existWorldGuard = false;
+    private boolean existMythicMobs = false;
 
     private TownyInterface townyInterface;
     private PlaceholderAPIManager placeholderAPIManager;
@@ -27,6 +29,7 @@ public class HookManager {
     private NexoManager nexoManager;
     private HologramManager hologramManager;
     private WorldManager worldManager;
+    private MythicMobsManager mythicMobsManager;
 
     public HookManager() {
         existLightCoins = checkPlugin("LightCoins", LightCoinsManager.class);
@@ -35,6 +38,7 @@ public class HookManager {
         existNexo = checkPlugin("Nexo", NexoManager.class);
         existFancyHolograms = checkPlugin("FancyHolograms", HologramManager.class);
         existWorldGuard = checkPlugin("WorldGuard", WorldManager.class);
+        existMythicMobs = checkPlugin("MythicMobs", MythicMobsManager.class);
     }
 
     private <T> boolean checkPlugin(String pluginName, Class<T> managerClass) {
@@ -59,6 +63,8 @@ public class HookManager {
             townyInterface = (TownyInterface) manager;
         } else if (managerClass == PlaceholderAPIManager.class) {
             placeholderAPIManager = (PlaceholderAPIManager) manager;
+        } else if (managerClass == MythicMobsManager.class) {
+            mythicMobsManager = (MythicMobsManager) manager;
         } else if (managerClass == NexoManager.class) {
             nexoManager = (NexoManager) manager;
         } else if (managerClass == HologramManager.class) {

@@ -16,7 +16,7 @@ public class BalanceUpdateRequest implements LightMessageListener {
 
 
     @Override
-    public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, byte @NotNull [] bytes) {
+    public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, @NotNull byte [] bytes) {
 
         if(!channel.equals("lightstudio:lightcore")) {
             return;

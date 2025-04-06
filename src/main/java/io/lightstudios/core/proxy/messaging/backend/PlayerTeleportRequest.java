@@ -20,7 +20,7 @@ public class PlayerTeleportRequest implements LightMessageListener {
     //  70.5 76.0 527.5 10 15
 
     @Override
-    public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, byte @NotNull [] bytes) {
+    public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, @NotNull byte [] bytes) {
 
         if(!channel.equals("lightstudio:lightcore")) {
             return;
