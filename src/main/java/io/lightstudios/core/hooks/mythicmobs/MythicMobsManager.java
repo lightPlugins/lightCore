@@ -25,6 +25,10 @@ public class MythicMobsManager {
     public boolean isMythicMobByEntity(Entity entity) {
         return getMobManager().isMythicMob(entity);
     }
+    public boolean isMythicMobByEntity(LivingEntity entity, String mobName) {
+        Optional<ActiveMob> optActiveMob = getMythicBukkit().getMobManager().getActiveMob(entity.getUniqueId());
+        return optActiveMob.isPresent() && optActiveMob.get().getMobType().equalsIgnoreCase(mobName);
+    }
 
 
     public ActiveMob getActiveMobByEntity(Entity entity) {
@@ -35,6 +39,7 @@ public class MythicMobsManager {
         Optional<ActiveMob> optActiveMob = getMythicBukkit().getMobManager().getActiveMob(entity.getUniqueId());
         return optActiveMob.orElse(null);
     }
+
 
     public LivingEntity spawnMythicMob(String mobName, Location location) {
         ActiveMob mob = getMobManager().spawnMob(mobName, location);
