@@ -137,7 +137,7 @@ public class ColorTranslation {
      * @param replacements   Eine Map mit benutzerdefinierten Platzhaltern und deren Ersatzwerten
      * @return Das übersetzte Component
      */
-    private Component translateComponentWithReplacements(Component inputComponent, Player player, Map<String, String> replacements) {
+    public Component translateComponentWithReplacements(Component inputComponent, Player player, Map<String, String> replacements) {
         // Serialisiere das ursprüngliche Component in einen Legacy-Text
         String legacyText = LegacyComponentSerializer.legacyAmpersand().serialize(inputComponent);
 
