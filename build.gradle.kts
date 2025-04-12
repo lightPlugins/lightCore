@@ -56,7 +56,7 @@ repositories {
     }
 
     maven {
-        name = "mmoitems"
+        name = "phoenix"
         url = uri("https://nexus.phoenixdevt.fr/repository/maven-public/")
     }
 }
@@ -82,7 +82,7 @@ dependencies {
     compileOnly("com.palmergames.bukkit.towny:towny:0.100.2.0")
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("com.nexomc:nexo:0.7.0")
-    compileOnly("io.lumine:Mythic-Dist:5.6.1")
+    compileOnly("io.lumine:Mythic-Dist:5.8.2")
     compileOnly("io.lumine:MythicLib-dist:1.7.1-SNAPSHOT")
     compileOnly("net.Indyuce:MMOItems-API:6.10-SNAPSHOT")
 }

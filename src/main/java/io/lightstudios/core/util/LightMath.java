@@ -96,7 +96,7 @@ public class LightMath {
             case '*' -> a * b;
             case '/' -> {
                 if (b == 0) {
-                    throw new ArithmeticException("Division durch Null ist nicht erlaubt!");
+                    throw new ArithmeticException("Cant divide by zero");
                 }
                 yield a / b;
             }
