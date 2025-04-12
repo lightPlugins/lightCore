@@ -46,7 +46,7 @@ public class DropTableBuilder {
 
             Map<String, DropTable.Drops> dropsList = new HashMap<>();
 
-            ConfigurationSection dropSection = config.getConfigurationSection("drops");
+            ConfigurationSection dropSection = config.getConfigurationSection("table");
 
             if(dropSection == null) {
                 LightCore.instance.getConsolePrinter().printError(List.of(
@@ -66,7 +66,7 @@ public class DropTableBuilder {
                     String mathString = dropSection.getString(key + ".chance", "100 / 1");
                     drops.setChance(mathString);
                     double mathChance = lightMath.evaluateExpression(mathString);
-                    drops.setChanceAsDouble(mathChance);
+                    drops.setChanceAsDouble(mathChance > 100 ? 100 : mathChance < 0 ? 0 : mathChance);
                 } catch (Exception e) {
                     LightCore.instance.getConsolePrinter().printError(List.of(
                             "Unable to load DropTable file " + dropTableFile.getName(),
@@ -90,43 +90,40 @@ public class DropTableBuilder {
                 if(id.equalsIgnoreCase("vanilla-item")) {
 
                     DropTable.Drops.VanillaItem vanillaItem = new DropTable.Drops.VanillaItem();
-                    vanillaItem.setVanillaItemBuilder(config.getString("table." + key + ".item", "stone"));
-                    vanillaItem.setAmountMin(config.getInt("table." + key + ".amount.min", 1));
-                    vanillaItem.setAmountMax(config.getInt("table." + key + ".amount.max", 1));
+                    vanillaItem.setVanillaItemBuilder(config.getString("table." + key + ".args.item", "stone"));
+                    vanillaItem.setAmountMin(config.getInt("table." + key + ".args.amount.min", 1));
+                    vanillaItem.setAmountMax(config.getInt("table." + key + ".args.amount.max", 1));
 
                     DropTable.ItemSettings vanillaItemSettings = new DropTable.ItemSettings();
                     vanillaItemSettings.setDirectDrop(
-                            config.getBoolean("table." + key + ".settings.direct-drop", false));
+                            config.getBoolean("table." + key + ".args.settings.direct-drop", false));
                     vanillaItemSettings.setPickUpOnlyOwner(
-                            config.getBoolean("table." + key + ".settings.pick-up-only-owner", false));
+                            config.getBoolean("table." + key + ".args.settings.pick-up-only-owner", false));
                     vanillaItemSettings.setEnableGlow(
-                            config.getBoolean("table." + key + ".settings.glow.enable", false));
+                            config.getBoolean("table." + key + ".args.settings.glow.enable", false));
                     vanillaItemSettings.setGlowColor(
-                            TextColor.fromHexString(config.getString("table." + key + ".glow.color", "#FFFFFF")));
+                            TextColor.fromHexString(config.getString("table." + key + ".args.glow.color", "#FFFFFF")));
 
                     vanillaItem.setItemSettings(vanillaItemSettings);
-
-                    ItemStack vanillaItemStack = new ItemStack(
-                            Material.valueOf(vanillaItem.getVanillaItemBuilder().toUpperCase()));
-                    vanillaItem.setItemStack(vanillaItemStack);
+                    drops.setVanillaItem(vanillaItem);
 
                 }
 
                 if(id.equalsIgnoreCase("nexo-item")) {
 
                     DropTable.Drops.NexoItem nexoItem = new DropTable.Drops.NexoItem();
-                    nexoItem.setNexoID(config.getString("table." + key + ".item", "unknown"));
-                    nexoItem.setAmountMin(config.getInt("table." + key + ".amount.min", 1));
-                    nexoItem.setAmountMax(config.getInt("table." + key + ".amount.max", 1));
+                    nexoItem.setNexoID(config.getString("table." + key + ".args.item", "unknown"));
+                    nexoItem.setAmountMin(config.getInt("table." + key + ".args.amount.min", 1));
+                    nexoItem.setAmountMax(config.getInt("table." + key + ".args.amount.max", 1));
 
                     DropTable.ItemSettings nexoItemSettings = new DropTable.ItemSettings();
                     nexoItemSettings.setDirectDrop(
-                            config.getBoolean("table." + key + ".settings.direct-drop", false));
-                    nexoItemSettings.setPickUpOnlyOwner(config.getBoolean("table." + key + ".settings.pick-up-only-owner", false));
+                            config.getBoolean("table." + key + ".args.settings.direct-drop", false));
+                    nexoItemSettings.setPickUpOnlyOwner(config.getBoolean("table." + key + ".args.settings.pick-up-only-owner", false));
                     nexoItemSettings.setEnableGlow(
-                            config.getBoolean("table." + key + ".settings.glow.enable", false));
+                            config.getBoolean("table." + key + ".args.settings.glow.enable", false));
                     nexoItemSettings.setGlowColor(
-                            TextColor.fromHexString(config.getString("table." + key + ".glow.color", "#FFFFFF")));
+                            TextColor.fromHexString(config.getString("table." + key + ".args.glow.color", "#FFFFFF")));
 
                     nexoItem.setItemSettings(nexoItemSettings);
 
@@ -140,6 +137,7 @@ public class DropTableBuilder {
                         return;
                     } else {
                         nexoItem.setItemStack(nexoItemStack);
+                        drops.setNexoItem(nexoItem);
                     }
 
                 }
@@ -147,31 +145,32 @@ public class DropTableBuilder {
                 if(id.equalsIgnoreCase("mmoitems-item")) {
 
                     DropTable.Drops.MMOItemsItem mmoItem = new DropTable.Drops.MMOItemsItem();
-                    mmoItem.setMmoItem(config.getString("table." + key + ".item", "unknown"));
-                    mmoItem.setAmountMin(config.getInt("table." + key + ".amount.min", 1));
-                    mmoItem.setAmountMax(config.getInt("table." + key + ".amount.max", 1));
+                    mmoItem.setMmoItem(config.getString("table." + key + ".args.item", "unknown"));
+                    mmoItem.setAmountMin(config.getInt("table." + key + ".args.amount.min", 1));
+                    mmoItem.setAmountMax(config.getInt("table." + key + ".args.amount.max", 1));
 
                     DropTable.ItemSettings mmoItemSettings = new DropTable.ItemSettings();
                     mmoItemSettings.setDirectDrop(
-                            config.getBoolean("table." + key + ".settings.direct-drop", false));
-                    mmoItemSettings.setPickUpOnlyOwner(config.getBoolean("table." + key + ".settings.pick-up-only-owner", false));
+                            config.getBoolean("table." + key + ".args.settings.direct-drop", false));
+                    mmoItemSettings.setPickUpOnlyOwner(config.getBoolean("table." + key + ".args.settings.pick-up-only-owner", false));
                     mmoItemSettings.setEnableGlow(
-                            config.getBoolean("table." + key + ".settings.glow.enable", false));
+                            config.getBoolean("table." + key + ".args.settings.glow.enable", false));
                     mmoItemSettings.setGlowColor(
-                            TextColor.fromHexString(config.getString("table." + key + ".glow.color", "#FFFFFF")));
+                            TextColor.fromHexString(config.getString("table." + key + ".args.glow.color", "#FFFFFF")));
 
                     mmoItem.setItemSettings(mmoItemSettings);
 
-                    ItemStack nexoItemStack = LightCore.instance.getHookManager().getNexoManager().getNexoItemByID(mmoItem.getMmoItem());
+                    ItemStack mmoItemStack = LightCore.instance.getHookManager().getNexoManager().getNexoItemByID(mmoItem.getMmoItem());
 
-                    if(nexoItemStack == null) {
+                    if(mmoItemStack == null) {
                         LightCore.instance.getConsolePrinter().printError(List.of(
                                 "Unable to load DropTable file " + dropTableFile.getName(),
                                 "Could not find MMOItems item with id: " + mmoItem.getMmoItem()
                         ));
                         return;
                     } else {
-                        mmoItem.setItemStack(nexoItemStack);
+                        mmoItem.setItemStack(mmoItemStack);
+                        drops.setMmoItemsItem(mmoItem);
                     }
                 }
 
@@ -234,7 +233,7 @@ public class DropTableBuilder {
                     if(actionID.equalsIgnoreCase("sound")) {
                         DropTable.Actions.Sound sound = new DropTable.Actions.Sound();
                         NamespacedKey namespacedKey = NamespacedKey.fromString(
-                                actionSection.getString(actionKey + ".args.sound", "BLOCK_NOTE_BLOCK_BASS"));
+                                actionSection.getString(actionKey + ".args.sound", "BLOCK_NOTE_BLOCK_BASS").replace("_", "."));
 
                         if(namespacedKey == null) {
                             LightCore.instance.getConsolePrinter().printError(List.of(
@@ -249,7 +248,7 @@ public class DropTableBuilder {
                         if(bukkitSound == null) {
                             LightCore.instance.getConsolePrinter().printError(List.of(
                                     "Unable to load DropTable file " + dropTableFile.getName(),
-                                    "Sound " + namespacedKey.getNamespace()+ "/" + namespacedKey.getKey() + " is not a valid sound."
+                                    "Sound " + namespacedKey.getNamespace()+ ":" + namespacedKey.getKey() + " is not a valid sound."
                             ));
                             return;
                         }
@@ -277,5 +276,7 @@ public class DropTableBuilder {
     public Map<String, DropTable> getDropTables() {
         return Collections.unmodifiableMap(dropTables);
     }
+
+    public DropTable getDropTableByName(String name) { return dropTables.get(name); }
 
 }

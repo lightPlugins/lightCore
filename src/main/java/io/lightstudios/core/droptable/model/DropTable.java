@@ -1,10 +1,12 @@
 package io.lightstudios.core.droptable.model;
 
+import io.lightstudios.core.LightCore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
@@ -22,6 +24,7 @@ public class DropTable {
 
         private String dropsID;
         private String chance;
+        private Location dropLocation;
         private double chanceAsDouble;
         private VanillaItem vanillaItem;
         private NexoItem nexoItem;
