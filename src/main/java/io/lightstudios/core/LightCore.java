@@ -157,6 +157,7 @@ public class LightCore extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        this.consolePrinter.printInfo("Stopping LightCore ...");
         this.consolePrinter.printInfo("Stopping database connection ...");
 
         try {
@@ -169,8 +170,6 @@ public class LightCore extends JavaPlugin {
             ));
         }
 
-
-        this.consolePrinter.printInfo("Stopping LightCore instance ...");
         this.consolePrinter.printInfo("Successfully stopped LightCore instance.");
     }
 
