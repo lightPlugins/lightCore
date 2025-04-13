@@ -206,10 +206,10 @@ public class DropTableBuilder {
                     if(actionID.equalsIgnoreCase("title")) {
                         DropTable.Actions.Title title = new DropTable.Actions.Title();
                         title.setUpperTitle(Component.text(
-                                actionSection.getString(actionKey + ".args.title", "Default Upper title.")
+                                actionSection.getString(actionKey + ".args.upper", "Default Upper title.")
                         ));
                         title.setLowerTitle(Component.text(
-                                actionSection.getString(actionKey + ".args.subtitle", "Default Sub title")
+                                actionSection.getString(actionKey + ".args.lower", "Default Sub title")
                         ));
                         title.setFadeIn(actionSection.getInt(actionKey + ".args.fade-in", 20));
                         title.setStay(actionSection.getInt(actionKey + ".args.stay", 70));
