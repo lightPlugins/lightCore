@@ -62,6 +62,18 @@ public class EconomyManager {
         }
     }
 
+    public String currencyNamePlural() {
+        return vault.currencyNamePlural();
+    }
+
+    public String currencyNameSingular() {
+        return vault.currencyNameSingular();
+    }
+
+    public String autoCurrencyName(BigDecimal amount) {
+        return vault.format(amount.doubleValue());
+    }
+
     private boolean setupVault() {
         RegisteredServiceProvider<Economy> rsp = LightCore.instance.getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
