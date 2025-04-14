@@ -3,6 +3,8 @@ package io.lightstudios.core.droptable;
 import io.lightstudios.core.LightCore;
 import io.lightstudios.core.droptable.model.DropTable;
 import io.lightstudios.core.util.LightMath;
+import io.lightstudios.core.util.LightStrings;
+import io.lightstudios.core.util.TextFormating;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.title.Title;
@@ -14,6 +16,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
 import java.time.Duration;
@@ -106,6 +109,19 @@ public class DropTableBuilder {
 
                     vanillaItem.setItemSettings(vanillaItemSettings);
                     drops.setVanillaItem(vanillaItem);
+                    ItemStack is = LightStrings.generateItemFromString(vanillaItem.getVanillaItemBuilder());
+                    if(is != null) {
+                        ItemMeta meta = is.getItemMeta();
+
+                        if(meta != null) {
+                            if(meta.hasDisplayName()) {
+                                drops.setRewardName(meta.displayName());
+                            } else {
+                                drops.setRewardName(Component.text(LightCore.instance.getTextFormating().formatName(is.getType().name())));
+                            }
+                        }
+                    }
+
 
                 }
 
@@ -217,8 +233,8 @@ public class DropTableBuilder {
 
 
                         Title confTitle = Title.title(
-                                title.getLowerTitle(),
                                 title.getUpperTitle(),
+                                title.getLowerTitle(),
                                 Title.Times.times(
                                         Duration.ofMillis(title.getFadeIn()),
                                         Duration.ofMillis(title.getStay()),
@@ -233,7 +249,7 @@ public class DropTableBuilder {
                     if(actionID.equalsIgnoreCase("sound")) {
                         DropTable.Actions.Sound sound = new DropTable.Actions.Sound();
                         NamespacedKey namespacedKey = NamespacedKey.fromString(
-                                actionSection.getString(actionKey + ".args.sound", "BLOCK_NOTE_BLOCK_BASS").replace("_", "."));
+                                actionSection.getString(actionKey + ".args.sound", "BLOCK_NOTE_BLOCK_BASS"));
 
                         if(namespacedKey == null) {
                             LightCore.instance.getConsolePrinter().printError(List.of(

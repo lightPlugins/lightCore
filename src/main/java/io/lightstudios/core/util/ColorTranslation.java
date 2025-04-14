@@ -6,6 +6,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -43,7 +44,7 @@ public class ColorTranslation {
      */
     public Component translateComponent(Component inputComponent, Player player) {
         // Serialisiere das ursprüngliche Component in einen Legacy-Text
-        String legacyText = LegacyComponentSerializer.legacyAmpersand().serialize(inputComponent);
+        String legacyText = PlainTextComponentSerializer.plainText().serialize(inputComponent);
 
         // Übersetze PlaceholderAPI (falls verfügbar)
         String translatedWithPlaceholders = PlaceholderAPI.setPlaceholders(player, legacyText);
@@ -64,7 +65,19 @@ public class ColorTranslation {
      */
     public List<Component> translateComponents(List<Component> inputComponents, Player player) {
         return inputComponents.stream()
-                .map(component -> translateComponent(component, player))
+                .map(component -> {
+                    // Serialize the component to a plain text string
+                    String plainText = PlainTextComponentSerializer.plainText().serialize(component);
+
+                    // Apply PlaceholderAPI to replace placeholders
+                    String translatedText = PlaceholderAPI.setPlaceholders(player, plainText);
+
+                    // Deserialize the translated text back into a Component
+                    Component translatedComponent = MiniMessage.miniMessage().deserialize(translatedText);
+
+                    // Ensure "italic" decoration is set to false
+                    return translatedComponent.decoration(TextDecoration.ITALIC, false);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -78,7 +91,27 @@ public class ColorTranslation {
      */
     public List<Component> translateComponents(List<Component> inputComponents, Player player, Map<String, String> replacements) {
         return inputComponents.stream()
-                .map(component -> translateComponentWithReplacements(component, player, replacements))
+                .map(component -> {
+                    // Serialize the component to a plain text string
+                    // String plainText = PlainTextComponentSerializer.plainText().serialize(component);
+                    String plainText = PlainTextComponentSerializer.plainText().serialize(component);
+
+                    // Apply PlaceholderAPI to replace placeholders
+                    String translatedText = PlaceholderAPI.setPlaceholders(player, plainText);
+
+                    // Replace custom placeholders
+                    for (Map.Entry<String, String> entry : replacements.entrySet()) {
+                        String placeholder = entry.getKey();
+                        String replacement = entry.getValue();
+                        translatedText = translatedText.replace(placeholder, replacement);
+                    }
+
+                    // Deserialize the translated text back into a Component
+                    Component translatedComponent = MiniMessage.miniMessage().deserialize(translatedText);
+
+                    // Ensure "italic" decoration is set to false
+                    return translatedComponent.decoration(TextDecoration.ITALIC, false);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -138,24 +171,23 @@ public class ColorTranslation {
      * @return Das übersetzte Component
      */
     public Component translateComponentWithReplacements(Component inputComponent, Player player, Map<String, String> replacements) {
-        // Serialisiere das ursprüngliche Component in einen Legacy-Text
-        String legacyText = LegacyComponentSerializer.legacyAmpersand().serialize(inputComponent);
+        // Serialize the original Component to a MiniMessage-compatible string
+        String miniMessageString = PlainTextComponentSerializer.plainText().serialize(inputComponent);
 
-        // Übersetze PlaceholderAPI (falls verfügbar)
-        String translatedWithPlaceholders = PlaceholderAPI.setPlaceholders(player, legacyText);
+        // Apply PlaceholderAPI to replace placeholders
+        String translatedWithPlaceholders = PlaceholderAPI.setPlaceholders(player, miniMessageString);
 
-        // Ersetze benutzerdefinierte Platzhalter
+        // Replace custom placeholders
         for (Map.Entry<String, String> entry : replacements.entrySet()) {
             String placeholder = entry.getKey();
             String replacement = entry.getValue();
             translatedWithPlaceholders = translatedWithPlaceholders.replace(placeholder, replacement);
         }
 
-        // Wandle den finalen Text in ein Component um
+        // Deserialize the final string back into a Component
         Component component = MiniMessage.miniMessage().deserialize(translatedWithPlaceholders);
 
-        // Setze standardmäßig "italic" auf false
+        // Set "italic" decoration to false
         return component.decoration(TextDecoration.ITALIC, false);
     }
-
 }

@@ -7,6 +7,7 @@ import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -37,60 +38,50 @@ public class DropTableManager {
             double dropChance = drop.getChanceAsDouble();
             double randomValue = Math.random() * 100;
 
-            LightCore.instance.getConsolePrinter().printInfo(List.of(
-                    "Random chance value: -> " + randomValue + " %",
-                    "Item drop chance: -> " + dropChance + " %"
-            ));
-
             if (randomValue <= dropChance) {
                 // Chance met
-                executeDrop(player);
-                executeActions(player);
+                executeDrop(drop, id, player);
+                executeActions(drop, player);
             }
 
         });
     }
 
-    private void executeDrop(Player player) {
-        dropTable.getDropsList().forEach((id, drop) -> {
-            if (drop.getMmoItemsItem() != null) {
-                handleMMOItemsDrop(player, id, drop.getMmoItemsItem(), drop.getDropLocation());
-            }
+    private void executeDrop(DropTable.Drops drop, String id, Player player) {
+        if (drop.getMmoItemsItem() != null) {
+            handleMMOItemsDrop(player, id, drop);
+        }
 
-            if (drop.getNexoItem() != null) {
-                handleNexoDrop(player, id, drop.getNexoItem(), drop.getDropLocation());
-            }
+        if (drop.getNexoItem() != null) {
+            handleNexoDrop(player, id, drop);
+        }
 
-            if (drop.getVanillaItem() != null) {
-                handleVanillaDrop(player, id, drop.getVanillaItem(), drop.getDropLocation());
-            }
-        });
+        if (drop.getVanillaItem() != null) {
+            handleVanillaDrop(player, id, drop);
+        }
     }
 
-    private void executeActions(Player player) {
+    private void executeActions(DropTable.Drops drop, Player player) {
 
-        dropTable.getDropsList().forEach((id, drop) -> {
+        DropTable.Actions.Message message = drop.getActions().getMessage();
+        DropTable.Actions.Title title = drop.getActions().getTitle();
+        DropTable.Actions.Sound sound = drop.getActions().getSound();
 
-            DropTable.Actions.Message message = drop.getActions().getMessage();
-            DropTable.Actions.Title title = drop.getActions().getTitle();
-            DropTable.Actions.Sound sound = drop.getActions().getSound();
+        if(message != null) {
+            sendMessage(drop, player, message.getMessage());
+        }
 
-            if(message != null) {
-                sendMessage(player, message.getMessage());
-            }
+        if(title != null) {
+            sendTitle(drop, player, title.getTitle());
+        }
 
-            if(title != null) {
-                sendTitle(player, title.getTitle());
-            }
-
-            if(sound != null) {
-                playSound(player, sound);
-            }
-        });
+        if(sound != null) {
+            playSound(player, sound);
+        }
     }
 
-    private void handleMMOItemsDrop(Player player, String id, DropTable.Drops.MMOItemsItem mmoItemsItem, Location dropLocation) {
-        DropTable.ItemSettings itemSettings = mmoItemsItem.getItemSettings();
+    private void handleMMOItemsDrop(Player player, String id, DropTable.Drops mmoItemsItem) {
+        DropTable.ItemSettings itemSettings = mmoItemsItem.getMmoItemsItem().getItemSettings();
 
         if (itemSettings == null) {
             LightCore.instance.getConsolePrinter().printError(List.of(
@@ -101,17 +92,21 @@ public class DropTableManager {
             return;
         }
 
-        ItemStack itemStack = initializeItemStack(mmoItemsItem.getItemStack(), mmoItemsItem.getAmountMin(), mmoItemsItem.getAmountMax());
+        ItemStack itemStack = initializeItemStack(
+                mmoItemsItem,
+                mmoItemsItem.getMmoItemsItem().getItemStack(),
+                mmoItemsItem.getMmoItemsItem().getAmountMin(),
+                mmoItemsItem.getMmoItemsItem().getAmountMax());
 
         if (itemSettings.isDirectDrop() && !isInventoryFull()) {
             player.getInventory().addItem(itemStack);
         } else {
-            dropItem(player, itemSettings, itemStack, dropLocation);
+            dropItem(player, itemSettings, itemStack, mmoItemsItem.getDropLocation());
         }
     }
 
-    private void handleNexoDrop(Player player, String id, DropTable.Drops.NexoItem nexoItem, Location dropLocation) {
-        DropTable.ItemSettings itemSettings = nexoItem.getItemSettings();
+    private void handleNexoDrop(Player player, String id, DropTable.Drops nexoItem) {
+        DropTable.ItemSettings itemSettings = nexoItem.getMmoItemsItem().getItemSettings();
 
         if (itemSettings == null) {
             LightCore.instance.getConsolePrinter().printError(List.of(
@@ -122,17 +117,21 @@ public class DropTableManager {
             return;
         }
 
-        ItemStack itemStack = initializeItemStack(nexoItem.getItemStack(), nexoItem.getAmountMin(), nexoItem.getAmountMax());
+        ItemStack itemStack = initializeItemStack(
+                nexoItem,
+                nexoItem.getMmoItemsItem().getItemStack(),
+                nexoItem.getMmoItemsItem().getAmountMin(),
+                nexoItem.getMmoItemsItem().getAmountMax());
 
         if (itemSettings.isDirectDrop()) {
             player.getInventory().addItem(itemStack);
         } else {
-            dropItem(player, itemSettings, itemStack, dropLocation);
+            dropItem(player, itemSettings, itemStack, nexoItem.getDropLocation());
         }
     }
 
-    private void handleVanillaDrop(Player player, String id, DropTable.Drops.VanillaItem vanillaItem, Location dropLocation) {
-        DropTable.ItemSettings itemSettings = vanillaItem.getItemSettings();
+    private void handleVanillaDrop(Player player, String id, DropTable.Drops vanillaItem) {
+        DropTable.ItemSettings itemSettings = vanillaItem.getVanillaItem().getItemSettings();
 
         if (itemSettings == null) {
             LightCore.instance.getConsolePrinter().printError(List.of(
@@ -143,26 +142,31 @@ public class DropTableManager {
             return;
         }
 
-        ItemStack itemStack = LightStrings.generateItemFromString(vanillaItem.getVanillaItemBuilder());
+        ItemStack itemStack = LightStrings.generateItemFromString(vanillaItem.getVanillaItem().getVanillaItemBuilder());
         if(itemStack == null) {
             LightCore.instance.getConsolePrinter().printError(List.of(
-                    "Could not generate item from string: " + vanillaItem.getVanillaItemBuilder()
+                    "Could not generate item from string: " + vanillaItem.getVanillaItem().getVanillaItemBuilder()
             ));
             return;
         }
 
-        initializeItemStack(itemStack, vanillaItem.getAmountMin(), vanillaItem.getAmountMax());
+        initializeItemStack(
+                vanillaItem,
+                itemStack,
+                vanillaItem.getVanillaItem().getAmountMin(),
+                vanillaItem.getVanillaItem().getAmountMax());
 
         if (itemSettings.isDirectDrop()) {
             player.getInventory().addItem(itemStack);
         } else {
-            dropItem(player, itemSettings, itemStack, dropLocation);
+            dropItem(player, itemSettings, itemStack, vanillaItem.getDropLocation());
         }
     }
 
-    private ItemStack initializeItemStack(ItemStack is, int amountMin, int amountMax) {
+    private ItemStack initializeItemStack(DropTable.Drops drop, ItemStack is, int amountMin, int amountMax) {
         Random random = new Random();
-        int amount = random.nextInt(amountMax - amountMin) + amountMin;
+        int amount = random.nextInt(amountMax - amountMin + 1) + amountMin;
+        drop.setFinalAmount(amount);
         is.setAmount(amount);
         return is;
     }
@@ -187,10 +191,35 @@ public class DropTableManager {
     }
 
 
-    private void sendTitle(Player player, Title title) { player.showTitle(title); }
+    private void sendTitle(DropTable.Drops drop, Player player, Title title) {
+        Map<String, String> replacements = Map.of(
+                "#display-name#", PlainTextComponentSerializer.plainText().serialize(drop.getRewardName()),
+                "#amount#", String.valueOf(drop.getFinalAmount())
+        );
 
-    private void sendMessage(Player player, Component message) {
-        player.sendMessage(LightCore.instance.getColorTranslation().translateComponent(message, player));
+        // Translate the title components with replacements
+        Component titleComponent = LightCore.instance.getColorTranslation()
+                .translateComponentWithReplacements(title.title(), player, replacements);
+        Component subtitleComponent = LightCore.instance.getColorTranslation()
+                .translateComponentWithReplacements(title.subtitle(), player, replacements);
+
+        // Create the final title with the translated components
+        Title finalTitle = Title.title(titleComponent, subtitleComponent, title.times());
+
+        // Show the title to the player
+        player.showTitle(finalTitle);
+    }
+
+    private void sendMessage(DropTable.Drops drop, Player player, Component message) {
+        Map<String, String> replacements = Map.of(
+                "#display-name#", PlainTextComponentSerializer.plainText().serialize(drop.getRewardName()),
+                "#amount#", String.valueOf(drop.getFinalAmount())
+        );
+        player.sendMessage(LightCore.instance.getColorTranslation().translateComponentWithReplacements(
+                message,
+                player,
+                replacements
+        ));
     }
 
     private void playSound(Player player, DropTable.Actions.Sound sound) {

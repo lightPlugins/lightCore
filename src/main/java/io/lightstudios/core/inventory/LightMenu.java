@@ -64,8 +64,6 @@ public abstract class LightMenu implements InventoryHolder {
             throw new IllegalArgumentException("Start- und Endslot müssen im gültigen Bereich des Inventars liegen.");
         }
 
-        LightCore.instance.getConsolePrinter().printInfo("setItemList: " + startSlot + " - " + endSlot);
-
         // Standard-Breite des Inventars (9 Slots pro Reihe)
         int inventoryWidth = 9;
 

@@ -2,24 +2,29 @@ package io.lightstudios.core.inventory.model;
 
 import io.lightstudios.core.LightCore;
 import lombok.Getter;
+import lombok.Setter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Getter
+@Setter
 public class InventoryData {
 
-    private final Component title;
+    private Component title;
     private final FileConfiguration fileConfiguration;
     private final int size;
     private final int updateInterval;
@@ -73,6 +78,25 @@ public class InventoryData {
             }
         }
         return items;
+    }
+
+    public Component replaceTitle(Player player, Map<String, String> replacements) {
+        // Serialize the Component to a MiniMessage-compatible String
+        String titleString = MiniMessage.miniMessage().serialize(title);
+
+        // Apply replacements
+        for (Map.Entry<String, String> entry : replacements.entrySet()) {
+            titleString = titleString.replace(entry.getKey(), entry.getValue());
+        }
+
+        // Deserialize the modified String back to a Component
+        Component finalTitle = MiniMessage.miniMessage().deserialize(titleString)
+                .decoration(TextDecoration.ITALIC, false);
+
+        // Update the title and send it to the player
+        this.title = finalTitle;
+
+        return finalTitle;
     }
 
     /**

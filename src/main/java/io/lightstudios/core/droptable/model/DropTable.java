@@ -1,6 +1,5 @@
 package io.lightstudios.core.droptable.model;
 
-import io.lightstudios.core.LightCore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +24,8 @@ public class DropTable {
         private String dropsID;
         private String chance;
         private Location dropLocation;
+        private Component rewardName;
+        private int finalAmount;
         private double chanceAsDouble;
         private VanillaItem vanillaItem;
         private NexoItem nexoItem;
