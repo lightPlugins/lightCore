@@ -1,0 +1,8 @@
+name: 'Zombie Slayer'
+levels:
+  '1':
+    required-xp: 100
+  '2':
+    required-xp: 200
+  '3':
+    required-xp: 400
