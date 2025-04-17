@@ -1,5 +1,6 @@
 package io.lightstudios.core.progression.level.models;
 
+import io.lightstudios.core.droptable.model.DropTable;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
@@ -11,6 +12,7 @@ import java.util.Map;
 @Setter
 public class LightLevel {
 
+    private String id;
     private Map<Integer, SingleLevel> levels;
     private Component name;
 
@@ -19,7 +21,9 @@ public class LightLevel {
     public static class SingleLevel {
 
         private int level;
+        private Component visualName;
         private BigDecimal requiredXP;
+        private DropTable dropTable;
 
     }
 

@@ -1,8 +1,14 @@
 name: 'Zombie Slayer'
 levels:
-  '1':
-    required-xp: 100
   '2':
-    required-xp: 200
+    visual-name: 'Zombie Slayer II'
+    required-xp: 100
+    drop-table: 'my-drop-table'
   '3':
+    visual-name: 'Zombie Slayer III'
+    required-xp: 200
+    drop-table: 'my-drop-table'
+  '4':
+    visual-name: 'Zombie Slayer IV'
     required-xp: 400
+    drop-table: 'my-drop-table'

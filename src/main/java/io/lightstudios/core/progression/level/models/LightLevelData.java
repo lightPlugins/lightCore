@@ -15,4 +15,11 @@ public class LightLevelData {
     private BigDecimal currentXP;
     private int currentLevel;
 
+    public LightLevelData(UUID uuid, LightLevel level, BigDecimal currentXP, int currentLevel) {
+        this.uuid = UUID.randomUUID();
+        this.level = level;
+        this.currentXP = currentXP;
+        this.currentLevel = currentLevel;
+    }
+
 }
