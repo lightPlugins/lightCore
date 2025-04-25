@@ -6,9 +6,9 @@ api-version: 1.20
 depend: ["Vault"]
 softdepend: ["Towny", "ProtocolLib", "PlaceholderAPI", "LightCoins", "WorldGuard", "MythicMobs", "Nexo"]
 loadbefore: [ ]
-libraries: [ ]
-#  - org.mariadb.jdbc:mariadb-java-client:3.5.0
-#  - com.zaxxer:HikariCP:6.0.0
+libraries:
+  # some servers do not include the libraries in the jar
+  - org.mariadb.jdbc:mariadb-java-client:3.5.0
 commands:
   lightcore:
     description: The root command for the api
