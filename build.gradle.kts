@@ -71,16 +71,15 @@ dependencies {
     compileOnly("net.milkbowl.vault:VaultUnlockedAPI:2.9")
     compileOnly("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
     compileOnly("de.oliver:FancyHolograms:2.4.1")
-    compileOnly("com.github.lightPlugins:lightCoins:0.0.2")
+    compileOnly("com.github.lightPlugins:lightCoins:0.1.3")
     compileOnly("org.mariadb.jdbc:mariadb-java-client:3.5.0")
     implementation("org.yaml:snakeyaml:2.4")
     implementation("redis.clients:jedis:5.2.0")
-    implementation("com.zaxxer:HikariCP:6.0.0")
-    implementation("com.github.stefvanschie.inventoryframework:IF:0.10.17")
+    implementation("com.zaxxer:HikariCP:6.3.0")
     implementation("commons-lang:commons-lang:2.6")
     implementation("org.bstats:bstats-bukkit:3.0.2")
     implementation("org.bstats:bstats-velocity:3.0.2")
-    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.13-SNAPSHOT")
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.14-SNAPSHOT")
     compileOnly("com.palmergames.bukkit.towny:towny:0.100.2.0")
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("com.nexomc:nexo:0.7.0")
@@ -98,8 +97,8 @@ tasks {
         from(sourceSets.main.get().resources.srcDirs()) {
             filesMatching("plugin.yml") {
                 expand(
-                    "name" to rootProject.name,
-                    "version" to rootProject.version
+                    "name" to "LightCoins",
+                    "version" to version
                 )
 
             }
@@ -119,7 +118,6 @@ tasks {
         archiveClassifier.set("")
         relocate("com.zaxxer.hikari", "io.lightstudios.core.util.libs.hikari")
         relocate("redis.clients.jedis", "io.lightstudios.core.util.libs.jedis")
-        relocate("com.github.stefvanschie.inventoryframework", "io.lightstudios.core.util.libs.inv")
         relocate("org.bstats", "io.lightstudios.core.util.libs.bstats")
         relocate("org.yaml.snakeyaml", "io.lightstudios.core.util.libs.snakeyaml")
     }

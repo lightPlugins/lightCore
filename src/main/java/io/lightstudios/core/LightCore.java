@@ -37,6 +37,8 @@ import io.lightstudios.core.util.files.configs.CoreSettings;
 import io.lightstudios.core.util.interfaces.LightCommand;
 import io.lightstudios.core.world.WorldManager;
 import lombok.Getter;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.Registry;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -91,12 +93,22 @@ public class LightCore extends JavaPlugin {
     @Override
     public void onLoad() {
         instance = this;
-        printLogo();
-
-        // Initialize LightTimers instance
         this.lightTimers = new LightTimers(this);
         this.consolePrinter = new ConsolePrinter("§7[§rLight§eCore§7] §r");
+        printLogo();
 
+        if(!Bukkit.getName().contains("paper")) {
+            getConsolePrinter().printError(List.of(
+                    "Light series plugins only support PaperMC.",
+                    "Please use PaperMC for better performance and support.",
+                    "I have decided to not support SpigotMC anymore.",
+                    "Now days SpigotMC is not the best option anymore.",
+                    "If you would update to PaperMC, you can download it here: https://papermc.io/downloads/paper"
+            ));
+            throw new IllegalArgumentException("Server engine " + Bukkit.getName() + " is not supported.");
+        }
+
+        // Initialize LightTimers instance
         this.hookManager = new HookManager();
 
         this.colorTranslation = new ColorTranslation();
@@ -118,8 +130,8 @@ public class LightCore extends JavaPlugin {
         enableRedisConnection();
         this.consolePrinter.printInfo("Reading core items ...");
         // Read core items and add them to the cache
-        readCoreItems();
-        loadInventories();
+        // readCoreItems();
+        // loadInventories();
 
     }
 
@@ -158,11 +170,12 @@ public class LightCore extends JavaPlugin {
     @Override
     public void onDisable() {
         this.consolePrinter.printInfo("Stopping LightCore ...");
-        this.consolePrinter.printInfo("Stopping database connection ...");
-
         try {
-            this.sqlDatabase.getConnection().close();
-            this.consolePrinter.printInfo("Successfully closed database connection.");
+            if(this.sqlDatabase != null) {
+                this.consolePrinter.printInfo("Stopping database connection ...");
+                this.sqlDatabase.getConnection().close();
+                this.consolePrinter.printInfo("Successfully closed database connection.");
+            }
         } catch (SQLException e) {
             LightCore.instance.getConsolePrinter().printError(List.of(
                     "Could not close database connection.",
@@ -283,11 +296,13 @@ public class LightCore extends JavaPlugin {
         String townyVersion = "§cnot found";
         String fancyHologramsVersion = "§cnot found";
         String lightCoinsVersion = "§cnot found";
+        String worldGuardVersion = "§cnot found";
 
         Plugin placeholderAPI = Bukkit.getServer().getPluginManager().getPlugin("PlaceholderAPI");
         Plugin towny = Bukkit.getServer().getPluginManager().getPlugin("Towny");
         Plugin fancyHolograms = Bukkit.getServer().getPluginManager().getPlugin("FancyHolograms");
         Plugin lightCoins = Bukkit.getServer().getPluginManager().getPlugin("LightCoins");
+        Plugin worldGuard = Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
 
         if(placeholderAPI != null) {
             placeholderAPIVersion = placeholderAPI.getDescription().getVersion();
@@ -301,15 +316,20 @@ public class LightCore extends JavaPlugin {
         if(lightCoins != null) {
             lightCoinsVersion = lightCoins.getDescription().getVersion();
         }
+        if(worldGuard != null) {
+            worldGuardVersion = worldGuard.getDescription().getVersion();
+        }
 
-        Bukkit.getConsoleSender().sendMessage("          LightCore: §ev0.2.9");
-        Bukkit.getConsoleSender().sendMessage("          Server: §e" + Bukkit.getServer().getVersion());
+        Bukkit.getConsoleSender().sendMessage("          LightCore: " + getDescription().getVersion());
+        Bukkit.getConsoleSender().sendMessage("          Server OS: §e" + System.getProperty("os.name") + " " + System.getProperty("os.version"));
+        Bukkit.getConsoleSender().sendMessage("          Engine: §e" + Bukkit.getBukkitVersion() + " " + Bukkit.getName());
         Bukkit.getConsoleSender().sendMessage("          API-Version: §e" + getDescription().getAPIVersion());
         Bukkit.getConsoleSender().sendMessage("          Soft-Dependency Versions: §e");
         Bukkit.getConsoleSender().sendMessage("           - PlaceholderAPI: §e" + placeholderAPIVersion);
         Bukkit.getConsoleSender().sendMessage("           - LightCoins: §e" + lightCoinsVersion);
         Bukkit.getConsoleSender().sendMessage("           - FancyHolograms: §e" + fancyHologramsVersion);
         Bukkit.getConsoleSender().sendMessage("           - Towny: §e" + townyVersion);
+        Bukkit.getConsoleSender().sendMessage("           - WorldGuard: §e" + worldGuardVersion);
         Bukkit.getConsoleSender().sendMessage("          Java: §e" + System.getProperty("java.version"));
         Bukkit.getConsoleSender().sendMessage("          Authors: §e" + getDescription().getAuthors() + "\n");
         Bukkit.getConsoleSender().sendMessage("          If you need help, please visit our §eDiscord §7server.");
@@ -336,14 +356,14 @@ public class LightCore extends JavaPlugin {
 
     public void registerCommands() {
         new CommandManager(new ArrayList<>(List.of(
-                new CoreReloadCommand(),
-                new LightItemsCommand()
+                new CoreReloadCommand()
+                //new LightItemsCommand()
         )), "core");
     }
 
     public void reloadCore() {
         generateCoreFiles();
-        loadInventories();
+        // loadInventories();
         this.consolePrinter.printInfo("Reloaded the core files.");
 
         if (!this.settings.checkForUpdates()) {

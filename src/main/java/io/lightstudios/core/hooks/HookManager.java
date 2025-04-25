@@ -51,7 +51,7 @@ public class HookManager {
             try {
                 T manager = managerClass.getDeclaredConstructor().newInstance();
                 setManager(managerClass, manager);
-                LightCore.instance.getConsolePrinter().printInfo("Found plugin " + pluginName + ". Hooking into it.");
+                LightCore.instance.getConsolePrinter().printInfo("Found plugin §e" + pluginName + "§r. Hooking into it.");
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();

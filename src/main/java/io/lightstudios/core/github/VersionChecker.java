@@ -37,44 +37,43 @@ public class VersionChecker {
         CompletableFuture<GithubVersionManager.UpdateCheckResult> lightCoins =
                 this.checkLightCoins.getVersionManager().isUpdateAvailableAsync();
 
-        // check for lightCore updates
-        lightCore.thenAccept(result -> {
-            if (result.updateAvailable()) {
-                LightCore.instance.getConsolePrinter().printInfo(List.of(
-                        "An update is available for " + this.checkLightCore.getPluginName() + "!",
-                        "Latest version: " + result.latestVersion(),
-                        "Your version: " + this.checkLightCore.getCurrentVersion(),
-                        "Download it here: https://github.com/lightPlugins/lightCore/releases"
-                ));
-            } else {
-                LightCore.instance.getConsolePrinter().printInfo(this.checkLightCore.getPluginName() + " is up to date!");
-            }
-        }).exceptionally(ex -> {
-            LightCore.instance.getConsolePrinter().printError(List.of(
-                    "Failed to check for updates for " + this.checkLightCore.getPluginName() + "!",
-                    "Error: " + ex.getMessage()
-            ));
-            return null;
-        });
+        CompletableFuture.allOf(lightCore, lightCoins).thenRun(() -> {
+            try {
+                // Nachrichten für LightCore
+                GithubVersionManager.UpdateCheckResult lightCoreResult = lightCore.get();
+                if (lightCoreResult.updateAvailable()) {
+                    LightCore.instance.getConsolePrinter().printInfo(List.of(
+                            "An update is available for " + this.checkLightCore.getPluginName() + "!",
+                            "Latest version: " + lightCoreResult.latestVersion(),
+                            "Your version: " + this.checkLightCore.getCurrentVersion(),
+                            "Download it here: https://github.com/lightPlugins/lightCore/releases"
+                    ));
+                } else {
+                    LightCore.instance.getConsolePrinter().printInfo(List.of(
+                            this.checkLightCore.getPluginName() + " is up to date!"
+                    ));
+                }
 
-        // check for lightCoins updates
-        lightCoins.thenAccept(result -> {
-            if (result.updateAvailable()) {
-                LightCore.instance.getConsolePrinter().printInfo(List.of(
-                        "An update is available for " + this.checkLightCoins.getPluginName() + "!",
-                        "Latest version: " + result.latestVersion(),
-                        "Your version: " + this.checkLightCoins.getCurrentVersion(),
-                        "Download it here: https://www.spigotmc.org/resources/83862"
+                // Nachrichten für LightCoins
+                GithubVersionManager.UpdateCheckResult lightCoinsResult = lightCoins.get();
+                if (lightCoinsResult.updateAvailable()) {
+                    LightCore.instance.getConsolePrinter().printInfo(List.of(
+                            "An update is available for " + this.checkLightCoins.getPluginName() + "!",
+                            "Latest version: " + lightCoinsResult.latestVersion(),
+                            "Your version: " + this.checkLightCoins.getCurrentVersion(),
+                            "Download it here: https://www.spigotmc.org/resources/83862"
+                    ));
+                } else {
+                    LightCore.instance.getConsolePrinter().printInfo(List.of(
+                            this.checkLightCoins.getPluginName() + " is up to date!"
+                    ));
+                }
+            } catch (Exception ex) {
+                LightCore.instance.getConsolePrinter().printError(List.of(
+                        "An error occurred while checking for updates!",
+                        "Error: " + ex.getMessage()
                 ));
-            } else {
-                LightCore.instance.getConsolePrinter().printInfo(this.checkLightCoins.getPluginName() + " is up to date!");
             }
-        }).exceptionally(ex -> {
-            LightCore.instance.getConsolePrinter().printError(List.of(
-                    "Failed to check for updates for " + this.checkLightCoins.getPluginName() + "!",
-                    "Error: " + ex.getMessage()
-            ));
-            return null;
         });
     }
 

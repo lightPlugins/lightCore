@@ -9,6 +9,7 @@ loadbefore: [ ]
 libraries:
   # some servers do not include the libraries in the jar
   - org.mariadb.jdbc:mariadb-java-client:3.5.0
+  - org.mariadb.jdbc:mariadb-java-client:3.1.4
 commands:
   lightcore:
     description: The root command for the api

@@ -29,7 +29,7 @@ public class CoreReloadCommand implements LightCommand {
 
     @Override
     public int maxArgs() {
-        return 2;
+        return 1;
     }
 
     @Override
@@ -45,10 +45,6 @@ public class CoreReloadCommand implements LightCommand {
                 return getSubcommand();
             }
 
-            if(args.length == 2) {
-                return List.of("lobby", "farmwelt");
-            }
-
             return null;
         };
     }
@@ -57,10 +53,10 @@ public class CoreReloadCommand implements LightCommand {
     public boolean performAsPlayer(Player player, String[] args) {
         LightCore.instance.reloadCore();
 
-        HashMap<String, LightItem> updatedItems =
-                LightCore.instance.getItemManager().updateItems(LightCore.instance, LightCore.instance.getItemFiles().getYamlFiles());
-
-        LightCore.instance.getConsolePrinter().printInfo("Updated " + updatedItems.size() + " items");
+//        HashMap<String, LightItem> updatedItems =
+//                LightCore.instance.getItemManager().updateItems(LightCore.instance, LightCore.instance.getItemFiles().getYamlFiles());
+//
+//        LightCore.instance.getConsolePrinter().printInfo("Updated " + updatedItems.size() + " items");
 
         LightCore.instance.getMessageSender().sendPlayerMessage(player,
                 LightCore.instance.getMessages().prefix() +

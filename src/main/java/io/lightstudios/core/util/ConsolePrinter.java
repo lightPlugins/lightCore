@@ -31,11 +31,15 @@ public class ConsolePrinter {
     }
 
     public void printWarning(List<String> messages) {
-        sendEmptyLine();
+        Bukkit.getConsoleSender().sendMessage(" ");
+        Bukkit.getConsoleSender().sendMessage("     §6# §e############## §6WARNING §e##############  §6#");
+        Bukkit.getConsoleSender().sendMessage(" ");
         for (String message : messages) {
             Bukkit.getConsoleSender().sendMessage(prefix + "§8[§6WARNING§8] §e" + message);
         }
-        sendEmptyLine();
+        Bukkit.getConsoleSender().sendMessage(" ");
+        Bukkit.getConsoleSender().sendMessage("     §6# §e###################################  §6#");
+        Bukkit.getConsoleSender().sendMessage(" ");
     }
 
     public void printError(String message) {
@@ -43,11 +47,15 @@ public class ConsolePrinter {
     }
 
     public void printError(List<String> messages) {
-        sendEmptyLine();
+        Bukkit.getConsoleSender().sendMessage(" ");
+        Bukkit.getConsoleSender().sendMessage("     §4# §c############## §4ERROR §c##############  §4#");
+        Bukkit.getConsoleSender().sendMessage(" ");
         for (String message : messages) {
             Bukkit.getConsoleSender().sendMessage(prefix + "§8[§4ERROR§8] §c" + message);
         }
-        sendEmptyLine();
+        Bukkit.getConsoleSender().sendMessage(" ");
+        Bukkit.getConsoleSender().sendMessage("     §4# §c###################################  §4#");
+        Bukkit.getConsoleSender().sendMessage(" ");
     }
 
     public void printConfigError(String message) {
@@ -55,11 +63,15 @@ public class ConsolePrinter {
     }
 
     public void printConfigError(List<String> messages) {
-        sendEmptyLine();
+        Bukkit.getConsoleSender().sendMessage(" ");
+        Bukkit.getConsoleSender().sendMessage("     §4# §c########### §4CONFIG-ERROR §c###########  §4#");
+        Bukkit.getConsoleSender().sendMessage(" ");
         for (String message : messages) {
             Bukkit.getConsoleSender().sendMessage(prefix + "§8[§4CONFIG-ERROR§8] §c" + message);
         }
-        sendEmptyLine();
+        Bukkit.getConsoleSender().sendMessage(" ");
+        Bukkit.getConsoleSender().sendMessage("     §4# §c###################################  §4#");
+        Bukkit.getConsoleSender().sendMessage(" ");
     }
 
     public void printItemSystem(String message) {
@@ -136,7 +148,7 @@ public class ConsolePrinter {
     }
 
     private void sendEmptyLine() {
-        String newLine = "\n";
+        String newLine = " ";
         Bukkit.getConsoleSender().sendMessage(newLine);
     }
 

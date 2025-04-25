@@ -56,7 +56,25 @@ public class GithubVersionManager {
 
     public CompletableFuture<UpdateCheckResult> isUpdateAvailableAsync() {
         return getLatestVersionAsync().thenApply(latestVersion -> {
-            boolean updateAvailable = latestVersion != null && !latestVersion.equals(currentVersion);
+            if (latestVersion == null || !latestVersion.matches("\\d+\\.\\d+\\.\\d+")) {
+                return new UpdateCheckResult(false, latestVersion);
+            }
+
+            String[] currentParts = currentVersion.split("\\.");
+            String[] latestParts = latestVersion.split("\\.");
+
+            int currentMajor = Integer.parseInt(currentParts[0]);
+            int currentMinor = Integer.parseInt(currentParts[1]);
+            int currentBugfix = Integer.parseInt(currentParts[2]);
+
+            int latestMajor = Integer.parseInt(latestParts[0]);
+            int latestMinor = Integer.parseInt(latestParts[1]);
+            int latestBugfix = Integer.parseInt(latestParts[2]);
+
+            boolean updateAvailable = (latestMajor > currentMajor) ||
+                    (latestMajor == currentMajor && latestMinor > currentMinor) ||
+                    (latestMajor == currentMajor && latestMinor == currentMinor && latestBugfix > currentBugfix);
+
             return new UpdateCheckResult(updateAvailable, latestVersion);
         });
     }
