@@ -62,6 +62,15 @@ public abstract class SQLDatabase {
         return future;
     }
 
+    public boolean checkConnection() {
+        try (Connection connection = getConnection()) {
+            return connection != null && !connection.isClosed();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     /**
      * Executes a SQL query asynchronously and returns a list of objects.
      * <ul>Examples of SQL queries:</ul>

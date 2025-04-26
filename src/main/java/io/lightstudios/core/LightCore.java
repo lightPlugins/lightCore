@@ -97,7 +97,7 @@ public class LightCore extends JavaPlugin {
         this.consolePrinter = new ConsolePrinter("§7[§rLight§eCore§7] §r");
         printLogo();
 
-        if(!Bukkit.getName().contains("paper")) {
+        if(!Bukkit.getName().equals("Paper")) {
             getConsolePrinter().printError(List.of(
                     "Light series plugins only support PaperMC.",
                     "Please use PaperMC for better performance and support.",

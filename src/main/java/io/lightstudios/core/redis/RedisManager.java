@@ -54,7 +54,7 @@ public class RedisManager {
      * Test the connection to the Redis server
      * @return true if the connection was successful
      */
-    private boolean testConnection() {
+    public boolean testConnection() {
         try (Jedis jedis = getJedisPool().getResource()) {
             String response = jedis.ping();
             return "PONG".equals(response);

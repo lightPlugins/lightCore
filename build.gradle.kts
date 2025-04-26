@@ -97,7 +97,7 @@ tasks {
         from(sourceSets.main.get().resources.srcDirs()) {
             filesMatching("plugin.yml") {
                 expand(
-                    "name" to "LightCoins",
+                    "name" to "LightCore",
                     "version" to version
                 )
 
