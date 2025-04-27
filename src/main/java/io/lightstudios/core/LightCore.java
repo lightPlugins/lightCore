@@ -4,7 +4,6 @@ import com.zaxxer.hikari.HikariDataSource;
 import io.lightstudios.core.commands.CoreReloadCommand;
 import io.lightstudios.core.commands.events.OnJoinCommandDelay;
 import io.lightstudios.core.commands.manager.CommandManager;
-import io.lightstudios.core.commands.LightItemsCommand;
 import io.lightstudios.core.database.SQLDatabase;
 import io.lightstudios.core.database.impl.MariaDatabase;
 import io.lightstudios.core.database.impl.MySQLDatabase;
@@ -19,13 +18,14 @@ import io.lightstudios.core.items.LightItem;
 import io.lightstudios.core.items.events.UpdateLightItem;
 import io.lightstudios.core.placeholder.PlaceholderRegistrar;
 import io.lightstudios.core.player.PlayerPunishment;
+import io.lightstudios.core.player.title.listener.TitleEventListener;
 import io.lightstudios.core.proxy.messaging.ReceiveProxyRequest;
 import io.lightstudios.core.redis.RedisManager;
 import io.lightstudios.core.events.ProxyTeleportEvent;
 import io.lightstudios.core.hooks.HookManager;
 import io.lightstudios.core.items.LightItemManager;
 import io.lightstudios.core.player.MessageSender;
-import io.lightstudios.core.player.TitleSender;
+import io.lightstudios.core.player.title.TitleSender;
 import io.lightstudios.core.util.ColorTranslation;
 import io.lightstudios.core.util.ConsolePrinter;
 import io.lightstudios.core.util.LightTimers;
@@ -37,8 +37,6 @@ import io.lightstudios.core.util.files.configs.CoreSettings;
 import io.lightstudios.core.util.interfaces.LightCommand;
 import io.lightstudios.core.world.WorldManager;
 import lombok.Getter;
-import net.minecraft.core.HolderGetter;
-import net.minecraft.core.Registry;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -349,6 +347,8 @@ public class LightCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new OnJoinCommandDelay(), this);
         // InventoryClickEvent for LightMenus
         getServer().getPluginManager().registerEvents(new MenuEvent(), this);
+        // Register title queue system
+        getServer().getPluginManager().registerEvents(new TitleEventListener(), this);
         // set nbt data to blocks placed by player
         // getServer().getPluginManager().registerEvents(new BlockPlacedByPlayer(), this);
         new PlaceholderRegistrar("lightcore", "lightStudios", "1.0", true, new ArrayList<>()).register();
