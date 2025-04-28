@@ -7,6 +7,7 @@ public enum SubChannels {
     MESSAGE_REQUEST("lightcore:proxymessage"),
     CHECK_PROXY_REQUEST("lightcore:checkproxy"),
     BALANCE_UPDATE_REQUEST("lightcore:balanceupdate"),
+    TITLE_REQUEST("lightcore:proxytitle"),
     ;
 
     private final String type;

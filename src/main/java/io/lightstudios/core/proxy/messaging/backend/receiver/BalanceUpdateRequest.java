@@ -1,4 +1,4 @@
-package io.lightstudios.core.proxy.messaging.backend;
+package io.lightstudios.core.proxy.messaging.backend.receiver;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;

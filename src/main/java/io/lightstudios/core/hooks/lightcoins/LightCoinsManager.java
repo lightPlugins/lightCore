@@ -5,6 +5,7 @@ import io.lightstudios.coins.api.LightCoinsAPI;
 import io.lightstudios.coins.api.models.AccountData;
 import io.lightstudios.coins.api.models.CoinsData;
 import io.lightstudios.coins.api.models.VirtualData;
+import io.lightstudios.coins.api.types.EconomyReason;
 import io.lightstudios.core.LightCore;
 import net.milkbowl.vault.economy.EconomyResponse;
 
@@ -45,15 +46,15 @@ public class LightCoinsManager {
     }
 
     public EconomyResponse deposit(UUID uuid, BigDecimal amount) {
-        return getCoinsData(uuid).addCoins(amount);
+        return getCoinsData(uuid).addCoins(amount, EconomyReason.CORE);
     }
 
     public EconomyResponse withdraw(UUID uuid, BigDecimal amount) {
-        return getCoinsData(uuid).removeCoins(amount);
+        return getCoinsData(uuid).removeCoins(amount, EconomyReason.CORE);
     }
 
     public EconomyResponse setBalance(UUID uuid, BigDecimal amount) {
-        return getCoinsData(uuid).setCoins(amount);
+        return getCoinsData(uuid).setCoins(amount, EconomyReason.CORE);
     }
 
 }

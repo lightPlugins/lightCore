@@ -1,4 +1,4 @@
-package io.lightstudios.core.proxy.messaging;
+package io.lightstudios.core.proxy.messaging.proxy.receiver;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
@@ -10,8 +10,10 @@ import com.velocitypowered.api.proxy.ServerConnection;
 import io.lightstudios.core.LightCoreProxy;
 import io.lightstudios.core.proxy.util.SubChannels;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.title.Title;
 
-import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.UUID;
 
 import static io.lightstudios.core.LightCoreProxy.IDENTIFIER;
@@ -111,6 +113,43 @@ public class ReceiveBackendRequest {
         Component text = Component.text(input.readUTF());
 
         LightCoreProxy.instance.getServer().getPlayer(uuid).ifPresent(target -> target.sendMessage(text));
+
+    }
+
+    @Subscribe
+    public void sendTitleToPlayer(PluginMessageEvent event) {
+
+        if(!IDENTIFIER.equals(event.getIdentifier())) {
+            return;
+        }
+
+        if(!(event.getSource() instanceof ServerConnection)) {
+            return;
+        }
+
+        ByteArrayDataInput input = ByteStreams.newDataInput(event.getData());
+
+        String subChannel = input.readUTF();
+
+        if(!subChannel.equalsIgnoreCase(SubChannels.TITLE_REQUEST.getId())) {
+            return;
+        }
+
+        UUID uuid = UUID.fromString(input.readUTF());
+        Component upper = Component.text(input.readUTF());
+        Component lower = Component.text(input.readUTF());
+        int fadeIn = input.readInt();
+        int stay = input.readInt();
+        int fadeOut = input.readInt();
+
+
+        Title title = Title.title(upper, lower,
+                Title.Times.times(
+                        Duration.ofSeconds(fadeIn / 20L),
+                        Duration.ofSeconds(stay / 20L),
+                        Duration.ofSeconds(fadeOut / 20L)));
+
+        LightCoreProxy.instance.getServer().getPlayer(uuid).ifPresent(target -> target.showTitle(title));
 
     }
 

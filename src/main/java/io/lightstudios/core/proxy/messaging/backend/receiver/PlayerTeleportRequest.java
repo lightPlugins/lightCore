@@ -1,4 +1,4 @@
-package io.lightstudios.core.proxy.messaging.backend;
+package io.lightstudios.core.proxy.messaging.backend.receiver;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
@@ -8,7 +8,6 @@ import io.lightstudios.core.util.interfaces.LightMessageListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

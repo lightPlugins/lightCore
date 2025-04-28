@@ -71,7 +71,8 @@ dependencies {
     compileOnly("net.milkbowl.vault:VaultUnlockedAPI:2.9")
     compileOnly("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
     compileOnly("de.oliver:FancyHolograms:2.4.1")
-    compileOnly("com.github.lightPlugins:lightCoins:0.1.3")
+    //compileOnly("com.github.lightPlugins:lightCoins:0.1.3")
+    compileOnly(files("C:/Users/phili/IdeaProjects/lightCoins/build/libs/lightCoins-1.0.0.jar"))
     compileOnly("org.mariadb.jdbc:mariadb-java-client:3.5.0")
     implementation("org.yaml:snakeyaml:2.4")
     implementation("redis.clients:jedis:5.2.0")
@@ -130,7 +131,7 @@ publishing {
                 classifier = null
             }
             groupId = "com.github.lightPlugins"
-            artifactId = "lightCore"
+            artifactId = "LightCore"
             version = rootProject.version.toString()
         }
     }

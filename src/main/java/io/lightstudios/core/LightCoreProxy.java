@@ -8,7 +8,7 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
-import io.lightstudios.core.proxy.messaging.ReceiveBackendRequest;
+import io.lightstudios.core.proxy.messaging.proxy.receiver.ReceiveBackendRequest;
 import io.lightstudios.core.util.ProxyConsolePrinter;
 import lombok.Getter;
 import org.bstats.velocity.Metrics;

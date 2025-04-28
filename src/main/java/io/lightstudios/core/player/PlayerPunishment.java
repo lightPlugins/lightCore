@@ -1,7 +1,7 @@
 package io.lightstudios.core.player;
 
 import io.lightstudios.core.LightCore;
-import io.lightstudios.core.proxy.messaging.SendProxyRequest;
+import io.lightstudios.core.proxy.messaging.backend.sender.SendProxyRequest;
 import io.lightstudios.core.util.LightTimers;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;

@@ -1,4 +1,4 @@
-package io.lightstudios.core.proxy.messaging;
+package io.lightstudios.core.proxy.messaging.backend.sender;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -6,7 +6,6 @@ import io.lightstudios.core.LightCore;
 import io.lightstudios.core.proxy.util.SubChannels;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.messaging.PluginMessageRecipient;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -68,6 +67,19 @@ public class SendProxyRequest {
         out.writeFloat(pitch);
 
         sender.sendPluginMessage(LightCore.instance, "lightstudio:lightcore", out.toByteArray());
+    }
+
+    public static void sendProxyTitle(Player player, String upper, String lower, int fadeIn, int stay, int fadeOut) {
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF(SubChannels.TITLE_REQUEST.getId());
+        out.writeUTF(player.getUniqueId().toString());
+        out.writeUTF(upper);
+        out.writeUTF(lower);
+        out.writeInt(fadeIn);
+        out.writeInt(stay);
+        out.writeInt(fadeOut);
+
+        player.sendPluginMessage(LightCore.instance, "lightstudio:lightcore", out.toByteArray());
     }
 
 

@@ -19,7 +19,7 @@ import io.lightstudios.core.items.events.UpdateLightItem;
 import io.lightstudios.core.placeholder.PlaceholderRegistrar;
 import io.lightstudios.core.player.PlayerPunishment;
 import io.lightstudios.core.player.title.listener.TitleEventListener;
-import io.lightstudios.core.proxy.messaging.ReceiveProxyRequest;
+import io.lightstudios.core.proxy.messaging.backend.receiver.ReceiveProxyRequest;
 import io.lightstudios.core.redis.RedisManager;
 import io.lightstudios.core.events.ProxyTeleportEvent;
 import io.lightstudios.core.hooks.HookManager;
