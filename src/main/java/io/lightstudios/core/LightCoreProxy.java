@@ -15,8 +15,13 @@ import org.bstats.velocity.Metrics;
 
 import java.nio.file.Path;
 
+/*
+ *  ########## VELOCITY PROXY PLUGIN ##########
+ *  WARNING: Do not use stuff from Bukkit here!
+ */
+
 @Getter
-@Plugin(id = "lightcore", name = "LightCore", version = "0.1.8",
+@Plugin(id = "lightcore", name = "LightCore", version = "0.5.3",
         url = "https://example.org", description = "Core Plugin of LightStudios", authors = {"LightStudios"})
 public class LightCoreProxy {
 

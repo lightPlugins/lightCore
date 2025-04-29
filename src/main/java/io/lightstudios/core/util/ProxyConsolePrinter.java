@@ -4,6 +4,11 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.ansi.ANSIComponentSerializer;
 
+/*
+ *  ########## VELOCITY PROXY PLUGIN ##########
+ *  WARNING: Do not use stuff from Bukkit here!
+ */
+
 public class ProxyConsolePrinter {
 
     public void sendInfo(String message) {

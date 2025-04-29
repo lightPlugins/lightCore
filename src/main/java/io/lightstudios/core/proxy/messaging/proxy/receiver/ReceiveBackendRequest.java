@@ -10,11 +10,15 @@ import com.velocitypowered.api.proxy.ServerConnection;
 import io.lightstudios.core.LightCoreProxy;
 import io.lightstudios.core.proxy.util.SubChannels;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
 
 import java.time.Duration;
 import java.util.UUID;
+
+/*
+ *  ########## VELOCITY PROXY PLUGIN ##########
+ *  WARNING: Do not use stuff from Bukkit here!
+ */
 
 import static io.lightstudios.core.LightCoreProxy.IDENTIFIER;
 

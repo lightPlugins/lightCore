@@ -4,7 +4,6 @@ import io.lightstudios.core.LightCore;
 import io.lightstudios.core.player.title.events.TitleSendEvent;
 import io.lightstudios.core.proxy.messaging.backend.sender.SendProxyRequest;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -43,7 +42,7 @@ public class TitleEventListener implements Listener {
             return;
         }
 
-        Title title = queue.poll();
+        Title title = queue.peek();
         if (title == null) {
             return;
         }
@@ -70,29 +69,31 @@ public class TitleEventListener implements Listener {
         }
 
         // Zeige den Titel an
-//        if(!player.isOnline()) {
-//            SendProxyRequest.sendProxyTitle(player, upper, lower, fadeIn, stay, fadeOut);
-//        } else {
-//            player.showTitle(title);
-//        }
-
-        SendProxyRequest.sendProxyTitle(player, upper, lower, fadeIn, stay, fadeOut);
+        if(!player.isOnline()) {
+            SendProxyRequest.sendProxyTitle(player, upper, lower, fadeIn, stay, fadeOut);
+        } else {
+            player.showTitle(title);
+        }
 
         // Berechne die Gesamtdauer des Titels (fadeIn + stay + fadeOut) + 1 Sekunde Verzögerung
         Duration totalDuration = Duration.ZERO;
 
         if (times != null) {
-            totalDuration = Duration.ofMillis(times.fadeIn().toMillis())
-                    .plus(Duration.ofMillis(times.stay().toMillis()))
-                    .plus(Duration.ofMillis(times.fadeOut().toMillis()))
-                    .plus(Duration.ofSeconds(1));
+            totalDuration = Duration.ofMillis(times.fadeIn().toMillis() * 50L)
+                    .plus(Duration.ofMillis(times.stay().toMillis() * 50L))
+                    .plus(Duration.ofMillis(times.fadeOut().toMillis() * 50L))
+                    .plus(Duration.ofMillis(0));
         }
+
 
         // Plane die Verarbeitung des nächsten Titels nach der Gesamtdauer
         Bukkit.getScheduler().runTaskLater(
                 LightCore.instance,
-                () -> processQueue(player),
-                totalDuration.toMillis() / 50 // Konvertiere Millisekunden in Ticks (1 Tick = 50ms)
+                () -> {
+                    queue.poll();
+                    processQueue(player);
+                },
+                totalDuration.toMillis() / 50L // Konvertiere Millisekunden in Ticks (1 Tick = 50ms)
         );
     }
 }
