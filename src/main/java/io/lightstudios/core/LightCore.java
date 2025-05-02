@@ -14,8 +14,6 @@ import io.lightstudios.core.economy.EconomyManager;
 import io.lightstudios.core.github.VersionChecker;
 import io.lightstudios.core.inventory.events.MenuEvent;
 import io.lightstudios.core.inventory.model.InventoryData;
-import io.lightstudios.core.items.LightItem;
-import io.lightstudios.core.items.events.UpdateLightItem;
 import io.lightstudios.core.placeholder.PlaceholderRegistrar;
 import io.lightstudios.core.player.PlayerPunishment;
 import io.lightstudios.core.player.title.listener.TitleEventListener;
@@ -23,7 +21,6 @@ import io.lightstudios.core.proxy.messaging.backend.receiver.ReceiveProxyRequest
 import io.lightstudios.core.redis.RedisManager;
 import io.lightstudios.core.events.ProxyTeleportEvent;
 import io.lightstudios.core.hooks.HookManager;
-import io.lightstudios.core.items.LightItemManager;
 import io.lightstudios.core.player.MessageSender;
 import io.lightstudios.core.player.title.TitleSender;
 import io.lightstudios.core.util.ColorTranslation;
@@ -78,7 +75,6 @@ public class LightCore extends JavaPlugin {
 
     private MultiFileManager itemFiles;
     private MultiFileManager inventoryFiles;
-    private LightItemManager itemManager;
 
     private final ArrayList<LightCommand> commands = new ArrayList<>();
     private final Map<String, InventoryData> lightInventories = new HashMap<>();
@@ -95,9 +91,11 @@ public class LightCore extends JavaPlugin {
         this.consolePrinter = new ConsolePrinter("§7[§rLight§eCore§7] §r");
         printLogo();
 
-        if(!Bukkit.getName().equals("Paper")) {
+        List<String> compatibleServer = List.of("Paper", "Pufferfish", "Purpur");
+
+        if(!compatibleServer.contains(Bukkit.getName())) {
             getConsolePrinter().printError(List.of(
-                    "Light series plugins only support PaperMC.",
+                    "Light series plugins only support PaperMC and forks.",
                     "Please use PaperMC for better performance and support.",
                     "I have decided to not support SpigotMC anymore.",
                     "Now days SpigotMC is not the best option anymore.",
@@ -114,7 +112,6 @@ public class LightCore extends JavaPlugin {
         this.messageSender = new MessageSender();
         this.titleSender = new TitleSender();
         this.playerPunishment = new PlayerPunishment();
-        this.itemManager = new LightItemManager();
         this.worldManager = new WorldManager();
 
         this.consolePrinter.printInfo("Generate core files ...");
@@ -219,6 +216,7 @@ public class LightCore extends JavaPlugin {
                         "Valid database types are: SQLite, MySQL.",
                         "Disabling all core related plugins."));
                 this.lightCoreEnabled = false;
+                onDisable();
                 return;
             }
 
@@ -339,8 +337,6 @@ public class LightCore extends JavaPlugin {
     private void registerEvents() {
         // Register Events
         LightCore.instance.getConsolePrinter().printInfo("Registering Core Events ...");
-        // update custom light items in player inventory
-        getServer().getPluginManager().registerEvents(new UpdateLightItem(), this);
         // teleport player to another server event throw proxy (velocity)
         getServer().getPluginManager().registerEvents(new ProxyTeleportEvent(), this);
         // delay command execution on player join (protection for dupes or other exploits)
@@ -357,8 +353,7 @@ public class LightCore extends JavaPlugin {
     public void registerCommands() {
         new CommandManager(new ArrayList<>(List.of(
                 new CoreReloadCommand()
-                //new LightItemsCommand()
-        )), "core");
+        )), "lightcore");
     }
 
     public void reloadCore() {
@@ -396,21 +391,6 @@ public class LightCore extends JavaPlugin {
                 "Redis is not enabled in config.",
                 "If you want to use Redis for some server synchronisation,",
                 "please enable it in the config file."));
-    }
-    public void readCoreItems() {
-
-        List<File> files = itemFiles.getYamlFiles();
-        if(files.isEmpty()) {
-            getConsolePrinter().printWarning(List.of(
-                    "No item files found in the items folder.",
-                    "Skipping this part ..."));
-            return;
-        }
-        float start = System.currentTimeMillis();
-        HashMap<String, LightItem> foundItems = itemManager.addItemsToCache(this, files);
-        float end = System.currentTimeMillis();
-        this.consolePrinter.printInfo("Successfully read " + foundItems.size() + " items in " + (end - start) + "ms.");
-
     }
     
     public void loadInventories() {

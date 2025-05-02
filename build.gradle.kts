@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "io.lightstudios.core"
-version = "0.5.3"
+version = "1.0.0"
 
 repositories {
     mavenCentral()

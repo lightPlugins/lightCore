@@ -16,15 +16,65 @@
 #   ############################### LIGHTCORE -> ITEM BUILDER ###############################  #
 #
 # The item builder arguments. Possible arguments are:
-# minimum example: item: '<materialName> <amount>'
-# more complex example: item: 'diamond_pickaxe 1 enchant:efficiency:1 enchant:fortune:3 unbreakable hide_enchants hide_attributes hide_unbreakable'
-item: 'diamond_sword 1 hide_attributes'
-# The Display name of the item.
-customName: 'Example Item'
-# The lore of the item.
-lore:
-  - '<gray>This is an example lore.'
-  - '<rainbow>Rainbow lore!'
-  - '<gray>from the placeholders section above.'
-# The custom model data of the item. (from resource pack)
-modelData: 0
+# minimum example: item: 'vanilla:<materialName>:<amount>'
+# more complex example: item: 'vanilla:diamond_sword:1 enchant:efficiency:1 enchant:fortune:3 unbreakable hide_enchants hide_attributes hide_unbreakable'
+settings:
+  liveItemUpdates: true
+item:
+  type: 'vanilla' # you can also use nexo, mmoitems
+  data: 'diamond_sword'
+  args:
+    display-name: '<rainbow>Example Item'
+    lore:
+      - '<gray>This is an example lore.'
+      - '<rainbow>Rainbow lore!'
+      - '<gray>from the placeholders section above.'
+    unbreakable: false
+    durability: 100
+    model-data: 1337
+    itemFlags:
+      - 'hide_enchants'
+      - 'hide_attributes'
+      - 'hide_unbreakable'
+    enchantments:
+      - 'efficiency:1'
+      - 'fortune:3'
+# The crafting recipe of the item is super simple to create.
+# The crafting pattern is always the same.
+# type: 3x3: slots 1 - 4
+# Workbench crafting
+#      '1 2 3'
+#      '4 5 6'
+#      '7 8 9'
+# type: 2x2: slots 1 - 9
+# Player crafting
+#       '1 2'
+#       '3 4'
+crafting-recipe:
+  # Can the item be crafted?
+  can-be-crafted: true
+  # The crafting size
+  # type: workbench - 3x3
+  # type: player - 2x2
+  type: workbench
+  # The crafting pattern (see above)
+  slots:
+    # First row - left to right
+    '1': 'vanilla:diamond:1'
+    '2': 'vanilla:gold_ingot:1'
+    '3': 'vanilla:iron_ingot:1'
+    # Second row - left to right
+    '4': 'vanilla:emerald:1'
+    '5': 'vanilla:lapis_lazuli:1'
+    '6': 'vanilla:netherite_ingot:1'
+    # Third row - left to right
+    '7': 'vanilla:quartz:1'
+    '8': 'vanilla:stone:1'
+    '9': 'vanilla:stone:1'
+  # how many items should be crafted in the end
+  resultAmount: 1
+  # Is it a shapeless crafting recipe?
+  # HINT: In Shapeless crafting recipes, the order of the items does not matter.
+  shapeless: false
+extras: { }
+

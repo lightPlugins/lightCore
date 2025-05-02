@@ -77,4 +77,25 @@ public class LightNumbers {
     public static boolean isPositiveNumber(double d) {
         return d > 0;
     }
+    public static boolean isNumberInRange(double d, double min, double max) {
+        return d >= min && d <= max;
+    }
+
+    public static boolean isValidInteger(String s) {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static boolean isValidDouble(String s) {
+        try {
+            Double.parseDouble(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 }
