@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class FileManager {
@@ -139,15 +141,37 @@ public class FileManager {
             // Merge the default config into the existing config
 
             if(loadDefaultsOneReload) {
+
+                saveConfig();
+
                 FileConfiguration defaultConfig = YamlConfiguration.loadConfiguration(
                         new InputStreamReader(Objects.requireNonNull(this.plugin.getResource(configName))));
                 FileConfiguration existingConfig = getConfig();
+
+                List<String> blockedKey = new ArrayList<>();
+
+                for (String test : existingConfig.getKeys(true)) {
+                    if(existingConfig.contains(test + ".generate-defaults")) {
+                        LightCore.instance.getConsolePrinter().printInfo(
+                                "Found blocked config key. Skipping all entrys for §e" + test + "§r in §e" + configName);
+                        if(!blockedKey.contains(test)) {
+                            blockedKey.add(test);
+                        }
+                    }
+                }
+
                 for (String key : defaultConfig.getKeys(true)) {
+
+                    boolean isBlocked = blockedKey.stream().anyMatch(key::startsWith);
+
+                    if (isBlocked) {
+                        continue;
+                    }
+
                     if (!existingConfig.getKeys(true).contains(key)) {
                         LightCore.instance.getConsolePrinter().printInfo(
-                                "Found non existing config key. Adding " + key + " into " + configName);
+                                "Found non existing config key. Adding §e" + key + "§r into §e" + configName);
                         existingConfig.set(key, defaultConfig.get(key));
-
                     }
                 }
 
@@ -155,7 +179,7 @@ public class FileManager {
 
                     existingConfig.save(configFile);
                     LightCore.instance.getConsolePrinter().printInfo(
-                            "Your config " + configName + " is up to date.");
+                            "Your config §e" + configName + "§r is up to date.");
 
                 } catch (IOException e) {
                     throw new RuntimeException(e);
