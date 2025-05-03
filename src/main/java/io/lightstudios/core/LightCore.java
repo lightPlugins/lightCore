@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import io.lightstudios.core.commands.CoreReloadCommand;
 import io.lightstudios.core.commands.events.OnJoinCommandDelay;
 import io.lightstudios.core.commands.manager.CommandManager;
+import io.lightstudios.core.database.DriverShim;
 import io.lightstudios.core.database.SQLDatabase;
 import io.lightstudios.core.database.impl.MariaDatabase;
 import io.lightstudios.core.database.impl.MySQLDatabase;
@@ -43,6 +44,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.sql.Driver;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -120,6 +123,16 @@ public class LightCore extends JavaPlugin {
         this.consolePrinter.printInfo("Initializing LightCore ...");
         this.consolePrinter.printInfo("Starting database connection ...");
         // Initialize and connect to the database
+        try {
+            Class<?> driverClass = Class.forName("io.lightstudios.core.util.libs.mariadb.Driver");
+            Driver driverInstance = (Driver) driverClass.getDeclaredConstructor().newInstance();
+            DriverManager.registerDriver(new DriverShim(driverInstance));
+        } catch (Exception e) {
+            getConsolePrinter().printError(List.of(
+                    "Could not register MariaDB jdbc driver with error message",
+                    "Error: " + e.getMessage()
+            ));
+        }
         initDatabase();
         // Initialize Redis connection and check if it is enabled
         enableRedisConnection();
