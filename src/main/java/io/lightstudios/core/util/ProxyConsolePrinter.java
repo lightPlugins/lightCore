@@ -4,6 +4,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.ansi.ANSIComponentSerializer;
 
+import java.util.List;
+
 /*
  *  ########## VELOCITY PROXY PLUGIN ##########
  *  WARNING: Do not use stuff from Bukkit here!
@@ -30,6 +32,17 @@ public class ProxyConsolePrinter {
         Component formattedMessage = MiniMessage.miniMessage().deserialize(prefix + message);
         String ansiMessage = ANSIComponentSerializer.ansi().serialize(formattedMessage);
         System.out.println(ansiMessage);
+    }
+
+    public void sendError(List<String> message) {
+        System.out.println(" ");
+        message.forEach(s -> {
+            String prefix = "[light<#ffdc73>Core<reset>] [<red>ERROR<reset>] ";
+            Component formattedMessage = MiniMessage.miniMessage().deserialize(prefix + s);
+            String ansiMessage = ANSIComponentSerializer.ansi().serialize(formattedMessage);
+            System.out.println(ansiMessage);
+        });
+        System.out.println(" ");
     }
 
     public void printSending(String message) {

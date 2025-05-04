@@ -3,3 +3,5 @@
  */
 
 rootProject.name = "lightCore"
+include("core")
+include("velocity")

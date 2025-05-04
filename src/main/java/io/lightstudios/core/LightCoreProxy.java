@@ -8,6 +8,8 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
+import io.lightstudios.core.proxy.LuckPermsProxy;
+import io.lightstudios.core.proxy.ProxyFileManager;
 import io.lightstudios.core.proxy.messaging.proxy.receiver.ReceiveBackendRequest;
 import io.lightstudios.core.util.ProxyConsolePrinter;
 import lombok.Getter;
@@ -34,6 +36,10 @@ public class LightCoreProxy {
     public static LightCoreProxy instance;
     private final ProxyConsolePrinter consolePrinter;
 
+    private ProxyFileManager proxyFileManager;
+
+    private LuckPermsProxy luckPermsHook;
+
     private final Metrics.Factory metrics;
 
     @Inject
@@ -52,6 +58,12 @@ public class LightCoreProxy {
         registerChannelRegistrars();
         consolePrinter.sendInfo("Starting bStats metrics instance ...");
         this.metrics.make(this, 24560);
+
+        server.getPluginManager().getPlugin("LuckPerms").ifPresent(luckPermsPlugin -> {
+            consolePrinter.sendInfo("Found LuckPerms, registering LuckPerms hook ...");
+            luckPermsHook = new LuckPermsProxy();
+        });
+
     }
 
     @Subscribe
@@ -69,6 +81,10 @@ public class LightCoreProxy {
         server.getEventManager().register(this, new ReceiveBackendRequest());
 
         consolePrinter.sendInfo("Registering Channel Registrars for LightCore plugin on Velocity...");
+    }
+
+    private void generateDefaultConfig() {
+        this.proxyFileManager = new ProxyFileManager(dataDirectory, "proxy/settings.yml", true);
     }
 
 

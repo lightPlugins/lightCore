@@ -8,6 +8,10 @@
     {
       "id": "velocity",
       "optional": true
+    },
+    {
+      "id": "luckperms",
+      "optional": true
     }
   ]
 }
